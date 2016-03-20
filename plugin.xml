@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e107Plugin name="Messaging" lan="LAN_MESS_NAME" version="1.0" date="2016-04-01" compatibility="2.0" installRequired="true">
+	<author name="Tijn Kuyper (Moc)" url="http://www.tijnkuyper.nl" email="e107@tijnkuyper.nl" />
+	<description lan="LAN_MESS_DESC">This plugin is a fully featured Private Messaging system.</description>
+	<category>users</category>
+	<keywords>
+		<word>messaging</word>
+		<word>communication</word>
+	</keywords>
+	<adminLinks>
+		<link url='admin_config.php' description='ADLAN_PM_2' icon='images/icons/icon_32.png' iconSmall='images/icons/icon_16.png' primary='true' />
+	</adminLinks>
+	<pluginPrefs>
+		<pref name="accessible_class">e_UC_MEMBER</pref>
+		<pref name="notify_class">e_UC_ADMIN</pref>
+		<pref name="receipt_class">e_UC_MEMBER</pref>
+		<pref name="attach_class">e_UC_ADMIN</pref>
+		<pref name="attach_size">500</pref>
+		<pref name="sendall_class">e_UC_ADMIN</pref>
+		<pref name="multi_class">e_UC_ADMIN</pref>
+		<pref name="allow_userclass">1</pref>
+		<pref name="message_limits">0</pref>
+		<pref name="message_max_send">100</pref>
+	</pluginPrefs>
+</e107Plugin>
