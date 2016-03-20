@@ -1,5 +1,5 @@
 # Messaging #
-*Messaging* is an e107 plugin that features an up-to-date messaging platfor using all the latest web technologies and e107 features available. 
+*Messaging* is an e107 plugin that features an up-to-date messaging platform using all the latest web technologies and functionalities that e107 offers.
 
 This plugin is coded using e107 standards and is based relies on **Bootstrap and jQuery standards**. Its secondary purpose is to provide an example of a properly coded plugin for e107 v2, making use of all its standards as well as its new features and possibilities.  
 
