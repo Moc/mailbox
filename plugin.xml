@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <e107Plugin name="Messaging" lan="LAN_MESS_NAME" version="1.0" date="2016-04-01" compatibility="2.0" installRequired="true">
 	<author name="Tijn Kuyper (Moc)" url="http://www.tijnkuyper.nl" email="e107@tijnkuyper.nl" />
-	<description lan="LAN_MESS_DESC">This plugin is a fully featured Private Messaging system.</description>
+	<description lan="LAN_MESS_DESC">An up-to-date messaging platform that uses all the latest web technologies and functionalities offered by e107.</description>
 	<category>users</category>
 	<keywords>
 		<word>messaging</word>
 		<word>communication</word>
 	</keywords>
 	<adminLinks>
-		<link url='admin_config.php' description='ADLAN_PM_2' icon='images/icons/icon_32.png' iconSmall='images/icons/icon_16.png' primary='true' />
+		<link url="admin_config.php" icon="images/messaging_32.png" iconSmall="images/messaging_16.png" primary="true" />
 	</adminLinks>
 	<pluginPrefs>
 		<pref name="accessible_class">e_UC_MEMBER</pref>
