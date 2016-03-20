@@ -6,8 +6,6 @@
  * Released under the terms and conditions of the
  * GNU General Public License (http://www.gnu.org/licenses/gpl.txt)
  *
- * Messaging class including all generic functions
- *
  */
 
 require_once('../../class2.php');
