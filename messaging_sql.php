@@ -13,5 +13,5 @@ CREATE TABLE messaging_messages (
   message_to_deleted tinyint(1) unsigned NOT NULL default '0',    /* Set when receiver has deleted the message */
   message_attachments text NOT NULL,
   /*message_options varchar(250) NOT NULL default '', */	        /* Options - '+rr' for read receipt - UNDER REVIEW*/
-  PRIMARY KEY (pm_id)
+  PRIMARY KEY (message_id)
 ) ENGINE=MyISAM AUTO_INCREMENT=1;
