@@ -10,7 +10,7 @@
 
 require_once('../../class2.php');
 
-if (!e107::isInstalled('Mailbox')) 
+if (!e107::isInstalled('mailbox')) 
 {
 	e107::redirect();
 	exit;
