@@ -1,5 +1,5 @@
-# Messaging #
-*Messaging* is an e107 plugin that features an up-to-date messaging platform that uses all the latest web technologies and functionalities offered by e107.
+# Mailbox #
+*Mailbox* is an e107 plugin that features an up-to-date messaging platform that uses all the latest web technologies and functionalities offered by e107.
 
 This plugin is coded using e107 standards and is based relies on **Bootstrap and jQuery standards**. Its secondary purpose is to provide an example of a properly coded plugin for e107 v2, making use of all its standards as well as its new features and possibilities.  
 
@@ -16,11 +16,11 @@ This plugin is coded using e107 standards and is based relies on **Bootstrap and
 * Cronjobs (send queue, cleanup database etc.)
 
 ## How to get help? ##
-* First, **search the wiki** [here](https://github.com/Moc/messaging/wiki)
-* If you cannot find the answer, you can submit an issue to the [issue tracker](https://github.com/Moc/messaging/issues).
+* First, **search the wiki** [here](https://github.com/Moc/mailbox/wiki)
+* If you cannot find the answer, you can submit an issue to the [issue tracker](https://github.com/Moc/mailbox/issues).
 
 ## Bugs &  feature requests ##
-* Use the [issue tracker](https://github.com/Moc/messaging/issues)
+* Use the [issue tracker](https://github.com/Moc/mailbox/issues)
 
 ## Translation ##
 * In case you want to translate this plugin to your language, let me first thank you for your contribution. To submit your language file, simply use the [pull-request feature on Github](https://help.github.com/articles/using-pull-requests) 

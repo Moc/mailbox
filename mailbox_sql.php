@@ -1,4 +1,4 @@
-CREATE TABLE messaging_messages (
+CREATE TABLE mailbox_messages (
   message_id int(10) unsigned NOT NULL auto_increment,
   message_from int(10) unsigned NOT NULL default '0',             /* User ID of sender */
   message_to varchar(250) NOT NULL default '',                    /* User ID of receiver */
