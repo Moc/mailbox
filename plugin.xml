@@ -10,6 +10,9 @@
 	<adminLinks>
 		<link url="admin_config.php" icon="images/mailbox_32.png" iconSmall="images/mailbox_16.png" primary="true" />
 	</adminLinks>
+	<siteLinks>
+		<link url="{e_PLUGIN}mailbox/mailbox.php" sef="mailbox" perm="everyone">LAN_MAILBOX_NAME</link>
+	</siteLinks>
 	<pluginPrefs>
 		<pref name="accessible_class">e_UC_MEMBER</pref>
 		<pref name="notify_class">e_UC_ADMIN</pref>
