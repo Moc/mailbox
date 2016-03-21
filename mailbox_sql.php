@@ -1,9 +1,9 @@
 CREATE TABLE mailbox_messages (
   message_id int(10) unsigned NOT NULL auto_increment,
   message_from int(10) unsigned NOT NULL default '0',             /* User ID of sender */
-  message_to varchar(250) NOT NULL default '',                    /* User ID of receiver */
-  message_draft varchar(250) NOT NULL default '',                 /* Draft status */
-  message_sent int(10) unsigned NOT NULL default '0',			        /* Date sent */
+  message_to int(10) NOT NULL default '0',                        /* User ID of receiver */
+  message_draft int(10) NOT NULL default '0',                     /* Draft status */
+  message_sent tinyint(1) unsigned NOT NULL default '0',			    /* Date sent */
   message_read int(10) unsigned NOT NULL default '0',			        /* Date read */
   message_subject text NOT NULL,
   message_text text NOT NULL,
