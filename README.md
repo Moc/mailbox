@@ -1,19 +1,19 @@
 # Mailbox #
 *Mailbox* is an e107 plugin that features an up-to-date messaging platform that uses all the latest web technologies and functionalities offered by e107.
 
-This plugin is coded using e107 standards and is based relies on **Bootstrap and jQuery standards**. Its secondary purpose is to provide an example of a properly coded plugin for e107 v2, making use of all its standards as well as its new features and possibilities.  
+This plugin is coded using e107 standards and is based relies on **Bootstrap 3 (soon 4) and jQuery standards**. Its secondary purpose is to provide an example of a properly coded plugin for e107 v2, making use of all its standards as well as its new features and possibilities.  
 
 ## Requirements ##
 * e107 v2.x (latest)
 * Ability to read the wiki and/or search documentation for answers ;)
 
 ## Roadmap - planned features ##
-* Preferences/options (limit number of messages / inbox and outbox size)
-* Templating for frontend customization
-* Email functionality (notifications)
+* ~~Templating for frontend customization~~ 
 * ~~Friendly URLs~~
+* Preferences/options (limit number of messages / inbox and outbox size)
+* Email functionality (notifications)
+* Cronjobs (queue for large amount of messages, cleanup database etc.)
 * Customizable labels per individual user 
-* Cronjobs (send queue, cleanup database etc.)
 
 ## How to get help? ##
 * First, **search the wiki** [here](https://github.com/Moc/mailbox/wiki)
