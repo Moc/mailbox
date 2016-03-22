@@ -59,6 +59,9 @@
 }
 
 
+.mailbox-datestamp {
+  font-style: italic;
+}
 /*
  * Page: Mailbox
  * -------------
