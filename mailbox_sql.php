@@ -7,7 +7,8 @@ CREATE TABLE mailbox_messages (
   message_read int(10) unsigned NOT NULL default '0',			        /* Datestamp read */
   message_subject varchar(255) NOT NULL,          
   message_text text NOT NULL,
-  message_starred tinyint(1) unsigned NOT NULL default '0',		    /* Set when either sender or receiver has starred the message */
+  message_from_starred tinyint(1) unsigned NOT NULL default '0',	/* Set when sender has starred the message */
+  message_to_starred tinyint(1) unsigned NOT NULL default '0',    /* Set when receiver has starred the message */
   message_from_deleted int(10) unsigned NOT NULL default '0',     /* Datestamp when sender has deleted the message */
   message_to_deleted int(10) unsigned NOT NULL default '0',       /* Datestamp when receiver has deleted the message */
   message_attachments text,
