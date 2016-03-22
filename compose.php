@@ -13,71 +13,47 @@ if(!defined('e107_INIT'))
 	require_once("../../class2.php");
 }
 
-
 if(!e107::isInstalled('mailbox')) 
 {
 	e107::redirect();
 	exit;
 }
 
-$frm = e107::getForm();
+// Load the LAN files
+e107::lan('mailbox', false, true); 
 
+// Load the header
 require_once(HEADERF);
 
-$userpicker_options = 
-array(
-    'selectize' => 
-	    array(
-	        'create' 	=> false,
-	        'maxItems' 	=> 10,
-	        'mode' 		=> 'multi',
-	    ),
-    'placeholder' => 'To',
-);
+// Load template and shortcodes
+$sc 		= e107::getScBatch('mailbox', TRUE);
+$template 	= e107::getTemplate('mailbox'); 
+$template 	= array_change_key_case($template);
 
-$text = '
+// Define variables
+$sql 	= e107::getDb();
+$tp 	= e107::getParser();
+$frm 	= e107::getForm();
+$text 	= ''; 
 
-<div class="box box-primary">
-	<div class="box-header with-border">
-	  <h3 class="box-title">Compose New Message</h3>
-	</div>
-	<!-- /.box-header -->
-	
-	<div class="box-body">
-		<div class="form-group">
-			'.$frm->userpicker('to', 'to_id', '', '', $userpicker_options).'
-		</div>
-	    
-	    <div class="form-group">
-	    	'.$frm->text('subject', $subject, '', array('placeholder' => 'Subject')).'
-	    </div>
-	    
-	    <div class="form-group">
-	    	'.$frm->bbarea('message_content', $message_content).'
-	    </div>
-            
-        <div class="form-group">
-			<div class="btn btn-default btn-file">
-            	<i class="fa fa-paperclip"></i> Attachment
-            </div>
-            <p class="help-block">Max. 32MB</p>
-        </div>
-    </div>
-    <!-- /.box-body -->
+/* Let's render some things now */ 
+// Open container
+$text .= '<div class="row">';
+	// Open left sidebar
+	$text .= '<div class="col-md-3">';
+		// Load left sidebar 
+		$text .= $tp->parseTemplate($template['box_navigation'], true, $sc);
+	// Close left sidebar 
+	$text .= '</div>';
+	// Open right content
+	$text .= '<div class="col-md-9">'; 
+		// Load right content
+		$text .= $tp->parseTemplate($template['compose'], true, $sc);
+	// Close right content
+	$text .= '</div>';
+// Close container
+$text .= '</div>';
 
-    <div class="box-footer">
-    	<div class="pull-right">
-        	<button type="button" class="btn btn-default"><i class="fa fa-pencil"></i> Draft</button>
-        	<button type="submit" class="btn btn-primary"><i class="fa fa-envelope-o"></i> Send</button>
-      	</div>
-      	<button type="reset" class="btn btn-default"><i class="fa fa-times"></i> Discard</button>
-    </div>
-    <!-- /.box-footer -->
-
-</div>
-<!-- /. box -->
-';
-
-$ns->tablerender("Compose New Message", $text);
+$ns->tablerender(LAN_MAILBOX_NAME, $text);
 require_once(FOOTERF);
 exit;

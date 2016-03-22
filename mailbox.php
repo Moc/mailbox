@@ -35,19 +35,6 @@ $sql 	= e107::getDb();
 $tp 	= e107::getParser();
 $text 	= ''; 
 
-/* NOTES: STRUCTURE
-*
-* BOXES
-* 1) Inbox
-* 2) Outbox
-* 3) Draftbox
-* 4) Savedbox
-* 5) Trashbox
-*
-* COMPOSE
-*
-*/
-
 // Construct the database queries depending on which box the user is viewing 
 switch ($_GET['page']) 
 {
@@ -61,8 +48,8 @@ switch ($_GET['page'])
 	case 'draftbox':
 		$query_getmessages = $sql->retrieve("mailbox_messages", "*", "message_from=".USERID." AND message_draft=1 AND message_sent=0", true);
 		break;
-	case 'savedbox':
-		$query_getmessages = $sql->retrieve("mailbox_messages", "*", "message_to=".USERID." AND message_saved=1", true);
+	case 'starbox': // no, not Starbucks ;)
+		$query_getmessages = $sql->retrieve("mailbox_messages", "*", "message_to=".USERID." AND message_starred=1", true);
 		break;
 	case 'trashbox':
 		$query_getmessages = $sql->retrieve("mailbox_messages", "*", "message_to=".USERID." AND message_to_deleted!=0", true);
@@ -71,7 +58,6 @@ switch ($_GET['page'])
 		$text .= "compose page";
 		break;
 }
-/* {SETIMAGE: w=20} {USER_AVATAR} {USER_AVATAR='.USERID.'} */
 
 /* Let's render some things now */ 
 // Open container
@@ -110,8 +96,6 @@ $text .= '<div class="row">';
 // Close container
 $text .= '</div>';
 
-
-
-$ns->tablerender("Mailbox", $text);
+$ns->tablerender(LAN_MAILBOX_NAME, $text);
 require_once(FOOTERF);
 exit;
