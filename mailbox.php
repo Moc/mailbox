@@ -8,7 +8,10 @@
  *
  */
 
-require_once('../../class2.php');
+if (!defined('e107_INIT'))
+{
+	require_once("../../class2.php");
+}
 
 if (!e107::isInstalled('mailbox')) 
 {
@@ -18,23 +21,51 @@ if (!e107::isInstalled('mailbox'))
 
 require_once(HEADERF);
 
-/*
-BOXES:
-1) Inbox
-2) Outbox
-3) Draftbox
-4) Savedbox
-5) Trashbox
+/* STRUCTURE
+*
+* BOXES
+* 1) Inbox
+* 2) Outbox
+* 3) Draftbox
+* 4) Savedbox
+* 5) Trashbox
+*
+* COMPOSE
+*
 */
+$text = ''; 
 
+switch ($_GET['page']) 
+{
+	case 'inbox':
+		# code...
+		break;
+	case 'outbox':
+		break;
+	case 'draftbox':
+		# code...
+		break;
+	case 'savedbox':
+		# code...
+		break;
+	case 'trashbox':
+		# code...
+		break;
+	case 'compose':
+		$text .= "compose page";
+		break;
+	default:
+		# code... inbox
+		break;
+}
+/* {SETIMAGE: w=20} {USER_AVATAR} */
 
-
-$text = '
+$text .= '
 <div class="row">
 	<div class="col-md-3">
 
 		<div class="form-group">
-			<a href="compose.php" class="btn btn-primary btn-block margin-bottom">Compose</a>
+			<a href="compose.php" class="btn btn-primary btn-block">Compose</a>
 		</div>
 
 		<div class="panel panel-primary">
@@ -100,7 +131,7 @@ $text = '
 			   		<!-- /.btn-group -->
 		 			<button type="button" class="btn btn-default btn-sm"><i class="fa fa-refresh"></i></button>
 				    <div class="pull-right">
-				    	1-50/200
+				    	1-20/200
 				      	<div class="btn-group">
 				        	<button type="button" class="btn btn-default btn-sm"><i class="fa fa-chevron-left"></i></button>
 				        	<button type="button" class="btn btn-default btn-sm"><i class="fa fa-chevron-right"></i></button>
@@ -114,52 +145,22 @@ $text = '
 					<table class="table table-hover table-striped">
 						<tbody>
 					  		<tr>
-							    <td><input type="checkbox"></td>
-							    <td class="mailbox-star hidden-xs"><a href="#"><i class="fa fa-star text-yellow"></i></a></td>
-							    <td class="mailbox-name"><a href="read-mail.html">{SETIMAGE: w=20} {USER_AVATAR: shape=circle} John Doe</a></td>
-							    <td class="mailbox-subject">Test subject</td>
-							    <td class="mailbox-attachment hidden-xs"></td>
-							    <td class="mailbox-date">5 mins ago</td>
-					  		</tr>
-					  		<tr>
-							    <td><input type="checkbox"></td>
-							    <td class="mailbox-star hidden-xs"><a href="#"><i class="fa fa-star-o text-yellow"></i></a></td>
-							    <td class="mailbox-name"><a href="read-mail.html">John Doe</a></td>
-							    <td class="mailbox-subject">Test subject</td>
+							    <td><input type="checkbox"></td> 
+							    <td class="mailbox-avatar hidden-xs"><a href="#"><img class="img-circle user-avatar" alt="" src="/e107/thumb.php?src=%7Be_IMAGE%7Dgeneric%2Fblank_avatar.jpg&amp;w=40&amp;h=0" width="40"  /></a></td>
+							    <td class="mailbox-namedate">
+							    	<a href="#">John Doe</a> 
+							    	<br />
+							    	<div class="mailbox-datestamp">5 mins ago</div>
+							    </td>
+							    <td class="mailbox-subject">Testing a longer subject</td>
 							    <td class="mailbox-attachment hidden-xs"><i class="fa fa-paperclip"></i></td>
-							    <td class="mailbox-date">5 mins ago</td>
-					  		</tr>
-					  		<tr>
-							    <td><input type="checkbox"></td>
-							    <td class="mailbox-star hidden-xs"><a href="#"><i class="fa fa-star text-yellow"></i></a></td>
-							    <td class="mailbox-name"><a href="read-mail.html">John Doe</a></td>
-							    <td class="mailbox-subject">Test subject</td>
-							    <td class="mailbox-attachment hidden-xs"></td>
-							    <td class="mailbox-date">5 mins ago</td>
-					  		</tr>
-					  		<tr>
-							    <td><input type="checkbox"></td>
-							    <td class="mailbox-star hidden-xs"><a href="#"><i class="fa fa-star text-yellow"></i></a></td>
-							    <td class="mailbox-name"><a href="read-mail.html">John Doe</a></td>
-							    <td class="mailbox-subject">Test subject</td>
-							    <td class="mailbox-attachment hidden-xs"><i class="fa fa-paperclip"></i></td>
-							    <td class="mailbox-date">5 mins ago</td>
-					  		</tr>
-					  		<tr>
-							    <td><input type="checkbox"></td>
-							    <td class="mailbox-star hidden-xs"><a href="#"><i class="fa fa-star text-yellow"></i></a></td>
-							    <td class="mailbox-name"><a href="read-mail.html">John Doe</a></td>
-							    <td class="mailbox-subject">Test subject</td>
-							    <td class="mailbox-attachment hidden-xs"></td>
-							    <td class="mailbox-date">5 mins ago</td>
 					  		</tr>
 					  	</tbody>
 					</table>
-				<!-- /.table -->
+					<!-- /.table -->
 				</div>
 				<!-- /.mail-box-messages -->
 				
-			
 				<div class="mailbox-controls">
 					<!-- Check all button -->
 					<button type="button" class="btn btn-default btn-sm checkbox-toggle"><i class="fa fa-square-o"></i></button>
@@ -170,7 +171,7 @@ $text = '
 					<!-- /.btn-group -->
 					<button type="button" class="btn btn-default btn-sm"><i class="fa fa-refresh"></i></button>	
 					<div class="pull-right">
-			  		1-50/200
+			  		1-20/200
 			      		<div class="btn-group">
 					        <button type="button" class="btn btn-default btn-sm"><i class="fa fa-chevron-left"></i></button>
 					        <button type="button" class="btn btn-default btn-sm"><i class="fa fa-chevron-right"></i></button>
