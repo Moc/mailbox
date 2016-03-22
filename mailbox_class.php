@@ -2,7 +2,7 @@
 /*
  * Mailbox - an e107 plugin by Tijn Kuyper
  *
- * Copyright (C) 2015-2016 Tijn Kuyper (http://www.tijnkuyper.nl)
+ * Copyright (C) 2016-2017 Tijn Kuyper (http://www.tijnkuyper.nl)
  * Released under the terms and conditions of the
  * GNU General Public License (http://www.gnu.org/licenses/gpl.txt)
  *
@@ -10,9 +10,24 @@
  *
  */
 
+/* NOTES
+
+- Deleting messages from database 
+=> check for starred status first
+
+- Unsaving
+=> check if message is ready to be deleted from database completely 
+1) should not be starred
+2) should be deleted by both to and from 
+
+- Emty trash 
+=> last empty date updated each time when trash is emptied
+=> only messages displayed where the message_to_deleted < latest_emptytrash_datestamp of user
+*/
+
 if (!defined('e107_INIT')) { exit; }
 
-class messenger_class
+class mailbox_class
 {
 	protected $plugprefs = array();
 	protected $db;
