@@ -30,9 +30,7 @@ class mailbox_shortcodes extends e_shortcode
 
    function sc_mailbox_boxtitle($parm='')
    {
-      $page = $_GET['page']; 
-      
-      switch($page) 
+      switch($_GET['page'])
       {
          case 'inbox':
          default:
@@ -76,14 +74,39 @@ class mailbox_shortcodes extends e_shortcode
 
    function sc_mailbox_box_avatar($parm='')
    {
-      /* {SETIMAGE: w=20} {USER_AVATAR} {USER_AVATAR='.USERID.'} */
-      $userinfo = e107::user($this->var['message_from']);
+      switch($_GET['page'])
+      {
+         case 'inbox':
+         case 'starbox':
+         case 'trashbox':
+         default:
+            $userinfo = e107::user($this->var['message_from']);
+            break;
+         case 'outbox':
+         case 'draftbox':
+            $userinfo = e107::user($this->var['message_to']);
+            break;
+      } 
+
       return e107::getParser()->toAvatar($userinfo); 
    }
 
-   function sc_mailbox_box_from($parm='')
+   function sc_mailbox_box_fromto($parm='')
    {
-      $userinfo = e107::user($this->var['message_from']);
+      switch($_GET['page'])
+      {
+         case 'inbox':
+         case 'starbox':
+         case 'trashbox':
+         default:
+            $userinfo = e107::user($this->var['message_from']);
+            break;
+         case 'outbox':
+         case 'draftbox':
+            $userinfo = e107::user($this->var['message_to']);
+            break;
+      } 
+
       $profile_link = e107::getUrl()->create('user/profile/view', array('id' => $userinfo['user_id'], 'name' => $userinfo['user_name']));
       return "<a href='".$profile_link."'>".$userinfo['user_name']."</a>"; 
    }
@@ -113,6 +136,9 @@ class mailbox_shortcodes extends e_shortcode
 
    function sc_mailbox_box_datestamp($parm='')
    {
+      // No need for a date when message is not send yet
+      if($_GET['page'] == 'draftbox'){ return; }
+      
       $gen = e107::getDateConvert();
       if(!$parm) { $parm = 'short'; }
       
