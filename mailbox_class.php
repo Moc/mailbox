@@ -20,7 +20,10 @@
 1) should not be starred
 2) should be deleted by both to and from 
 
-- Emty trash 
+- Move to trash
+=> Remove starred status from to (set message_to_starred to 0)
+
+- Empty trash 
 => last empty date updated each time when trash is emptied
 => only messages displayed where the message_to_deleted < latest_emptytrash_datestamp of user
 */
