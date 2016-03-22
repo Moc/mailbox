@@ -11,7 +11,7 @@ This plugin is coded using e107 standards and is based relies on **Bootstrap and
 * Preferences/options (limit number of messages / inbox and outbox size)
 * Templating for frontend customization
 * Email functionality (notifications)
-* Friendly URLs
+* ~~Friendly URLs~~
 * Customizable labels per individual user 
 * Cronjobs (send queue, cleanup database etc.)
 
