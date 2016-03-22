@@ -8,12 +8,12 @@
  *
  */
 
-if (!defined('e107_INIT'))
+if(!defined('e107_INIT'))
 {
 	require_once("../../class2.php");
 }
 
-if (!e107::isInstalled('mailbox')) 
+if(!e107::isInstalled('mailbox')) 
 {
 	e107::redirect();
 	exit;
