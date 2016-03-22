@@ -10,7 +10,7 @@ CREATE TABLE mailbox_messages (
   message_starred tinyint(1) unsigned NOT NULL default '0',		    /* Set when either sender or receiver has starred the message */
   message_from_deleted int(10) unsigned NOT NULL default '0',     /* Datestamp when sender has deleted the message */
   message_to_deleted int(10) unsigned NOT NULL default '0',       /* Datestamp when receiver has deleted the message */
-  message_attachments text NOT NULL,
+  message_attachments text,
   /*message_options varchar(250) NOT NULL default '', */	        /* Options - '+rr' for read receipt - UNDER REVIEW*/
   PRIMARY KEY (message_id)
 ) ENGINE=MyISAM AUTO_INCREMENT=1;
