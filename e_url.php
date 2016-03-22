@@ -21,17 +21,23 @@ class mailbox_url
 			'sef'			=> 'mailbox',
 			'redirect'		=> '{e_PLUGIN}mailbox/mailbox.php',
 		);
-
-		$config['box'] = array(
-			'regex'			=> '^mailbox/(.*)$',
-			'sef'			=> 'mailbox/{boxname}',
-			'redirect'		=> '{e_PLUGIN}mailbox/mailbox.php?page=$1',
+		
+		$config['compose'] = array(
+			'regex'			=> '^mailbox/compose/?$',
+			'sef'			=> 'mailbox/compose',
+			'redirect'		=> '{e_PLUGIN}mailbox/compose.php',
 		);
 
 		$config['read'] = array(
 			'regex'			=> '^mailbox/read/(.*)$',
 			'sef'			=> 'mailbox/read/{id}',
 			'redirect'		=> '{e_PLUGIN}mailbox/read.php?id=$1',
+		);
+
+		$config['box'] = array(
+			'regex'			=> '^mailbox/(.*)$',
+			'sef'			=> 'mailbox/{boxname}',
+			'redirect'		=> '{e_PLUGIN}mailbox/mailbox.php?page=$1',
 		);
 
 		return $config;
