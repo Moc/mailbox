@@ -1,11 +1,3 @@
-#mailbox-searchform { 
-  width: 200px; 
-  float: right;
-}
-
-.mailbox-title {
-  padding-top: 7.5px;
-}
 
 /*
  * Component: Nav
@@ -58,9 +50,27 @@
   text-transform: uppercase;
 }
 
+/* ============ */
+
+#mailbox-searchform { 
+  width: 200px; 
+  float: right;
+}
+
+.mailbox-title {
+  padding-top: 7.5px;
+}
 
 .mailbox-datestamp {
   font-style: italic;
+}
+
+.mailbox-infomessage {
+  width: 50%;
+  margin: 0 auto; 
+  font-style: italic;
+  padding-top: 10px;
+  padding-bottom: 10px;
 }
 /*
  * Page: Mailbox
