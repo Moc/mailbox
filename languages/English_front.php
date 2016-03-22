@@ -8,4 +8,15 @@
  *
  */
 
-define("LAN_MAILBOX_NOMESSAGESTODISPLAY",	"There are no messages in this box.");
+define("LAN_MAILBOX_COMPOSE", "Send a message");
+define("LAN_MAILBOX_FOLDERS", "Folders");
+
+// BOXES
+define("LAN_MAILBOX_INBOX",		"Inbox");
+define("LAN_MAILBOX_OUTBOX",	"Outbox");
+define("LAN_MAILBOX_DRAFTBOX",	"Drafts");
+define("LAN_MAILBOX_STARBOX",	"Starred");
+define("LAN_MAILBOX_TRASHBOX",	"Trash");
+
+// MESSAGES
+define("LAN_MAILBOX_NOMESSAGESTODISPLAY", "There are no messages in this box.");
