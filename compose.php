@@ -8,9 +8,13 @@
  *
  */
 
-require_once('../../class2.php');
+if(!defined('e107_INIT'))
+{
+	require_once("../../class2.php");
+}
 
-if (!e107::isInstalled('mailbox')) 
+
+if(!e107::isInstalled('mailbox')) 
 {
 	e107::redirect();
 	exit;
@@ -20,15 +24,15 @@ $frm = e107::getForm();
 
 require_once(HEADERF);
 
-$userpicker_options = "
+$userpicker_options = 
 array(
-    'selectize' => array(
-        'create' => false,
-        'maxItems' => 10,
-        'mode' => 'multi', 
-        ),
+    'selectize' => 
+    array(
+        'create' 	=> false,
+        'maxItems' 	=> 10,
+        'mode' 		=> 'multi',
     ),
-";
+);
 
 $text = '
 
@@ -40,8 +44,7 @@ $text = '
 	
 	<div class="box-body">
 		<div class="form-group">
-			'.$frm->userpicker('author', 'author_field_id', '', '', $userpicker_options).'
-			<input class="form-control" placeholder="To">
+			'.$frm->userpicker('to', 'to_id', '', '', $userpicker_options).'
 		</div>
 	    
 	    <div class="form-group">
