@@ -7,3 +7,5 @@
  * GNU General Public License (http://www.gnu.org/licenses/gpl.txt)
  *
  */
+
+define("LAN_MAILBOX_NOMESSAGESTODISPLAY",	"There are no messages in this box.");
