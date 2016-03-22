@@ -79,6 +79,11 @@
 .mailbox-messages > .table {
   margin: 0;
 }
+
+.mailbox-messages > .table > td > * {
+    vertical-align : middle;
+} 
+
 .mailbox-controls {
   padding: 5px;
 }
