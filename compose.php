@@ -27,11 +27,12 @@ require_once(HEADERF);
 $userpicker_options = 
 array(
     'selectize' => 
-    array(
-        'create' 	=> false,
-        'maxItems' 	=> 10,
-        'mode' 		=> 'multi',
-    ),
+	    array(
+	        'create' 	=> false,
+	        'maxItems' 	=> 10,
+	        'mode' 		=> 'multi',
+	    ),
+    'placeholder' => 'To',
 );
 
 $text = '
@@ -48,7 +49,7 @@ $text = '
 		</div>
 	    
 	    <div class="form-group">
-	    	<input class="form-control" placeholder="Subject">
+	    	'.$frm->text('subject', $subject, '', array('placeholder' => 'Subject')).'
 	    </div>
 	    
 	    <div class="form-group">
