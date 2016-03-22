@@ -19,9 +19,23 @@ if(!e107::isInstalled('mailbox'))
 	exit;
 }
 
+// Load the LAN files
+e107::lan('mailbox', false, true); 
+
+// Load the header
 require_once(HEADERF);
 
-/* STRUCTURE
+// Load template and shortcodes
+$sc 		= e107::getScBatch('mailbox', TRUE);
+$template 	= e107::getTemplate('mailbox'); 
+$template 	= array_change_key_case($template);
+
+// Define variables
+$sql 	= e107::getDb();
+$tp 	= e107::getParser();
+$text 	= ''; 
+
+/* NOTES: STRUCTURE
 *
 * BOXES
 * 1) Inbox
@@ -33,162 +47,70 @@ require_once(HEADERF);
 * COMPOSE
 *
 */
-$text = ''; 
 
+// Construct the database queries depending on which box the user is viewing 
 switch ($_GET['page']) 
 {
 	case 'inbox':
-		# code...
+	default:
+		$query_getmessages = $sql->retrieve("mailbox_messages", "*", "message_to=".USERID."", true); 
 		break;
 	case 'outbox':
+		$query_getmessages = $sql->retrieve("mailbox_messages", "*", "message_from=".USERID."", true);
 		break;
 	case 'draftbox':
-		# code...
+		$query_getmessages = $sql->retrieve("mailbox_messages", "*", "message_from=".USERID." AND message_draft=1 AND message_sent=0", true);
 		break;
 	case 'savedbox':
-		# code...
+		$query_getmessages = $sql->retrieve("mailbox_messages", "*", "message_to=".USERID." AND message_saved=1", true);
 		break;
 	case 'trashbox':
-		# code...
+		$query_getmessages = $sql->retrieve("mailbox_messages", "*", "message_to=".USERID." AND message_to_deleted!=0", true);
 		break;
 	case 'compose':
 		$text .= "compose page";
 		break;
-	default:
-		# code... inbox
-		break;
 }
-/* {SETIMAGE: w=20} {USER_AVATAR} */
+/* {SETIMAGE: w=20} {USER_AVATAR} {USER_AVATAR='.USERID.'} */
 
-$text .= '
-<div class="row">
-	<div class="col-md-3">
+/* Let's render some things now */ 
+// Open container
+$text .= '<div class="row">';
+	// Open left sidebar
+	$text .= '<div class="col-md-3">';
+		// Load left sidebar 
+		$text .= $tp->parseTemplate($template['box_navigation'], true, $sc);
+	// Close left sidebar 
+	$text .= '</div>';
+	// Open right content
+	$text .= '<div class="col-md-9">'; 
+	// Load right content
+		// Header
+		$text .= $tp->parseTemplate($template['tablelist']['header'], true, $sc);
 
-		<div class="form-group">
-			<a href="compose.php" class="btn btn-primary btn-block">Compose</a>
-		</div>
+		// Body
+			// Check if there messages to display 
+			if($query_getmessages)
+			{
+				// Messages found, loop through 
+				foreach($query_getmessages as $message)
+				{
+					$sc->setVars($message); // pass query values on so they can be used in the shortcodes 
+					$text .= $tp->parseTemplate($template['tablelist']['body'], true, $sc);
+				}
+			}
+			else
+			{
+				$text .='<div class="mailbox-infomessage">'.LAN_MAILBOX_NOMESSAGESTODISPLAY.'</div>';
+			} 		
+		// Footer
+		$text .= $tp->parseTemplate($template['tablelist']['footer'], true, $sc);
+	// Close right content
+	$text .= '</div>';
+// Close container
+$text .= '</div>';
 
-		<div class="panel panel-primary">
-	    	<div class="panel-heading">Folders</div>
-	   		<div class="panel-body">
-	     		<ul class="nav nav-pills nav-stacked mailbox-nav">
-			        <li class="active"><a href="#">
-			        	<i class="fa fa-inbox"></i> Inbox 
-			        	<span class="label label-primary pull-right">12</span></a>
-			        </li>
-			        <li><a href="#">
-			        	<i class="fa fa-envelope-o"></i> Outbox</a>
-			        </li>
-			        <li><a href="#">
-			        	<i class="fa fa-pencil-square-o"></i> Drafts</a>
-			        </li>
-			        <li><a href="#"><i class="fa fa-floppy-o">
-			        	</i> Saved <span class="label label-warning pull-right">65</span></a>
-			        </li>
-	        		<li><a href="#">
-	        			<i class="fa fa-trash-o"></i> Trash</a>
-	        		</li>
-	      		</ul>
-	   	 </div>
-	    <!-- /.panel-body -->
-	  </div>
-	  <!-- /. panel --> 
-	</div>
-	<!-- /. col-md-3 --> 
-	<div class="col-md-9">
-		<div class="panel panel-primary">
-			<div class="panel-heading clearfix">
-				<div class="row">
-					<div class="col-md-4">
-						<h2 class="panel-title pull-left mailbox-title">Inbox</h3>
-					</div>
-					<!-- /.col-md-4 -->
-					<div class="col-md-8">
-						<form method="get" action="">
-						<div class="input-group">
-							<input class="form-control" type="text" id="mailbox-searchform" placeholder="Search in inbox...">
-					        <span class="input-group-btn">
-					        	<button class="btn btn-default" type="submit" name="s">'.e107::getParser()->toGlyph("search").'</button>
-					        </span>
-						</div>
-						</form>
-					</div>
-					<!-- /.col-md-8 -->
-				</div>
-				<!-- /.row -->
-			</div>
-			<!-- /.panel-heading -->
 
-			<div class="panel-body">
-				<div class="mailbox-controls">
-				    <!-- Check all button -->
-				    <button type="button" class="btn btn-default btn-sm checkbox-toggle"><i class="fa fa-square-o"></i>
-				    </button>
-				    <div class="btn-group">
-						<button type="button" class="btn btn-default btn-sm"><i class="fa fa-trash-o"></i></button>
-						<button type="button" class="btn btn-default btn-sm"><i class="fa fa-floppy-o"></i></button>
-				    </div>
-			   		<!-- /.btn-group -->
-		 			<button type="button" class="btn btn-default btn-sm"><i class="fa fa-refresh"></i></button>
-				    <div class="pull-right">
-				    	1-20/200
-				      	<div class="btn-group">
-				        	<button type="button" class="btn btn-default btn-sm"><i class="fa fa-chevron-left"></i></button>
-				        	<button type="button" class="btn btn-default btn-sm"><i class="fa fa-chevron-right"></i></button>
-				      	</div>
-				      	<!-- /.btn-group -->
-				    </div>
-				    <!-- /.pull-right -->
-				</div>
-
-				<div class="table-responsive mailbox-messages">
-					<table class="table table-hover table-striped">
-						<tbody>
-					  		<tr>
-							    <td><input type="checkbox"></td> 
-							    <td class="mailbox-avatar hidden-xs"><a href="#"><img class="img-circle user-avatar" alt="" src="/e107/thumb.php?src=%7Be_IMAGE%7Dgeneric%2Fblank_avatar.jpg&amp;w=40&amp;h=0" width="40"  /></a></td>
-							    <td class="mailbox-namedate">
-							    	<a href="#">John Doe</a> 
-							    	<br />
-							    	<div class="mailbox-datestamp">5 mins ago</div>
-							    </td>
-							    <td class="mailbox-subject">Testing a longer subject</td>
-							    <td class="mailbox-attachment hidden-xs"><i class="fa fa-paperclip"></i></td>
-					  		</tr>
-					  	</tbody>
-					</table>
-					<!-- /.table -->
-				</div>
-				<!-- /.mail-box-messages -->
-				
-				<div class="mailbox-controls">
-					<!-- Check all button -->
-					<button type="button" class="btn btn-default btn-sm checkbox-toggle"><i class="fa fa-square-o"></i></button>
-				    <div class="btn-group">
-						<button type="button" class="btn btn-default btn-sm"><i class="fa fa-trash-o"></i></button>
-						<button type="button" class="btn btn-default btn-sm"><i class="fa fa-floppy-o"></i></button>
-				    </div>
-					<!-- /.btn-group -->
-					<button type="button" class="btn btn-default btn-sm"><i class="fa fa-refresh"></i></button>	
-					<div class="pull-right">
-			  		1-20/200
-			      		<div class="btn-group">
-					        <button type="button" class="btn btn-default btn-sm"><i class="fa fa-chevron-left"></i></button>
-					        <button type="button" class="btn btn-default btn-sm"><i class="fa fa-chevron-right"></i></button>
-					    </div>
-			      		<!-- /.btn-group -->
-			   		</div>
-			    	<!-- /.pull-right -->
-				</div>
-				<!-- /.mailbox-controls -->
-			</div>
-			<!-- /.panel-body -->
-		</div>
-		<!-- /.panel -->
-	</div>
-	<!-- /.col-md-9 -->
-</div>
-';
 
 $ns->tablerender("Mailbox", $text);
 require_once(FOOTERF);
