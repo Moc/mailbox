@@ -12,19 +12,48 @@ if (!defined('e107_INIT')) { exit; }
 
 class mailbox_shortcodes extends e_shortcode
 {
+   function sc_mailbox_boxcount($parm='')
+   {
+      return '<span class="label label-primary pull-right">12</span>'; 
+   }
+
+   function sc_mailbox_boxglyph($parm='')
+   {
+      if(!$parm) { $parm = 'inbox'; }
+
+      switch($parm)
+      {
+         case 'inbox':
+         default:
+            $glyph = e107::getParser()->toGlyph("inbox");
+            break;
+         case 'outbox':
+            $glyph = e107::getParser()->toGlyph("envelope-o"); 
+            break;
+         case 'draftbox':
+            $glyph = e107::getParser()->toGlyph("pencil-square-o");
+            break;
+         case 'starbox':
+            $glyph = e107::getParser()->toGlyph("star");
+            break;
+         case 'trashbox':
+            $glyph = e107::getParser()->toGlyph("trash-o");
+            break;
+      }
+      
+      return $glyph; 
+   } 
+
    function sc_mailbox_boxlink($parm='')
    {
       if(!$parm) { $parm = 'inbox'; }
-      //print_a($parm);
 
       $urlparms = array(
          'boxname' => $parm,
       );
-      //print_a($urlparms);
 
       $url = e107::url('mailbox', 'box', $urlparms);
-      //print_a($url);
-
+ 
       return $url;
    } 
 
@@ -59,7 +88,6 @@ class mailbox_shortcodes extends e_shortcode
       return $url;
    } 
 
-   // BOX
    function sc_mailbox_box_star($parm='')
    {
       if($this->var['message_starred'])
@@ -136,9 +164,10 @@ class mailbox_shortcodes extends e_shortcode
 
    function sc_mailbox_box_datestamp($parm='')
    {
-      // No need for a date when message is not send yet
+      // No need for a date when message is not send yet or when it is a draft message
       if($_GET['page'] == 'draftbox'){ return; }
-      
+      if($this->var['message_draft']) { return; }
+            
       $gen = e107::getDateConvert();
       if(!$parm) { $parm = 'short'; }
       

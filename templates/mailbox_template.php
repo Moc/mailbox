@@ -105,35 +105,34 @@ $MAILBOX_TEMPLATE['tablelist']['footer'] = '
 <!-- /.panel -->
 ';
 
+//  split this up into smaller shortcodes? e.g. {MAILBOX_BOXNAV_GLYPH}
 $MAILBOX_TEMPLATE['box_navigation'] = '
 <div class="form-group">
 	<a href="{MAILBOX_COMPOSELINK}" class="btn btn-primary btn-block">'.LAN_MAILBOX_COMPOSE.'</a>
 </div>
 
 <div class="panel panel-primary">
-	<div class="panel-heading">Folders</div>
-		<div class="panel-body">
- 		<ul class="nav nav-pills nav-stacked mailbox-nav">
-	        <li class="active"><a href="{MAILBOX_BOXLINK=inbox}">
-	        	'.e107::getParser()->toGlyph("inbox").' '.LAN_MAILBOX_INBOX.' 
-	        	<span class="label label-primary pull-right">12</span></a>
+	<div class="panel-heading">'.LAN_MAILBOX_MAILBOXES.'</div>
+	<div class="panel-body">
+		<ul class="nav nav-pills nav-stacked mailbox-nav">
+        	<li {MAILBOX_BOXLINK_ACTIVE=inbox}>
+        		<a href="{MAILBOX_BOXLINK=inbox}">{MAILBOX_BOXGLYPH=inbox} '.LAN_MAILBOX_INBOX.' {MAILBOX_BOXCOUNT=inbox}</a> 
+           	</li>
+           	<li {MAILBOX_BOXLINK_ACTIVE=outbox}>
+           		<a href="{MAILBOX_BOXLINK=outbox}">{MAILBOX_BOXGLYPH=outbox} '.LAN_MAILBOX_OUTBOX.' {MAILBOX_BOXCOUNT=outbox}</a>
+           	</li>
+           	<li {MAILBOX_BOXLINK_ACTIVE=draftbox}>
+           		<a href="{MAILBOX_BOXLINK=draftbox}">{MAILBOX_BOXGLYPH=draftbox} '.LAN_MAILBOX_DRAFTBOX.' {MAILBOX_BOXCOUNT=draftbox}</a>
+           	</li>
+           	<li {MAILBOX_BOXLINK_ACTIVE=starbox}>
+           		<a href="{MAILBOX_BOXLINK=starbox}">{MAILBOX_BOXGLYPH=starbox} '.LAN_MAILBOX_STARBOX.' {MAILBOX_BOXCOUNT=starbox}</a> 
+           	</li>
+	        <li {MAILBOX_BOXLINK_ACTIVE=trashbox}>
+	        	<a href="{MAILBOX_BOXLINK=trashbox}">{MAILBOX_BOXGLYPH=trashbox} '.LAN_MAILBOX_TRASHBOX.' {MAILBOX_BOXCOUNT=starbox}</a>
 	        </li>
-	        <li><a href="{MAILBOX_BOXLINK=outbox}">
-	        	'.e107::getParser()->toGlyph("envelope-o").' Outbox</a>
-	        </li>
-	        <li><a href="{MAILBOX_BOXLINK=draftbox}">
-	        	'.e107::getParser()->toGlyph("pencil-square-o").' Drafts</a>
-	        </li>
-	        <li><a href="{MAILBOX_BOXLINK=starbox}">
-	        '.e107::getParser()->toGlyph("star").' Starred 
-	        <span class="label label-warning pull-right">65</span></a>
-	        </li>
-    		<li><a href="{MAILBOX_BOXLINK=trashbox}">
-    			'.e107::getParser()->toGlyph("trash-o").' Trash</a>
-    		</li>
-  		</ul>
-	 </div>
-<!-- /.panel-body -->
+      	</ul>
+ 	</div>
+	<!-- /.panel-body -->
 </div>
 <!-- /. panel --> 
 ';
