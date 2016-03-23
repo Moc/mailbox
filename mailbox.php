@@ -43,16 +43,16 @@ switch ($_GET['page'])
 		$query_getmessages = $sql->retrieve("mailbox_messages", "*", "message_to=".USERID." AND message_to_deleted=0", true); 
 		break;
 	case 'outbox':
-		$query_getmessages = $sql->retrieve("mailbox_messages", "*", "message_from=".USERID."", true);
+		$query_getmessages = $sql->retrieve("mailbox_messages", "*", "message_from=".USERID." AND message_to_deleted=0", true);
 		break;
 	case 'draftbox':
-		$query_getmessages = $sql->retrieve("mailbox_messages", "*", "message_from=".USERID." AND message_draft=1 AND message_sent=0", true);
+		$query_getmessages = $sql->retrieve("mailbox_messages", "*", "message_from=".USERID." AND message_draft=1 AND message_sent=0 AND message_to_deleted=0", true);
 		break;
 	case 'starbox': // no, not Starbucks ;)
-		$query_getmessages = $sql->retrieve("mailbox_messages", "*", "message_to=".USERID." AND message_starred_to=1", true);
+		$query_getmessages = $sql->retrieve("mailbox_messages", "*", "message_to=".USERID." AND message_starred_to=1 AND message_to_deleted=0", true);
 		break;
 	case 'trashbox':
-		$query_getmessages = $sql->retrieve("mailbox_messages", "*", "message_to=".USERID." AND message_to_deleted!=0", true);
+		$query_getmessages = $sql->retrieve("mailbox_messages", "*", "message_to=".USERID." AND message_to_deleted=1", true);
 		break;
 	case 'compose':
 		$text .= "compose page";
