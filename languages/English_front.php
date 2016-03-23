@@ -8,8 +8,8 @@
  *
  */
 
-define("LAN_MAILBOX_COMPOSE", "Send a message");
-define("LAN_MAILBOX_FOLDERS", "Folders");
+define("LAN_MAILBOX_COMPOSE", 	"Send a message");
+define("LAN_MAILBOX_MAILBOXES", "Mailboxes");
 
 // BOXES
 define("LAN_MAILBOX_INBOX",		"Inbox");
