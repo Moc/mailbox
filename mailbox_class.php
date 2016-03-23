@@ -26,6 +26,12 @@
 - Empty trash 
 => last empty date updated each time when trash is emptied
 => only messages displayed where the message_to_deleted < latest_emptytrash_datestamp of user
+
+- Delete draft
+=> check for draft status (just to be sure)
+=> set message_to_deleted=1
+
+
 */
 
 if (!defined('e107_INIT')) { exit; }
