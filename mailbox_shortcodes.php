@@ -14,7 +14,12 @@ class mailbox_shortcodes extends e_shortcode
 {
    function sc_mailbox_boxcount($parm='')
    {
-      return '<span class="label label-primary pull-right">12</span>'; 
+      require_once(e_PLUGIN."mailbox/mailbox_class.php");
+      $mailbox_class = new Mailbox;
+      $args  = $mailbox_class->get_database_queryargs($parm);
+      $count = e107::getDb()->count('mailbox_messages', '(*)', ''.$args.'');
+      
+      return '<span class="label label-primary pull-right">'.$count.'</span>'; 
    }
 
    function sc_mailbox_boxglyph($parm='')
@@ -25,10 +30,10 @@ class mailbox_shortcodes extends e_shortcode
       {
          case 'inbox':
          default:
-            $glyph = e107::getParser()->toGlyph("inbox");
+            $glyph = e107::getParser()->toGlyph('inbox');
             break;
          case 'outbox':
-            $glyph = e107::getParser()->toGlyph("envelope-o"); 
+            $glyph = e107::getParser()->toGlyph('envelope-o'); 
             break;
          case 'draftbox':
             $glyph = e107::getParser()->toGlyph("pencil-square-o");
@@ -40,7 +45,7 @@ class mailbox_shortcodes extends e_shortcode
             $glyph = e107::getParser()->toGlyph("trash-o");
             break;
       }
-      
+
       return $glyph; 
    } 
 
@@ -90,7 +95,7 @@ class mailbox_shortcodes extends e_shortcode
 
    function sc_mailbox_box_star($parm='')
    {
-      if($this->var['message_starred'])
+      if($this->var['message_to_starred'])
       {
          return '<a href="#">'.e107::getParser()->toGlyph("star").'</a>';
       }

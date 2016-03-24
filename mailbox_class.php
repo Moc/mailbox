@@ -36,17 +36,60 @@
 
 if (!defined('e107_INIT')) { exit; }
 
-class mailbox_class
+class Mailbox
 {
 	protected $plugprefs = array();
-	protected $db;
 
-	public function __construct($prefs)
+	public function __construct()
 	{
-		$this->db = e107::getDb();
 		$this->plugprefs = e107::getPlugPref('messaging');
 	}
 	
+	public function get_current_mailbox($parm)
+	{
+		// All valid mailboxes in an array 
+		$mailbox_array = array("inbox", "outbox", "draftbox", "starbox", "trashbox"); 
+		// Check user input to see if mailbox matches with array
+		if(in_array($parm, $mailbox_array))
+		{
+			$current_mailbox = $parm; 
+		}
+		// Invalid mailbox input, so default back to inbox to be sure
+		else
+		{
+			$current_mailbox = 'inbox';
+		}
+
+		return $current_mailbox;
+	}
+
+	public function get_database_queryargs($box = '')
+	{
+		if(!$box) { $box = 'inbox'; }
+
+		switch($box) 
+		{
+			case 'inbox':
+			default:
+				$args = "message_to=".USERID." AND message_to_deleted=0"; 
+				break;
+			case 'outbox':
+				$args = "message_from=".USERID." AND message_to_deleted=0 AND message_draft=0";
+				break;
+			case 'draftbox':
+				$args = "message_from=".USERID." AND message_draft=1 AND message_sent=0 AND message_to_deleted=0";
+				break;
+			case 'starbox': // no, not Starbucks ;)
+				$args = "message_to=".USERID." AND message_to_starred=1 AND message_to_deleted=0";
+				break;
+			case 'trashbox':
+				$args = "message_to=".USERID." AND message_to_deleted!=0";
+				break;
+		}
+
+		return $args; 
+	}
+
 	/*
 	 *	Send a message
 	 *
@@ -71,7 +114,7 @@ class mailbox_class
 		$attachlist = '';
 		$pm_options = '';
 		$ret = '';
-		$maxSendNow = varset($this->plugprefs'pm_max_send'], 100) // Max # of messages before having to queue
+		$maxSendNow = varset($this->plugprefs['pm_max_send'], 100); // Max # of messages before having to queue
 		
 		if (isset($vars['pm_from']))
 		{	// Doing bulk send off cron task
@@ -181,7 +224,7 @@ class mailbox_class
 					{
 						$toclass .= $u['user_name'].', ';
 					}
-					if(check_class($this->plugprefs'notify_class'], $u['user_class']))
+					if(check_class($this->plugprefs['notify_class'], $u['user_class']))
 					{
 						$vars['to_info'] = $u;
 						$this->pm_send_notify($u['user_id'], $vars, $pmid, count($a_list));
@@ -212,7 +255,7 @@ class mailbox_class
 			{
 				$info['pm_id'] = $pmid;
 				e107::getEvent()->trigger('user_pm_sent', $info);
-				if(check_class($this->plugprefs'notify_class'], $vars['to_info']['user_class']))
+				if(check_class($this->plugprefs['notify_class'], $vars['to_info']['user_class']))
 				{
 					set_time_limit(30);
 					$this->pm_send_notify($vars['to_info']['user_id'], $vars, $pmid, count($a_list));
@@ -237,7 +280,7 @@ class mailbox_class
 	function pm_mark_read($pm_id, $pm_info)
 	{
 		$now = time();
-		if($this->plugprefs'read_delete'])
+		if($this->plugprefs['read_delete'])
 		{
 			$this->del($pm_id);
 		}

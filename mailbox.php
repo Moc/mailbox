@@ -22,8 +22,9 @@ if(!e107::isInstalled('mailbox'))
 // Load the LAN files
 e107::lan('mailbox', false, true); 
 
-// Load the header
+// Load the header and mailbox class
 require_once(HEADERF);
+require_once(e_PLUGIN."mailbox/mailbox_class.php");
 
 // Load template and shortcodes
 $sc 		= e107::getScBatch('mailbox', TRUE);
@@ -35,29 +36,17 @@ $sql 	= e107::getDb();
 $tp 	= e107::getParser();
 $text 	= ''; 
 
-// Construct the database queries depending on which box the user is viewing 
-switch ($_GET['page']) 
+define(MAILBOX_DEBUG, false);
+
+$mailbox_class 		= new Mailbox; 
+$current_mailbox 	= $mailbox_class->get_current_mailbox($_GET['page']);
+$queryargs 			= $mailbox_class->get_database_queryargs($current_mailbox); 
+
+if(MAILBOX_DEBUG == true)
 {
-	case 'inbox':
-	default:
-		$query_getmessages = $sql->retrieve("mailbox_messages", "*", "message_to=".USERID." AND message_to_deleted=0", true); 
-		break;
-	case 'outbox':
-		$query_getmessages = $sql->retrieve("mailbox_messages", "*", "message_from=".USERID." AND message_to_deleted=0", true);
-		break;
-	case 'draftbox':
-		$query_getmessages = $sql->retrieve("mailbox_messages", "*", "message_from=".USERID." AND message_draft=1 AND message_sent=0 AND message_to_deleted=0", true);
-		break;
-	case 'starbox': // no, not Starbucks ;)
-		$query_getmessages = $sql->retrieve("mailbox_messages", "*", "message_to=".USERID." AND message_starred_to=1 AND message_to_deleted=0", true);
-		break;
-	case 'trashbox':
-		$query_getmessages = $sql->retrieve("mailbox_messages", "*", "message_to=".USERID." AND message_to_deleted=1", true);
-		break;
-	case 'compose':
-		$text .= "compose page";
-		break;
-}
+	print_a("Current mailbox: ".$current_mailbox);
+	print_a("Query arguments: ".$queryargs);
+} 
 
 /* Let's render some things now */ 
 // Open container
@@ -76,6 +65,13 @@ $text .= '<div class="row">';
 
 		// Body
 			// Check if there messages to display 
+			$query_getmessages = $sql->retrieve('mailbox_messages', '*', ''.$queryargs.'', true);
+			
+			if(MAILBOX_DEBUG == true)
+			{
+				print_a($query_getmessages);
+			}
+
 			if($query_getmessages)
 			{
 				// Messages found, loop through 
