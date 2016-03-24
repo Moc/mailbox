@@ -48,7 +48,7 @@ $text .= '<div class="row">';
 	// Open right content
 	$text .= '<div class="col-md-9">'; 
 		// Load right content
-		$text .= $tp->parseTemplate($template['compose'], true, $sc);
+		$text .= $tp->parseTemplate($template['compose_message'], true, $sc);
 	// Close right content
 	$text .= '</div>';
 // Close container
