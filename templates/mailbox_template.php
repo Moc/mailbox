@@ -139,7 +139,7 @@ $MAILBOX_TEMPLATE['box_navigation'] = '
 $MAILBOX_TEMPLATE['compose_message'] = '
 <div class="panel panel-primary">
 	<div class="panel-heading">
-	  <h3 class="panel-title">'.LAN_MAILBOX_COMPOSE.'</h3>
+		<h3 class="panel-title">'.LAN_MAILBOX_COMPOSE.'</h3>
 	</div>
 	<!-- /.panel-heading -->
 	
@@ -173,7 +173,7 @@ $MAILBOX_TEMPLATE['compose_message'] = '
 $MAILBOX_TEMPLATE['read_message'] = '
 <div class="panel panel-primary">
 	<div class="panel-heading">
-	  <h3 class="panel-title">{MAILBOX_MESSAGE_SUBJECT}</h3>
+		<h3 class="panel-title">{MAILBOX_MESSAGE_SUBJECT}</h3>
 	</div>
 	<!-- /.panel-heading -->
 	
