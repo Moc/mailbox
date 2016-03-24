@@ -36,17 +36,9 @@ $sql 	= e107::getDb();
 $tp 	= e107::getParser();
 $text 	= ''; 
 
-define(MAILBOX_DEBUG, false);
-
 $mailbox_class 		= new Mailbox; 
 $current_mailbox 	= $mailbox_class->get_current_mailbox($_GET['page']);
 $queryargs 			= $mailbox_class->get_database_queryargs($current_mailbox); 
-
-if(MAILBOX_DEBUG == true)
-{
-	print_a("Current mailbox: ".$current_mailbox);
-	print_a("Query arguments: ".$queryargs);
-} 
 
 /* Let's render some things now */ 
 // Open container
@@ -64,14 +56,10 @@ $text .= '<div class="row">';
 		$text .= $tp->parseTemplate($template['tablelist']['header'], true, $sc);
 
 		// Body
-			// Check if there messages to display 
+			// Construct query  
 			$query_getmessages = $sql->retrieve('mailbox_messages', '*', ''.$queryargs.'', true);
 			
-			if(MAILBOX_DEBUG == true)
-			{
-				print_a($query_getmessages);
-			}
-
+			// Check if there messages to display
 			if($query_getmessages)
 			{
 				// Messages found, loop through 
