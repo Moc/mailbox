@@ -93,7 +93,7 @@ class mailbox_shortcodes extends e_shortcode
       return $url;
    } 
 
-   function sc_mailbox_box_star($parm='')
+   function sc_mailbox_message_star($parm='')
    {
       if($this->var['message_to_starred'])
       {
@@ -105,7 +105,7 @@ class mailbox_shortcodes extends e_shortcode
       }
    }
 
-   function sc_mailbox_box_avatar($parm='')
+   function sc_mailbox_message_avatar($parm='')
    {
       switch($_GET['page'])
       {
@@ -124,7 +124,7 @@ class mailbox_shortcodes extends e_shortcode
       return e107::getParser()->toAvatar($userinfo); 
    }
 
-   function sc_mailbox_box_fromto($parm='')
+   function sc_mailbox_message_fromto($parm='')
    {
       switch($_GET['page'])
       {
@@ -144,7 +144,7 @@ class mailbox_shortcodes extends e_shortcode
       return "<a href='".$profile_link."'>".$userinfo['user_name']."</a>"; 
    }
 
-   function sc_mailbox_box_subject($parm='')
+   function sc_mailbox_message_subject($parm='')
    {
       $urlparms = array(
          'id' => $this->var['message_id'], 
@@ -155,7 +155,7 @@ class mailbox_shortcodes extends e_shortcode
       return "<a href='".$url."'>".$this->var['message_subject']."</a>"; 
    }
 
-   function sc_mailbox_box_attachment($parm='')
+   function sc_mailbox_message_attachment($parm='')
    {
       if($this->var['message_attachment'])
       {
@@ -167,7 +167,7 @@ class mailbox_shortcodes extends e_shortcode
       }
    }
 
-   function sc_mailbox_box_datestamp($parm='')
+   function sc_mailbox_message_datestamp($parm='')
    {
       // No need for a date when message is not send yet or when it is a draft message
       if($_GET['page'] == 'draftbox'){ return; }
