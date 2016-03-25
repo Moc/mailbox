@@ -212,12 +212,12 @@ class mailbox_shortcodes extends e_shortcode
           'placeholder' => 'To',
       );
 
-      return e107::getForm()->userpicker('to', 'to_id', '', '', $userpicker_options);
+      return e107::getForm()->userpicker('message_to', 'to_id', '', '', $userpicker_options);
    }
 
    function sc_mailbox_compose_subject($parm='')
    { 
-      return e107::getForm()->text('subject', $subject, '', array('placeholder' => 'Subject'));
+      return e107::getForm()->text('message_subject', $subject, '', array('placeholder' => 'Subject'));
    }
 
    function sc_mailbox_compose_content($parm='')

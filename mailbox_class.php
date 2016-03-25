@@ -65,6 +65,7 @@ class Mailbox
 
 	public function get_database_queryargs($box = '')
 	{
+		// Default back to inbox to be sure 
 		if(!$box) { $box = 'inbox'; }
 
 		switch($box) 
@@ -88,6 +89,12 @@ class Mailbox
 		}
 
 		return $args; 
+	}
+
+	public function process_compose($action = 'send', $post_data)
+	{
+		print_a("Message action: ".$action);
+		print_a($post_data);
 	}
 
 	/*
