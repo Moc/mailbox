@@ -11,11 +11,7 @@
  */
 
 /* NOTES
-
-- Deleting messages from database 
-=> check for starred status first
-
-- Unsaving
+- Delete message
 => check if message is ready to be deleted from database completely 
 1) should not be starred
 2) should be deleted by both to and from 
@@ -30,8 +26,6 @@
 - Delete draft
 => check for draft status (just to be sure)
 => set message_to_deleted=1
-
-
 */
 
 if (!defined('e107_INIT')) { exit; }
@@ -49,6 +43,7 @@ class Mailbox
 	{
 		// All valid mailboxes in an array 
 		$mailbox_array = array("inbox", "outbox", "draftbox", "starbox", "trashbox"); 
+		
 		// Check user input to see if mailbox matches with array
 		if(in_array($parm, $mailbox_array))
 		{
