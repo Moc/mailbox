@@ -85,7 +85,7 @@ class mailbox_shortcodes extends e_shortcode
       }
       
       return $title; 
-   } 
+   }
 
    function sc_mailbox_composelink($parm='')
    {
@@ -146,14 +146,28 @@ class mailbox_shortcodes extends e_shortcode
 
    function sc_mailbox_message_subject($parm='')
    {
-      $urlparms = array(
-         'id' => $this->var['message_id'], 
-      );
+      // Check for either mailboxes section or reading an individual message 
+      if($_GET['page'])
+      {
+         $urlparms = array(
+            'id' => $this->var['message_id'], 
+         );
 
-      $url = e107::url('mailbox', 'read', $urlparms);
+         $url = e107::url('mailbox', 'read', $urlparms);
 
-      return "<a href='".$url."'>".$this->var['message_subject']."</a>"; 
+         return "<a href='".$url."'>".$this->var['message_subject']."</a>";   
+      }
+      // Reading individual plugin
+      else
+      {
+         return $this->var['message_subject'];
+      }
    }
+
+   function sc_mailbox_message_text($parm='')
+   {
+      return e107::getParser()->toHTML($this->var['message_text']);
+   } 
 
    function sc_mailbox_message_attachment($parm='')
    {
