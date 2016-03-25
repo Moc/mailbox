@@ -42,7 +42,7 @@ $queryargs 			= $mailbox_class->get_database_queryargs($current_mailbox);
 
 if(!USERID)
 {
-	e107::getMessage()->addError("Please login to view your mailbox!");
+	e107::getMessage()->addError(LAN_MAILBOX_NOTLOGGEDIN);
 }
 else
 {

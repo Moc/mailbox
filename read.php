@@ -61,7 +61,7 @@ $text .= '<div class="row">';
 			}
 			else
 			{
-				$text .='<div class="mailbox-infomessage">'.LAN_MAILBOX_NAME_MESSAGENOTFOUND.'</div>';
+				$text .='<div class="mailbox-infomessage">'.LAN_MAILBOX_MESSAGENOTFOUND.'</div>';
 			} 			
 	// Close right content
 	$text .= '</div>';
