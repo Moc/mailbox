@@ -60,6 +60,20 @@ class mailbox_shortcodes extends e_shortcode
       $url = e107::url('mailbox', 'box', $urlparms);
  
       return $url;
+   }
+
+   function sc_mailbox_boxlink_active($parm='')
+   {
+      // always default back to inbox
+      if(!$parm) { $parm = 'inbox'; }
+
+      // Check if current page is the active page
+      if($_GET['page'] == $parm)
+      {
+         return 'class="active"';
+      }
+ 
+      return;
    } 
 
    function sc_mailbox_boxtitle($parm='')
