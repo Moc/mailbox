@@ -205,7 +205,7 @@ $MAILBOX_TEMPLATE['read_message'] = '
 
 				<div class="col-md-6">
 					<span class="mailbox-read-time pull-right">{MAILBOX_MESSAGE_DATESTAMP=long}</span> <br />
-					<div class="mailbox-controls pull-right">
+					<div class="mailbox-controls hidden-xs pull-right">
 	                	<div class="btn-group">
 	                  		<button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-container="body" title="Delete">
 	                    		<i class="fa fa-trash-o"></i></button>
