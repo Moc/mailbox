@@ -172,21 +172,75 @@ $MAILBOX_TEMPLATE['compose_message'] = '
 
 $MAILBOX_TEMPLATE['read_message'] = '
 <div class="panel panel-primary">
-	<div class="panel-heading">
-		<h3 class="panel-title">{MAILBOX_MESSAGE_SUBJECT}</h3>
+	<div class="panel-heading clearfix">
+		<div class="row">
+			<div class="col-md-8">
+				<h2 class="panel-title pull-left mailbox-title">{MAILBOX_MESSAGE_SUBJECT}</h3>
+			</div>
+			<!-- /.col-md-8 -->
+			<div class="col-md-4">
+				<div class="pull-right">
+		      		<div class="btn-group">
+				        <button type="button" class="btn btn-default btn-sm">'.e107::getParser()->toGlyph("chevron-left").'</button>
+				        <button type="button" class="btn btn-default btn-sm">'.e107::getParser()->toGlyph("chevron-right").'</button>
+				    </div>
+		      		<!-- /.btn-group -->
+		   		</div>
+		    	<!-- /.pull-right -->
+			</div>
+			<!-- /.col-md-4 -->
+		</div>
+		<!-- /.row -->
 	</div>
 	<!-- /.panel-heading -->
 	
 	<div class="panel-body">
-		
+		<div class="mailbox-read-info">
+			<div class="row">
+				<div class="col-md-6">
+					{SETIMAGE: w=50&h=50&crop=1} {MAILBOX_MESSAGE_AVATAR} {MAILBOX_MESSAGE_FROMTO}
+				</div>
+				<!-- /.col-md-6 -->
+
+				<div class="col-md-6">
+					<span class="mailbox-read-time pull-right">{MAILBOX_MESSAGE_DATESTAMP=long}</span> <br />
+					<div class="mailbox-controls pull-right">
+	                	<div class="btn-group">
+	                  		<button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-container="body" title="Delete">
+	                    		<i class="fa fa-trash-o"></i></button>
+	                  		<button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-container="body" title="Reply">
+	                    		<i class="fa fa-reply"></i></button>
+	                  		<button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-container="body" title="Forward">
+	                    		<i class="fa fa-share"></i></button>
+	                	</div>
+	                	<!-- /.btn-group -->
+	                	<button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="Print">
+	                  	<i class="fa fa-print"></i></button>
+	              	</div>
+	              	<!-- /.mailbox-controls -->
+				</div>
+				<!-- /.col-md-6 -->
+			</div>
+			<!-- /.row -->
+		</div>
+		<!-- /.mailbox-read-info -->
+
+		<div class="mailbox-read-message">	
+			{MAILBOX_MESSAGE_TEXT}
+		</div>
+		<!-- /.mailbox-read-message -->
     </div>
     <!-- /.panel-body -->
 
     <div class="panel-footer">
-    	
-    </div>
+		<div class="pull-right">
+			<button type="button" class="btn btn-default"><i class="fa fa-reply"></i> Reply</button>
+			<button type="button" class="btn btn-default"><i class="fa fa-share"></i> Forward</button>
+		</div>
+		<button type="button" class="btn btn-default"><i class="fa fa-trash-o"></i> Delete</button>
+		<button type="button" class="btn btn-default"><i class="fa fa-print"></i> Print</button>
+	</div>	
     <!-- /.panel-footer -->
-
 </div>
 <!-- /. panel -->
 ';

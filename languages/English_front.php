@@ -19,4 +19,5 @@ define("LAN_MAILBOX_STARBOX",	"Starred");
 define("LAN_MAILBOX_TRASHBOX",	"Trash");
 
 // MESSAGES
-define("LAN_MAILBOX_NOMESSAGESTODISPLAY", "There are no messages in this box.");
+define("LAN_MAILBOX_NOMESSAGESTODISPLAY",  "There are no messages in this mailbox.");
+define("LAN_MAILBOX_NAME_MESSAGENOTFOUND", "It seems like this message does not exist.");
