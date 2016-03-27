@@ -161,7 +161,13 @@ class mailbox_shortcodes extends e_shortcode
    function sc_mailbox_message_subject($parm='')
    {
       // Check for either mailboxes section or reading an individual message 
-      if($_GET['page'])
+      if($_GET['id'])
+      {
+         // Reading an individual message, does not require a link
+         return $this->var['message_subject'];
+      }
+      // In one of the mailboxes
+      else
       {
          $urlparms = array(
             'id' => $this->var['message_id'], 
@@ -170,11 +176,6 @@ class mailbox_shortcodes extends e_shortcode
          $url = e107::url('mailbox', 'read', $urlparms);
 
          return "<a href='".$url."'>".$this->var['message_subject']."</a>";   
-      }
-      // Reading individual plugin
-      else
-      {
-         return $this->var['message_subject'];
       }
    }
 
@@ -219,9 +220,10 @@ class mailbox_shortcodes extends e_shortcode
       array(
           'selectize' => 
              array(
-                 'create'  => false,
-                 'maxItems'   => 10,
-                 'mode'       => 'multi',
+                  'loadPath'  => e_HTTP.'user.php',
+                  'create'    => false,
+                  'maxItems'  => 10,
+                  'mode'      => 'multi',
              ),
           'placeholder' => 'To',
       );
