@@ -160,7 +160,7 @@ $MAILBOX_TEMPLATE['compose_message'] = '
 
     <div class="panel-footer">
     	<div class="pull-right">
-        	<button name="compose" type="button" class="btn btn-default" value="draft">'.e107::getParser()->toGlyph("floppy-o").' Draft</button>
+        	<button name="compose" type="submit" class="btn btn-default" value="draft">'.e107::getParser()->toGlyph("floppy-o").' Draft</button>
         	<button name="compose" type="submit" class="btn btn-primary" value="send">'.e107::getParser()->toGlyph("envelope-o").' Send</button>
       	</div>
       	<button name="compose" type="reset" class="btn btn-default" value="discard">'.e107::getParser()->toGlyph("times").' Discard</button>
