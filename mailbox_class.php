@@ -88,8 +88,73 @@ class Mailbox
 
 	public function process_compose($action = 'send', $post_data)
 	{
-		print_a("Message action: ".$action);
-		print_a($post_data);
+		// print_a("Message action: ".$action);
+		// print_a($post_data);
+
+		$tp  = e107::getParser(); 
+		$sql = e107::getDb(); 
+
+		$default_data = array(
+			'message_from' 			=> USERID, 
+			'message_draft'			=> '0',
+			'message_sent' 			=> time(),					
+			'message_read' 			=> 0, 
+			'message_subject' 		=> $post_data['message_subject'],
+			'message_text'			=> $post_data['message_text'],
+			'message_to_starred' 	=> '0',
+			'message_from_starred' 	=> '0',
+			'message_to_deleted'	=> '0', 
+			'message_from_deleted' 	=> '0',
+			'message_attachments' 	=> '',
+		);
+
+		$insert_data = $default_data; 
+
+		if($action == 'draft')
+		{
+			// Set draft status and send datestamp to 0
+			$insert_data['message_draft'] = '1';
+			$insert_data['message_sent'] = '0';
+			$insert_data['message_to'] = $post_data['message_to'];
+		
+			// Save all other fields exactly as posted, so user can continue to write message where it was left 	
+			if($sql->insert("mailbox_messages", $insert_data))
+			{
+				return "Saved as draft";
+			}
+			else
+			{
+				print_a($insert_data);
+				return "Something went wrong with saving message as a draft";
+			}	
+		}
+
+		// Determine sendmode: individual, multiple, userclass (message_to) 
+		print_a($post_data['message_to']); 
+		$message_to = $tp->toDb($post_data['message_to']);
+		var_dump($message_to);
+
+		if(is_numeric($message_to))
+		{
+			//print_a("It should be individual: ".$message_to); 
+			$sendmode = 'individual';  
+		}
+		// individual 
+		else
+		{
+			//print_a("It should be multiple: ".$message_to);
+			$sendmode = 'multiple';
+		}
+
+
+
+		print_a("sendmode: ".$sendmode); 
+		return;
+		// Prepare subject (message_subject)
+
+		
+		// Prepare message text (message_text)
+
 	}
 
 	/*

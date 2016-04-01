@@ -39,48 +39,45 @@ $text 	= '';
 
 $mailbox_class = new Mailbox; 
 
-// Check if the compose form is filled in
-if($_POST)
-{
-	switch ($_POST['compose']) 
-	{
-		// Message should be send to the receiver
-		case 'send':
-		default:
-			$mailbox_class->process_compose("send", $_POST); 
-			//print_a("The message should be send");
-			break;
-		// Message should be saved as a draft
-		case 'draft':
-			$mailbox_class->process_compose("draft", $_POST); 
-			//print_a("The message should be saved as a draft");
-			break;
-		case 'discard':
-			print_a("The message should be discarded");
-			break;
-	}
-}
-// Form is not filled in yet, show form
-else
-{
-	// Open container
-	$text .= '<div class="row">';
-		// Open left sidebar
-		$text .= '<div class="col-md-3">';
-			// Load left sidebar 
-			$text .= $tp->parseTemplate($template['box_navigation'], true, $sc);
-		// Close left sidebar 
-		$text .= '</div>';
-		// Open right content
-		$text .= '<div class="col-md-9">'; 
-			// Load right content
-			$text .= $tp->parseTemplate($template['compose_message'], true, $sc);
-		// Close right content
-		$text .= '</div>';
-	// Close container
+// Open container
+$text .= '<div class="row">';
+	// Open left sidebar
+	$text .= '<div class="col-md-3">';
+		// Load left sidebar 
+		$text .= $tp->parseTemplate($template['box_navigation'], true, $sc);
+	// Close left sidebar 
 	$text .= '</div>';
+	// Open right content
+	$text .= '<div class="col-md-9">'; 
+		// Check if the compose form is filled in
+		if($_SERVER['REQUEST_METHOD'] == 'POST')
+		{
+			switch($_POST['compose']) 
+			{
+				// Message should be send to the receiver
+				case 'send':
+				default:
+					$text .= $mailbox_class->process_compose("send", $_POST); 
+					break;
+				// Message should be saved as a draft
+				case 'draft':
+					$text .= $mailbox_class->process_compose("draft", $_POST); 
+					break;
+				case 'discard':
+					print_a("The message should be discarded");
+					break;
+			}
+		}
+		// Form is not filled in yet, show form
+		else
+		{
+			$text .= $tp->parseTemplate($template['compose_message'], true, $sc);
+		}
+	// Close right content
+	$text .= '</div>';
+// Close container
+$text .= '</div>';
 
-	$ns->tablerender(LAN_MAILBOX_NAME, $text);
-	require_once(FOOTERF);
-	exit;
-}
+$ns->tablerender(LAN_MAILBOX_NAME, $text);
+require_once(FOOTERF);
+exit;
