@@ -147,7 +147,7 @@ $MAILBOX_TEMPLATE['compose_message'] = '
 	<form method="post">
 		<div class="form-group">{MAILBOX_COMPOSE_TO}</div>
 	    <div class="form-group">{MAILBOX_COMPOSE_SUBJECT}</div>
-	    <div class="form-group">{MAILBOX_COMPOSE_CONTENT}</div>
+	    <div class="form-group">{MAILBOX_COMPOSE_TEXT}</div>
             
         <div class="form-group">
 			<div class="btn btn-default btn-file">
