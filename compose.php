@@ -75,7 +75,7 @@ $text .= '<div class="row">';
 			if($tp->filter($_GET['cid']))
 			{
 				$cid = $tp->filter($_GET['cid']);
-				$draftvalues = $sql->retrieve('mailbox_messages', 'message_from, message_to, message_subject, message_text, message_draft, message_sent', 'message_id='.$cid);
+				$draftvalues = $sql->retrieve('mailbox_messages', 'message_id, message_from, message_to, message_subject, message_text, message_draft, message_sent', 'message_id='.$cid);
 				
 				/* Confirm that:
 				 - user is indeed the original sender of the message
@@ -95,6 +95,10 @@ $text .= '<div class="row">';
 				{
 					$text .= '<div class="mailbox-infomessage">'.LAN_MAILBOX_MESSAGENOTYOURS.'</div>';
 				}
+			}
+			else
+			{
+				$text .= $tp->parseTemplate($template['compose_message'], true, $sc);
 			}			
 		}
 	// Close right content

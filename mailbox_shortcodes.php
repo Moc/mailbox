@@ -234,6 +234,11 @@ class mailbox_shortcodes extends e_shortcode
    }
 
    // COMPOSE
+   function sc_mailbox_compose_id($parm='')
+   {
+      return $this->var['message_id']; 
+   }
+   
    function sc_mailbox_compose_to($parm='')
    {
       $userpicker_options = 

@@ -120,8 +120,25 @@ class Mailbox
 			$insert_data['message_draft'] 	= '1';
 			$insert_data['message_sent'] 	= '0';
 			$insert_data['message_to'] 		= $post_data['message_to'];
-		
-			// Save all other fields exactly as posted, so user can continue to write message where it was left 	
+
+			
+			// If saving an existing draft, update rather than insert new record
+			if($post_data['id'])
+			{
+				// Set WHERE clause to message ID
+				$insert_data['WHERE'] = 'message_id = '.$tp->toDb($post_data['id']);
+
+				if($sql->update("mailbox_messages", $insert_data))
+				{
+					return "Updated draft";
+				}
+				else
+				{
+					return "Something went wrong with saving the draft";
+				}
+			}
+
+			// New draft - insert into database
 			if($sql->insert("mailbox_messages", $insert_data))
 			{
 				return "Saved as draft";
@@ -130,7 +147,7 @@ class Mailbox
 			{
 				// $sql->getLastErrorNumber()$sql->getLastErrorText()
 				// print_a($insert_data);
-				return "Something went wrong with saving message as a draft";
+				return "Something went wrong with saving the draft";
 			}	
 		}
 
