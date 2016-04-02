@@ -135,6 +135,12 @@ class mailbox_shortcodes extends e_shortcode
             break;
       } 
 
+      // Check if we are viewing an outbox message (message that was send by user viewing)
+      if($this->var['message_from'] == USERID)
+      {
+          $userinfo = e107::user($this->var['message_to']);
+      }
+
       return e107::getParser()->toAvatar($userinfo); 
    }
 
@@ -153,6 +159,12 @@ class mailbox_shortcodes extends e_shortcode
             $userinfo = e107::user($this->var['message_to']);
             break;
       } 
+
+      // Check if we are viewing an outbox message (message that was send by user viewing)
+      if($this->var['message_from'] == USERID)
+      {
+          $userinfo = e107::user($this->var['message_to']);
+      }
 
       $profile_link = e107::getUrl()->create('user/profile/view', array('id' => $userinfo['user_id'], 'name' => $userinfo['user_name']));
       return "<a href='".$profile_link."'>".$userinfo['user_name']."</a>"; 
