@@ -49,7 +49,7 @@ $text .= '<div class="row">';
 	$text .= '</div>';
 	// Open right content
 	$text .= '<div class="col-md-9">'; 
-		// Check if the compose form is filled in
+		// Check if the user has just submitted a message
 		if($_SERVER['REQUEST_METHOD'] == 'POST')
 		{
 			switch($_POST['compose']) 
@@ -68,10 +68,34 @@ $text .= '<div class="row">';
 					break;
 			}
 		}
-		// Form is not filled in yet, show form
+		// No, so either composing a new message or continuing a draft - either way; show form
 		else
 		{
-			$text .= $tp->parseTemplate($template['compose_message'], true, $sc);
+			// Check if we are continuing a draft - in which case we need to retrieve the data from db
+			if($tp->filter($_GET['cid']))
+			{
+				$cid = $tp->filter($_GET['cid']);
+				$draftvalues = $sql->retrieve('mailbox_messages', 'message_from, message_to, message_subject, message_text, message_draft, message_sent', 'message_id='.$cid);
+				
+				/* Confirm that:
+				 - user is indeed the original sender of the message
+				 - message is a draft
+				 - message has not been sent yet
+				*/
+				if(
+					$draftvalues['message_from'] == USERID && 
+					$draftvalues['message_draft'] == 1 &&
+					$draftvalues['message_sent'] == 0
+				  )
+				{
+					$sc->setVars($draftvalues);
+					$text .= $tp->parseTemplate($template['compose_message'], true, $sc);
+				}
+				else
+				{
+					$text .= '<div class="mailbox-infomessage">'.LAN_MAILBOX_MESSAGENOTYOURS.'</div>';
+				}
+			}			
 		}
 	// Close right content
 	$text .= '</div>';
