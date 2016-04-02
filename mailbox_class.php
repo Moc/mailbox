@@ -93,7 +93,9 @@ class Mailbox
 
 		$tp  = e107::getParser(); 
 		$sql = e107::getDb(); 
+		$mes = e107::getMessage(); 
 
+		// This is the default data set
 		$default_data = array(
 			'message_from' 			=> USERID, 
 			'message_draft'			=> '0',
@@ -108,14 +110,16 @@ class Mailbox
 			'message_attachments' 	=> '',
 		);
 
+		// The insert data represents changes specific to a message (e.g. draft)
 		$insert_data = $default_data; 
 
+		// If the message is only a draft, we need to make some changes to the default data
 		if($action == 'draft')
 		{
 			// Set draft status and send datestamp to 0
-			$insert_data['message_draft'] = '1';
-			$insert_data['message_sent'] = '0';
-			$insert_data['message_to'] = $post_data['message_to'];
+			$insert_data['message_draft'] 	= '1';
+			$insert_data['message_sent'] 	= '0';
+			$insert_data['message_to'] 		= $post_data['message_to'];
 		
 			// Save all other fields exactly as posted, so user can continue to write message where it was left 	
 			if($sql->insert("mailbox_messages", $insert_data))
@@ -124,19 +128,20 @@ class Mailbox
 			}
 			else
 			{
-				print_a($insert_data);
+				// $sql->getLastErrorNumber()$sql->getLastErrorText()
+				// print_a($insert_data);
 				return "Something went wrong with saving message as a draft";
 			}	
 		}
 
-		// Determine sendmode: individual, multiple, userclass (message_to) 
+		// Ending up here, we are actually sending the message. 
+		// First, determine the sendmode: individual, multiple, userclass (message_to) 
 		print_a($post_data['message_to']); 
 		$message_to = $tp->toDb($post_data['message_to']);
 		var_dump($message_to);
 
 		if(is_numeric($message_to))
 		{
-			//print_a("It should be individual: ".$message_to); 
 			$sendmode = 'individual';  
 		}
 		// individual 
@@ -148,7 +153,7 @@ class Mailbox
 
 
 
-		print_a("sendmode: ".$sendmode); 
+		print_a("sendmode: ".$sendmode." recipients: ".$message_to); 
 		return;
 		// Prepare subject (message_subject)
 
