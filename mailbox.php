@@ -78,7 +78,7 @@ else
 				}
 				else
 				{
-					$text .='<div class="mailbox-infomessage">'.LAN_MAILBOX_NOMESSAGESTODISPLAY.'</div>';
+					$text .= '<div class="mailbox-infomessage">'.LAN_MAILBOX_NOMESSAGESTODISPLAY.'</div>';
 				} 		
 			// Footer
 			$text .= $tp->parseTemplate($template['tablelist']['footer'], true, $sc);
