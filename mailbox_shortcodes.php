@@ -78,7 +78,7 @@ class mailbox_shortcodes extends e_shortcode
 
    function sc_mailbox_boxtitle($parm='')
    {
-      switch($_GET['page'])
+      switch(e107::getParser()->filter($_GET['page']))
       {
          case 'inbox':
          default:
@@ -121,7 +121,7 @@ class mailbox_shortcodes extends e_shortcode
 
    function sc_mailbox_message_avatar($parm='')
    {
-      switch($_GET['page'])
+      switch(e107::getParser()->filter($_GET['page']))
       {
          case 'inbox':
          case 'starbox':
@@ -140,7 +140,7 @@ class mailbox_shortcodes extends e_shortcode
 
    function sc_mailbox_message_fromto($parm='')
    {
-      switch($_GET['page'])
+      switch(e107::getParser()->filter($_GET['page']))
       {
          case 'inbox':
          case 'starbox':
@@ -161,7 +161,7 @@ class mailbox_shortcodes extends e_shortcode
    function sc_mailbox_message_subject($parm='')
    {
       // Check for either mailboxes section or reading an individual message 
-      if($_GET['id'])
+      if(e107::getParser()->filter($_GET['id']))
       {
          // Reading an individual message, does not require a link
          return $this->var['message_subject'];
@@ -199,7 +199,7 @@ class mailbox_shortcodes extends e_shortcode
    function sc_mailbox_message_datestamp($parm='')
    {
       // No need for a date when message is not send yet or when it is a draft message
-      if($_GET['page'] == 'draftbox'){ return; }
+      if(e107::getParser()->filter($_GET['page']) == 'draftbox'){ return; }
       if($this->var['message_draft']) { return; }
             
       $gen = e107::getDateConvert();

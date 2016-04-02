@@ -35,9 +35,10 @@ $template 	= array_change_key_case($template);
 $sql 	= e107::getDb();
 $tp 	= e107::getParser();
 $text 	= ''; 
+$page   = $tp->filter($_GET['page']);
 
 $mailbox_class 		= new Mailbox; 
-$current_mailbox 	= $mailbox_class->get_current_mailbox($_GET['page']);
+$current_mailbox 	= $mailbox_class->get_current_mailbox($page);
 $queryargs 			= $mailbox_class->get_database_queryargs($current_mailbox); 
 
 if(!USERID)
