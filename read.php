@@ -55,7 +55,7 @@ $text .= '<div class="row">';
 			// Check if the message is there
 			if($query_getmessage)
 			{
-				if($query_getmessage['message_to'] == USERID)
+				if($query_getmessage['message_to'] == USERID || $query_getmessage['message_from'] == USERID)
 				{
 					$sc->setVars($query_getmessage);
 					$text .= $tp->parseTemplate($template['read_message'], true, $sc);
