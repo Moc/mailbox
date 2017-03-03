@@ -49,9 +49,17 @@ $text .= '<div class="row">';
 	$text .= '</div>';
 	// Open right content
 	$text .= '<div class="col-md-9">';
+
 		// Check if the user has just submitted a message
 		if($_SERVER['REQUEST_METHOD'] == 'POST')
 		{
+			// Get message id when updating existing draft
+			if($tp->filter($_GET['cid']))
+			{
+				$_POST['id'] = $tp->filter($_GET['cid']);
+			}
+
+			// Determine whether we are sending, saving as a draft or discarding the message
 			switch($_POST['compose'])
 			{
 				// Message should be send to the receiver
