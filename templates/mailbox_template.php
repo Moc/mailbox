@@ -58,11 +58,11 @@ $MAILBOX_TEMPLATE['tablelist']['header'] = '
 
 		<div class="table-responsive mailbox-messages">
 			<table class="table table-hover table-striped">
-				<tbody>					  	
+				<tbody>
 ';
 
-$MAILBOX_TEMPLATE['tablelist']['body'] = '	    
-				<tr> 
+$MAILBOX_TEMPLATE['tablelist']['body'] = '
+				<tr>
 					<td><input type="checkbox"></td>
 					<td class="mailbox-star hidden-xs">{MAILBOX_MESSAGE_STAR}</td>
 					<td class="mailbox-name">{SETIMAGE: w=50&h=50&crop=1} {MAILBOX_MESSAGE_AVATAR} {MAILBOX_MESSAGE_FROMTO}</td>
@@ -78,7 +78,7 @@ $MAILBOX_TEMPLATE['tablelist']['footer'] = '
 			<!-- /.table -->
 		</div>
 		<!-- /.mail-box-messages -->
-		
+
 		<div class="mailbox-controls">
 			<!-- Check all button -->
 			<button type="button" class="btn btn-default btn-sm checkbox-toggle">'.e107::getParser()->toGlyph("square-o").'</button>
@@ -87,7 +87,7 @@ $MAILBOX_TEMPLATE['tablelist']['footer'] = '
 				<button type="button" class="btn btn-default btn-sm">'.e107::getParser()->toGlyph("floppy-o").'</button>
 		    </div>
 			<!-- /.btn-group -->
-			<button type="button" class="btn btn-default btn-sm">'.e107::getParser()->toGlyph("refresh").'</button>	
+			<button type="button" class="btn btn-default btn-sm">'.e107::getParser()->toGlyph("refresh").'</button>
 			<div class="pull-right">
 	  		1-50/200
 	      		<div class="btn-group">
@@ -115,7 +115,7 @@ $MAILBOX_TEMPLATE['box_navigation'] = '
 	<div class="panel-body">
 		<ul class="nav nav-pills nav-stacked mailbox-nav">
         	<li {MAILBOX_BOXLINK_ACTIVE=inbox}>
-        		<a href="{MAILBOX_BOXLINK=inbox}">{MAILBOX_BOXGLYPH=inbox} '.LAN_MAILBOX_INBOX.' {MAILBOX_BOXCOUNT=inbox}</a> 
+        		<a href="{MAILBOX_BOXLINK=inbox}">{MAILBOX_BOXGLYPH=inbox} '.LAN_MAILBOX_INBOX.' {MAILBOX_BOXCOUNT=inbox}</a>
            	</li>
            	<li {MAILBOX_BOXLINK_ACTIVE=outbox}>
            		<a href="{MAILBOX_BOXLINK=outbox}">{MAILBOX_BOXGLYPH=outbox} '.LAN_MAILBOX_OUTBOX.' {MAILBOX_BOXCOUNT=outbox}</a>
@@ -124,7 +124,7 @@ $MAILBOX_TEMPLATE['box_navigation'] = '
            		<a href="{MAILBOX_BOXLINK=draftbox}">{MAILBOX_BOXGLYPH=draftbox} '.LAN_MAILBOX_DRAFTBOX.' {MAILBOX_BOXCOUNT=draftbox}</a>
            	</li>
            	<li {MAILBOX_BOXLINK_ACTIVE=starbox}>
-           		<a href="{MAILBOX_BOXLINK=starbox}">{MAILBOX_BOXGLYPH=starbox} '.LAN_MAILBOX_STARBOX.' {MAILBOX_BOXCOUNT=starbox}</a> 
+           		<a href="{MAILBOX_BOXLINK=starbox}">{MAILBOX_BOXGLYPH=starbox} '.LAN_MAILBOX_STARBOX.' {MAILBOX_BOXCOUNT=starbox}</a>
            	</li>
 	        <li {MAILBOX_BOXLINK_ACTIVE=trashbox}>
 	        	<a href="{MAILBOX_BOXLINK=trashbox}">{MAILBOX_BOXGLYPH=trashbox} '.LAN_MAILBOX_TRASHBOX.' {MAILBOX_BOXCOUNT=starbox}</a>
@@ -133,7 +133,7 @@ $MAILBOX_TEMPLATE['box_navigation'] = '
  	</div>
 	<!-- /.panel-body -->
 </div>
-<!-- /. panel --> 
+<!-- /. panel -->
 ';
 
 $MAILBOX_TEMPLATE['compose_message'] = '
@@ -142,13 +142,13 @@ $MAILBOX_TEMPLATE['compose_message'] = '
 		<h3 class="panel-title">'.LAN_MAILBOX_COMPOSE.'</h3>
 	</div>
 	<!-- /.panel-heading -->
-	
+
 	<div class="panel-body">
 	<form method="post">
 		<div class="form-group">{MAILBOX_COMPOSE_TO}</div>
 	    <div class="form-group">{MAILBOX_COMPOSE_SUBJECT}</div>
 	    <div class="form-group">{MAILBOX_COMPOSE_TEXT}</div>
-            
+
         <div class="form-group">
 			<div class="btn btn-default btn-file">
             	'.e107::getParser()->toGlyph("paperclip").' Attachment
@@ -196,7 +196,7 @@ $MAILBOX_TEMPLATE['read_message'] = '
 		<!-- /.row -->
 	</div>
 	<!-- /.panel-heading -->
-	
+
 	<div class="panel-body">
 		<div class="mailbox-read-info">
 			<div class="row">
@@ -228,7 +228,7 @@ $MAILBOX_TEMPLATE['read_message'] = '
 		</div>
 		<!-- /.mailbox-read-info -->
 
-		<div class="mailbox-read-message">	
+		<div class="mailbox-read-message">
 			{MAILBOX_MESSAGE_TEXT}
 		</div>
 		<!-- /.mailbox-read-message -->
@@ -242,7 +242,7 @@ $MAILBOX_TEMPLATE['read_message'] = '
 		</div>
 		<button type="button" class="btn btn-default"><i class="fa fa-trash-o"></i> Delete</button>
 		<button type="button" class="btn btn-default"><i class="fa fa-print"></i> Print</button>
-	</div>	
+	</div>
     <!-- /.panel-footer -->
 </div>
 <!-- /. panel -->
