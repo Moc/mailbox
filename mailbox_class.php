@@ -130,7 +130,7 @@ class Mailbox
 
 				if($sql->update("mailbox_messages", $insert_data))
 				{
-					return e107::getMessage()->addSucces("Updated draft");
+					return e107::getMessage()->addSuccess("Draft successfully updated");
 				}
 				else
 				{
