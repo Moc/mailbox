@@ -147,7 +147,7 @@ $MAILBOX_TEMPLATE['compose_message'] = '
 	<form method="post">
 		<div class="form-group">{MAILBOX_COMPOSE_TO}</div>
 	    <div class="form-group">{MAILBOX_COMPOSE_SUBJECT}</div>
-	    <div class="form-group">{MAILBOX_COMPOSE_CONTENT}</div>
+	    <div class="form-group">{MAILBOX_COMPOSE_TEXT}</div>
             
         <div class="form-group">
 			<div class="btn btn-default btn-file">
@@ -160,10 +160,12 @@ $MAILBOX_TEMPLATE['compose_message'] = '
 
     <div class="panel-footer">
     	<div class="pull-right">
-        	<button name="compose" type="button" class="btn btn-default" value="draft">'.e107::getParser()->toGlyph("floppy-o").' Draft</button>
+        	<button name="compose" type="submit" class="btn btn-default" value="draft">'.e107::getParser()->toGlyph("floppy-o").' Draft</button>
         	<button name="compose" type="submit" class="btn btn-primary" value="send">'.e107::getParser()->toGlyph("envelope-o").' Send</button>
+        	<input type="hidden" name="id" value="{MAILBOX_COMPOSE_ID}">
       	</div>
       	<button name="compose" type="reset" class="btn btn-default" value="discard">'.e107::getParser()->toGlyph("times").' Discard</button>
+
     </div>
     <!-- /.panel-footer -->
     </form>
@@ -205,7 +207,7 @@ $MAILBOX_TEMPLATE['read_message'] = '
 
 				<div class="col-md-6">
 					<span class="mailbox-read-time pull-right">{MAILBOX_MESSAGE_DATESTAMP=long}</span> <br />
-					<div class="mailbox-controls pull-right">
+					<div class="mailbox-controls hidden-xs pull-right">
 	                	<div class="btn-group">
 	                  		<button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-container="body" title="Delete">
 	                    		<i class="fa fa-trash-o"></i></button>

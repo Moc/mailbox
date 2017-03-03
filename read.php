@@ -53,11 +53,17 @@ $text .= '<div class="row">';
 			$query_getmessage = $sql->retrieve('mailbox_messages', '*', 'message_id='.$mid.'');
 			
 			// Check if the message is there
-			// TODO add other checks: make sure message_to = USERID to prevent another user from viewing other's messages
 			if($query_getmessage)
 			{
-				$sc->setVars($query_getmessage);
-				$text .= $tp->parseTemplate($template['read_message'], true, $sc);
+				if($query_getmessage['message_to'] == USERID || $query_getmessage['message_from'] == USERID)
+				{
+					$sc->setVars($query_getmessage);
+					$text .= $tp->parseTemplate($template['read_message'], true, $sc);
+				}
+				else
+				{
+					$text .= '<div class="mailbox-infomessage">'.LAN_MAILBOX_MESSAGENOTYOURS.'</div>'; 
+				}
 			}
 			else
 			{

@@ -21,7 +21,13 @@ class mailbox_url
 			'sef'			=> 'mailbox',
 			'redirect'		=> '{e_PLUGIN}mailbox/mailbox.php',
 		);
-		
+
+		$config['composeid'] = array(
+			'regex'			=> '^mailbox/compose/(.*)$',
+			'sef'			=> 'mailbox/compose/{id}',
+			'redirect'		=> '{e_PLUGIN}mailbox/compose.php?cid=$1',
+		);
+
 		$config['compose'] = array(
 			'regex'			=> '^mailbox/compose/?$',
 			'sef'			=> 'mailbox/compose',
