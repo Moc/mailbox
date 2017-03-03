@@ -52,8 +52,8 @@
 
 /* ============ */
 
-#mailbox-searchform { 
-  width: 200px; 
+#mailbox-searchform {
+  width: 200px;
   float: right;
 }
 
@@ -66,8 +66,8 @@
 }
 
 .mailbox-infomessage {
-  width: 60%;
-  margin: 0 auto; 
+  width: 80%;
+  margin: 0 auto;
   font-style: italic;
   padding-top: 10px;
   padding-bottom: 10px;
@@ -82,7 +82,7 @@
 
 .mailbox-messages > .table > td > * {
     vertical-align : middle;
-} 
+}
 
 .mailbox-controls {
   padding: 5px;
