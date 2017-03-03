@@ -12,4 +12,7 @@
 
 if (!defined('e107_INIT')) { exit; }
 
-e107::css('mailbox', 'mailbox.css');
+if(USER_AREA === true) // Don't include in admin area
+{
+	e107::css('mailbox', 'mailbox.css');
+}
