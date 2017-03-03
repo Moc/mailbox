@@ -13,45 +13,45 @@ if(!defined('e107_INIT'))
 	require_once("../../class2.php");
 }
 
-if(!e107::isInstalled('mailbox')) 
+if(!e107::isInstalled('mailbox'))
 {
 	e107::redirect();
 	exit;
 }
 
 // Load the LAN files
-e107::lan('mailbox', false, true); 
+e107::lan('mailbox', false, true);
 
 // Load the header
 require_once(HEADERF);
 
 // Load template and shortcodes
 $sc 		= e107::getScBatch('mailbox', TRUE);
-$template 	= e107::getTemplate('mailbox'); 
+$template 	= e107::getTemplate('mailbox');
 $template 	= array_change_key_case($template);
 
 // Define variables
 $sql 	= e107::getDb();
 $tp 	= e107::getParser();
 $frm 	= e107::getForm();
-$text 	= ''; 
+$text 	= '';
 $mid 	= (int) $_GET['id'];
 
-/* Let's render some things now */ 
+/* Let's render some things now */
 // Open container
 $text .= '<div class="row">';
 	// Open left sidebar
 	$text .= '<div class="col-md-3">';
-		// Load left sidebar 
+		// Load left sidebar
 		$text .= $tp->parseTemplate($template['box_navigation'], true, $sc);
-	// Close left sidebar 
+	// Close left sidebar
 	$text .= '</div>';
 	// Open right content
-	$text .= '<div class="col-md-9">'; 
+	$text .= '<div class="col-md-9">';
 		// Load right content
-			// Construct query  
+			// Construct query
 			$query_getmessage = $sql->retrieve('mailbox_messages', '*', 'message_id='.$mid.'');
-			
+
 			// Check if the message is there
 			if($query_getmessage)
 			{
@@ -62,13 +62,13 @@ $text .= '<div class="row">';
 				}
 				else
 				{
-					$text .= '<div class="mailbox-infomessage">'.LAN_MAILBOX_MESSAGENOTYOURS.'</div>'; 
+					$text .= '<div class="mailbox-infomessage">'.LAN_MAILBOX_MESSAGENOTYOURS.'</div>';
 				}
 			}
 			else
 			{
 				$text .='<div class="mailbox-infomessage">'.LAN_MAILBOX_MESSAGENOTFOUND.'</div>';
-			} 			
+			}
 	// Close right content
 	$text .= '</div>';
 // Close container

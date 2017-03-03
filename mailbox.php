@@ -13,14 +13,14 @@ if(!defined('e107_INIT'))
 	require_once("../../class2.php");
 }
 
-if(!e107::isInstalled('mailbox')) 
+if(!e107::isInstalled('mailbox'))
 {
 	e107::redirect();
 	exit;
 }
 
 // Load the LAN files
-e107::lan('mailbox', false, true); 
+e107::lan('mailbox', false, true);
 
 // Load the header and mailbox class
 require_once(HEADERF);
@@ -28,18 +28,18 @@ require_once(e_PLUGIN."mailbox/mailbox_class.php");
 
 // Load template and shortcodes
 $sc 		= e107::getScBatch('mailbox', TRUE);
-$template 	= e107::getTemplate('mailbox'); 
+$template 	= e107::getTemplate('mailbox');
 $template 	= array_change_key_case($template);
 
 // Define variables
 $sql 	= e107::getDb();
 $tp 	= e107::getParser();
-$text 	= ''; 
+$text 	= '';
 $page   = $tp->filter($_GET['page']);
 
-$mailbox_class 		= new Mailbox; 
+$mailbox_class 		= new Mailbox;
 $current_mailbox 	= $mailbox_class->get_current_mailbox($page);
-$queryargs 			= $mailbox_class->get_database_queryargs($current_mailbox); 
+$queryargs 			= $mailbox_class->get_database_queryargs($current_mailbox);
 
 if(!USERID)
 {
@@ -47,39 +47,39 @@ if(!USERID)
 }
 else
 {
-	/* Let's render some things now */ 
+	/* Let's render some things now */
 	// Open container
 	$text .= '<div class="row">';
 		// Open left sidebar
 		$text .= '<div class="col-md-3">';
-			// Load left sidebar 
+			// Load left sidebar
 			$text .= $tp->parseTemplate($template['box_navigation'], true, $sc);
-		// Close left sidebar 
+		// Close left sidebar
 		$text .= '</div>';
 		// Open right content
-		$text .= '<div class="col-md-9">'; 
+		$text .= '<div class="col-md-9">';
 		// Load right content
 			// Header
 			$text .= $tp->parseTemplate($template['tablelist']['header'], true, $sc);
 
 			// Body
-				// Construct query  
+				// Construct query
 				$query_getmessages = $sql->retrieve('mailbox_messages', '*', ''.$queryargs.'', true);
-				
+
 				// Check if there messages to display
 				if($query_getmessages)
 				{
-					// Messages found, loop through 
+					// Messages found, loop through
 					foreach($query_getmessages as $message)
 					{
-						$sc->setVars($message); // pass query values on so they can be used in the shortcodes 
+						$sc->setVars($message); // pass query values on so they can be used in the shortcodes
 						$text .= $tp->parseTemplate($template['tablelist']['body'], true, $sc);
 					}
 				}
 				else
 				{
 					$text .= '<div class="mailbox-infomessage">'.LAN_MAILBOX_NOMESSAGESTODISPLAY.'</div>';
-				} 		
+				}
 			// Footer
 			$text .= $tp->parseTemplate($template['tablelist']['footer'], true, $sc);
 		// Close right content

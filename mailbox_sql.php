@@ -5,7 +5,7 @@ CREATE TABLE mailbox_messages (
   message_draft int(10) NOT NULL default '0',                     /* Draft status */
   message_sent int(10) unsigned NOT NULL default '0',			        /* Datestamp sent */
   message_read int(10) unsigned NOT NULL default '0',			        /* Datestamp read */
-  message_subject varchar(255) NOT NULL,          
+  message_subject varchar(255) NOT NULL,
   message_text text NOT NULL,
   message_from_starred tinyint(1) unsigned NOT NULL default '0',	/* Set when sender has starred the message */
   message_to_starred tinyint(1) unsigned NOT NULL default '0',    /* Set when receiver has starred the message */
