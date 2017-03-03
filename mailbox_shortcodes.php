@@ -238,4 +238,31 @@ class mailbox_shortcodes extends e_shortcode
    {
       return e107::getForm()->bbarea('message_content', $message_content);
    }
+
+   function sc_mailbox_quickform($parm='')
+   {
+      return '
+         <div class="ibox">
+            <div class="ibox-content">
+                <h3>Private message</h3>
+
+                <p class="small">
+                    Send private message to Alex Smith
+                </p>
+
+                <div class="form-group">
+                    <label>Subject</label>
+                    <input type="email" class="form-control" placeholder="Message subject">
+                </div>
+                <div class="form-group">
+                    <label>Message</label>
+                    <textarea class="form-control" placeholder="Your message" rows="3"></textarea>
+                </div>
+                <button class="btn btn-primary btn-block">Send</button>
+
+            </div>
+        </div>
+      ';
+   }
+
 }
