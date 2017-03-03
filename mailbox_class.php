@@ -12,14 +12,14 @@
 
 /* NOTES
 - Delete message
-=> check if message is ready to be deleted from database completely 
+=> check if message is ready to be deleted from database completely
 1) should not be starred
-2) should be deleted by both to and from 
+2) should be deleted by both to and from
 
 - Move to trash
 => Remove starred status from to (set message_to_starred to 0)
 
-- Empty trash 
+- Empty trash
 => last empty date updated each time when trash is emptied
 => only messages displayed where the message_to_deleted < latest_emptytrash_datestamp of user
 
@@ -38,16 +38,16 @@ class Mailbox
 	{
 		$this->plugprefs = e107::getPlugPref('messaging');
 	}
-	
+
 	public function get_current_mailbox($parm)
 	{
-		// All valid mailboxes in an array 
-		$mailbox_array = array("inbox", "outbox", "draftbox", "starbox", "trashbox"); 
-		
+		// All valid mailboxes in an array
+		$mailbox_array = array("inbox", "outbox", "draftbox", "starbox", "trashbox");
+
 		// Check user input to see if mailbox matches with array
 		if(in_array($parm, $mailbox_array))
 		{
-			$current_mailbox = $parm; 
+			$current_mailbox = $parm;
 		}
 		// Invalid mailbox input, so default back to inbox to be sure
 		else
@@ -60,14 +60,14 @@ class Mailbox
 
 	public function get_database_queryargs($box = '')
 	{
-		// Default back to inbox to be sure 
+		// Default back to inbox to be sure
 		if(!$box) { $box = 'inbox'; }
 
-		switch($box) 
+		switch($box)
 		{
 			case 'inbox':
 			default:
-				$args = "message_to=".USERID." AND message_to_deleted=0"; 
+				$args = "message_to=".USERID." AND message_to_deleted=0";
 				break;
 			case 'outbox':
 				$args = "message_from=".USERID." AND message_to_deleted=0 AND message_draft=0";
@@ -83,7 +83,7 @@ class Mailbox
 				break;
 		}
 
-		return $args; 
+		return $args;
 	}
 
 	public function process_compose($action = 'send', $post_data)
@@ -91,27 +91,27 @@ class Mailbox
 		// print_a("Message action: ".$action);
 		// print_a($post_data);
 
-		$tp  = e107::getParser(); 
-		$sql = e107::getDb(); 
-		$mes = e107::getMessage(); 
+		$tp  = e107::getParser();
+		$sql = e107::getDb();
+		$mes = e107::getMessage();
 
 		// This is the default data set
 		$default_data = array(
-			'message_from' 			=> USERID, 
+			'message_from' 			=> USERID,
 			'message_draft'			=> '0',
-			'message_sent' 			=> time(),					
-			'message_read' 			=> 0, 
+			'message_sent' 			=> time(),
+			'message_read' 			=> 0,
 			'message_subject' 		=> $post_data['message_subject'],
 			'message_text'			=> $post_data['message_text'],
 			'message_to_starred' 	=> '0',
 			'message_from_starred' 	=> '0',
-			'message_to_deleted'	=> '0', 
+			'message_to_deleted'	=> '0',
 			'message_from_deleted' 	=> '0',
 			'message_attachments' 	=> '',
 		);
 
 		// The insert data represents changes specific to a message (e.g. draft)
-		$insert_data = $default_data; 
+		$insert_data = $default_data;
 
 		// If the message is only a draft, we need to make some changes to the default data
 		if($action == 'draft')
@@ -121,7 +121,7 @@ class Mailbox
 			$insert_data['message_sent'] 	= '0';
 			$insert_data['message_to'] 		= $post_data['message_to'];
 
-			
+
 			// If saving an existing draft, update rather than insert new record
 			if($post_data['id'])
 			{
@@ -148,20 +148,20 @@ class Mailbox
 				// $sql->getLastErrorNumber()$sql->getLastErrorText()
 				// print_a($insert_data);
 				return "Something went wrong with saving the draft";
-			}	
+			}
 		}
 
-		// Ending up here, we are actually sending the message. 
-		// First, determine the sendmode: individual, multiple, userclass (message_to) 
-		print_a($post_data['message_to']); 
+		// Ending up here, we are actually sending the message.
+		// First, determine the sendmode: individual, multiple, userclass (message_to)
+		print_a($post_data['message_to']);
 		$message_to = $tp->toDb($post_data['message_to']);
 		var_dump($message_to);
 
 		if(is_numeric($message_to))
 		{
-			$sendmode = 'individual';  
+			$sendmode = 'individual';
 		}
-		// individual 
+		// individual
 		else
 		{
 			//print_a("It should be multiple: ".$message_to);
@@ -170,11 +170,11 @@ class Mailbox
 
 
 
-		print_a("sendmode: ".$sendmode." recipients: ".$message_to); 
+		print_a("sendmode: ".$sendmode." recipients: ".$message_to);
 		return;
 		// Prepare subject (message_subject)
 
-		
+
 		// Prepare message text (message_text)
 
 	}
@@ -204,7 +204,7 @@ class Mailbox
 		$pm_options = '';
 		$ret = '';
 		$maxSendNow = varset($this->plugprefs['pm_max_send'], 100); // Max # of messages before having to queue
-		
+
 		if (isset($vars['pm_from']))
 		{	// Doing bulk send off cron task
 			$info = array();
@@ -237,12 +237,12 @@ class Mailbox
 
 			$pm_subject = trim($tp->toDB($vars['pm_subject']));
 			$pm_message = trim($tp->toDB($vars['pm_message']));
-			
+
 			if (!$pm_subject && !$pm_message && !$attachlist)
 			{  // Error - no subject, no message body and no uploaded files
 				return LAN_PM_65;
 			}
-			
+
 			// Most of the pm info is fixed - just need to set the 'to' user on each send
 			$info = array(
 				'pm_from' => $vars['from_id'],
@@ -335,7 +335,7 @@ class Mailbox
 					$ret .= LAN_PM_41.'<br />';
 				}
 			}
-			
+
 		}
 		else
 		{	// Sending to a single person
@@ -363,7 +363,7 @@ class Mailbox
 	 *	@param	array $pm_info - PM details
 	 *
 	 *	@return	none
-	 *	
+	 *
 	 *	@todo - 'read_delete' pref doesn't exist - remove code? Or support?
 	 */
 	function pm_mark_read($pm_id, $pm_info)

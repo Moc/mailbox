@@ -219,7 +219,7 @@ class mailbox_shortcodes extends e_shortcode
       array(
           'selectize' =>
              array(
-                 'create'  => false,
+                 'create'     => false,
                  'maxItems'   => 10,
                  'mode'       => 'multi',
              ),
@@ -234,9 +234,9 @@ class mailbox_shortcodes extends e_shortcode
       return e107::getForm()->text('message_subject', $subject, '', array('placeholder' => 'Subject'));
    }
 
-   function sc_mailbox_compose_content($parm='')
+   function sc_mailbox_compose_text($parm='')
    {
-      return e107::getForm()->bbarea('message_content', $message_content);
+      return e107::getForm()->bbarea('message_text', $message_text);
    }
 
    function sc_mailbox_quickform($parm='')
