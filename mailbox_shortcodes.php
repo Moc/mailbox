@@ -78,7 +78,7 @@ class mailbox_shortcodes extends e_shortcode
 
    function sc_mailbox_boxtitle($parm='')
    {
-      switch($_GET['page'])
+      switch(e107::getParser()->filter($_GET['page']))
       {
          case 'inbox':
          default:
@@ -121,7 +121,7 @@ class mailbox_shortcodes extends e_shortcode
 
    function sc_mailbox_message_avatar($parm='')
    {
-      switch($_GET['page'])
+      switch(e107::getParser()->filter($_GET['page']))
       {
          case 'inbox':
          case 'starbox':
@@ -140,7 +140,7 @@ class mailbox_shortcodes extends e_shortcode
 
    function sc_mailbox_message_fromto($parm='')
    {
-      switch($_GET['page'])
+      switch(e107::getParser()->filter($_GET['page']))
       {
          case 'inbox':
          case 'starbox':
@@ -161,20 +161,29 @@ class mailbox_shortcodes extends e_shortcode
    function sc_mailbox_message_subject($parm='')
    {
       // Check for either mailboxes section or reading an individual message
-      if($_GET['page'])
+      if(e107::getParser()->filter($_GET['id']))
+      {
+         // Reading an individual message, does not require a link
+         return $this->var['message_subject'];
+      }
+      // In one of the mailboxes
+      else
       {
          $urlparms = array(
             'id' => $this->var['message_id'],
          );
 
-         $url = e107::url('mailbox', 'read', $urlparms);
+         // Check if draft, because then it requires a link to continue writing the message (compose)
+         if(e107::getParser()->filter($_GET['page']) == 'draftbox')
+         {
+            $url = e107::url('mailbox', 'composeid', $urlparms);
+         }
+         else
+         {
+            $url = e107::url('mailbox', 'read', $urlparms);
+         }
 
          return "<a href='".$url."'>".$this->var['message_subject']."</a>";
-      }
-      // Reading individual plugin
-      else
-      {
-         return $this->var['message_subject'];
       }
    }
 
@@ -198,7 +207,7 @@ class mailbox_shortcodes extends e_shortcode
    function sc_mailbox_message_datestamp($parm='')
    {
       // No need for a date when message is not send yet or when it is a draft message
-      if($_GET['page'] == 'draftbox'){ return; }
+      if(e107::getParser()->filter($_GET['page']) == 'draftbox'){ return; }
       if($this->var['message_draft']) { return; }
 
       $gen = e107::getDateConvert();
@@ -219,23 +228,39 @@ class mailbox_shortcodes extends e_shortcode
       array(
           'selectize' =>
              array(
-                 'create'     => false,
-                 'maxItems'   => 10,
-                 'mode'       => 'multi',
+                  'loadPath'  => e_HTTP.'user.php',
+                  'create'    => false,
+                  'maxItems'  => 10,
+                  'mode'      => 'multi',
              ),
           'placeholder' => 'To',
       );
 
-      return e107::getForm()->userpicker('message_to', 'to_id', '', '', $userpicker_options);
+      if($this->var['message_to'])
+      {
+         $message_to = $this->var['message_to'];
+      }
+
+      return e107::getForm()->userpicker('message_to', $message_to, '', '', $userpicker_options);
    }
 
    function sc_mailbox_compose_subject($parm='')
    {
-      return e107::getForm()->text('message_subject', $subject, '', array('placeholder' => 'Subject'));
+      if($this->var['message_subject'])
+      {
+         $message_subject = $this->var['message_subject'];
+      }
+
+      return e107::getForm()->text('message_subject', $message_subject, '', array('placeholder' => 'Subject'));
    }
 
    function sc_mailbox_compose_text($parm='')
    {
+      if($this->var['message_text'])
+      {
+         $message_text = $this->var['message_text'];
+      }
+
       return e107::getForm()->bbarea('message_text', $message_text);
    }
 
