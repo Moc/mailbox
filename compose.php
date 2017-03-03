@@ -106,6 +106,6 @@ $text .= '<div class="row">';
 // Close container
 $text .= '</div>';
 
-$ns->tablerender(LAN_MAILBOX_NAME, $text);
+$ns->tablerender(LAN_MAILBOX_NAME, e107::getMessage()->render().$text);
 require_once(FOOTERF);
 exit;

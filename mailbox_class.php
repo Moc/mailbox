@@ -67,7 +67,7 @@ class Mailbox
 		{
 			case 'inbox':
 			default:
-				$args = "message_to=".USERID." AND message_to_deleted=0";
+				$args = "message_to=".USERID." AND message_to_deleted=0 AND message_draft=0";
 				break;
 			case 'outbox':
 				$args = "message_from=".USERID." AND message_to_deleted=0 AND message_draft=0";
@@ -130,24 +130,25 @@ class Mailbox
 
 				if($sql->update("mailbox_messages", $insert_data))
 				{
-					return "Updated draft";
+					return e107::getMessage()->addSucces("Updated draft");
 				}
 				else
 				{
-					return "Something went wrong with saving the draft";
+					return e107::getMessage()->addError("Something went wrong with saving the draft");
 				}
 			}
 
 			// New draft - insert into database
 			if($sql->insert("mailbox_messages", $insert_data))
 			{
-				return "Saved as draft";
+				return e107::getMessage()->addSuccess("Saved as draft");
 			}
 			else
 			{
-				// $sql->getLastErrorNumber()$sql->getLastErrorText()
+				// $sql->getLastErrorNumber();
+				// $sql->getLastErrorText();
 				// print_a($insert_data);
-				return "Something went wrong with saving the draft";
+				return e107::getMessage()->addError("Something went wrong with saving the draft");
 			}
 		}
 
