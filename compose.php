@@ -39,6 +39,33 @@ $text 	= '';
 
 $mailbox_class = new Mailbox;
 
+// Check if the user has just submitted a message
+if($_SERVER['REQUEST_METHOD'] == 'POST')
+{
+	// Get message id when updating existing draft
+	if($tp->filter($_GET['cid']))
+	{
+		$_POST['id'] = $tp->filter($_GET['cid']);
+	}
+
+	// Determine whether we are sending, saving as a draft or discarding the message
+	switch($_POST['compose'])
+	{
+		// Message should be send to the receiver
+		case 'send':
+		default:
+			$text .= $mailbox_class->process_compose("send", $_POST);
+			break;
+		// Message should be saved as a draft
+		case 'draft':
+			$text .= $mailbox_class->process_compose("draft", $_POST);
+			break;
+		case 'discard':
+			print_a("The message should be discarded");
+			break;
+	}
+}
+
 // Open container
 $text .= '<div class="row">';
 	// Open left sidebar
@@ -50,62 +77,38 @@ $text .= '<div class="row">';
 	// Open right content
 	$text .= '<div class="col-md-9">';
 
-		// Check if the user has just submitted a message
-		if($_SERVER['REQUEST_METHOD'] == 'POST')
+	// Check if we are continuing a draft - in which case we need to retrieve the data from db
+	if($tp->filter($_GET['cid']))
+	{
+		$cid = $tp->filter($_GET['cid']);
+		$draftvalues = $sql->retrieve('mailbox_messages', 'message_id, message_from, message_to, message_subject, message_text, message_draft, message_sent', 'message_id='.$cid);
+
+		/* Confirm that:
+		 - user is indeed the original sender of the message
+		 - message is a draft
+		 - message has not been sent yet
+		*/
+		if(
+			$draftvalues['message_from'] 	== USERID &&
+			$draftvalues['message_draft']	== 1 &&
+			$draftvalues['message_sent'] 	== 0
+		  )
 		{
-			// Get message id when updating existing draft
-			if($tp->filter($_GET['cid']))
-			{
-				$_POST['id'] = $tp->filter($_GET['cid']);
-			}
-
-			// Determine whether we are sending, saving as a draft or discarding the message
-			switch($_POST['compose'])
-			{
-				// Message should be send to the receiver
-				case 'send':
-				default:
-					$text .= $mailbox_class->process_compose("send", $_POST);
-					break;
-				// Message should be saved as a draft
-				case 'draft':
-					$text .= $mailbox_class->process_compose("draft", $_POST);
-					break;
-				case 'discard':
-					print_a("The message should be discarded");
-					break;
-			}
-		}
-
-		// Check if we are continuing a draft - in which case we need to retrieve the data from db
-		if($tp->filter($_GET['cid']))
-		{
-			$cid = $tp->filter($_GET['cid']);
-			$draftvalues = $sql->retrieve('mailbox_messages', 'message_id, message_from, message_to, message_subject, message_text, message_draft, message_sent', 'message_id='.$cid);
-
-			/* Confirm that:
-			 - user is indeed the original sender of the message
-			 - message is a draft
-			 - message has not been sent yet
-			*/
-			if(
-				$draftvalues['message_from'] == USERID &&
-				$draftvalues['message_draft'] == 1 &&
-				$draftvalues['message_sent'] == 0
-			  )
-			{
-				$sc->setVars($draftvalues);
-				$text .= $tp->parseTemplate($template['compose_message'], true, $sc);
-			}
-			else
-			{
-				$text .= '<div class="mailbox-infomessage">'.LAN_MAILBOX_MESSAGENOTYOURS.'</div>';
-			}
+			$text .= e107::getMessage()->addInfo("You are continuing your draft message.");
+			$sc->setVars($draftvalues);
+			$text .= $tp->parseTemplate($template['compose_message'], true, $sc);
 		}
 		else
 		{
-			$text .= $tp->parseTemplate($template['compose_message'], true, $sc);
+			$url = e107::url('mailbox', 'compose');
+			e107::redirect($url); // some sneaky person trying to read into someone else's drafts, redirect to default compose page
 		}
+	}
+	else
+	{
+		$text .= $tp->parseTemplate($template['compose_message'], true, $sc);
+	}
+
 	// Close right content
 	$text .= '</div>';
 // Close container
