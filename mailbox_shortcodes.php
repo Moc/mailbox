@@ -109,6 +109,12 @@ class mailbox_shortcodes extends e_shortcode
 
    function sc_mailbox_message_star($parm='')
    {
+      // Draft messages cannot be starred
+      if(e107::getParser()->filter($_GET['page']) == 'draftbox')
+      {
+         return;
+      }
+
       if($this->var['message_to_starred'])
       {
          return '<a href="#">'.e107::getParser()->toGlyph("star").'</a>';
