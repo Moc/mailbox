@@ -83,7 +83,7 @@ $text .= '<div class="row">';
 		$cid = $tp->filter($_GET['cid']);
 		$draftvalues = $sql->retrieve('mailbox_messages', 'message_id, message_from, message_to, message_subject, message_text, message_draft, message_sent', 'message_id='.$cid);
 
-		/* Confirm that:
+		/* Need to confirm that:
 		 - user is indeed the original sender of the message
 		 - message is a draft
 		 - message has not been sent yet
@@ -98,10 +98,11 @@ $text .= '<div class="row">';
 			$sc->setVars($draftvalues);
 			$text .= $tp->parseTemplate($template['compose_message'], true, $sc);
 		}
+		// Message is not from user or message is not a draft/has already been sent.
 		else
 		{
 			$url = e107::url('mailbox', 'compose');
-			e107::redirect($url); // some sneaky person trying to read into someone else's drafts, redirect to default compose page
+			e107::redirect($url);
 		}
 	}
 	else

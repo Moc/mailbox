@@ -47,7 +47,11 @@ if(!USERID)
 }
 else
 {
-	/* Let's render some things now */
+	// Notify user that messages in trashbox are permanently deleted after 14 days in the trashbox
+	if($current_mailbox == 'trashbox')
+	{
+		e107::getMessage()->addInfo(LAN_MAILBOX_TRASHDELETED);
+	}
 	// Open container
 	$text .= '<div class="row">';
 		// Open left sidebar
@@ -78,7 +82,7 @@ else
 				}
 				else
 				{
-					$text .= '<div class="mailbox-infomessage">'.LAN_MAILBOX_NOMESSAGESTODISPLAY.'</div>';
+					$text .= e107::getMessage()->addInfo(LAN_MAILBOX_NOMESSAGESTODISPLAY);
 				}
 			// Footer
 			$text .= $tp->parseTemplate($template['tablelist']['footer'], true, $sc);

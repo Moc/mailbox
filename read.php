@@ -62,18 +62,18 @@ $text .= '<div class="row">';
 				}
 				else
 				{
-					$text .= '<div class="mailbox-infomessage">'.LAN_MAILBOX_MESSAGENOTYOURS.'</div>';
+					$text .= e107::getMessage()->addError(LAN_MAILBOX_MESSAGENOTYOURS);
 				}
 			}
 			else
 			{
-				$text .='<div class="mailbox-infomessage">'.LAN_MAILBOX_MESSAGENOTFOUND.'</div>';
+				$text .= e107::getMessage()->addError(LAN_MAILBOX_MESSAGENOTFOUND); // may only happen when message has been deleted > 14 days ago
 			}
 	// Close right content
 	$text .= '</div>';
 // Close container
 $text .= '</div>';
 
-$ns->tablerender(LAN_MAILBOX_NAME, $text);
+$ns->tablerender(LAN_MAILBOX_NAME, e107::getMessage()->render().$text);
 require_once(FOOTERF);
 exit;
