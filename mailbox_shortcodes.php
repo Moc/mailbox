@@ -68,7 +68,7 @@ class mailbox_shortcodes extends e_shortcode
       if(!$parm) { $parm = 'inbox'; }
 
       // Check if current page is the active page
-      if($_GET['page'] == $parm)
+      if(e107::getParser()->filter($_GET['page']) == $parm)
       {
          return 'class="active"';
       }
