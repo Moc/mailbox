@@ -61,17 +61,7 @@
   padding-top: 7.5px;
 }
 
-.mailbox-datestamp {
-  font-style: italic;
-}
 
-.mailbox-infomessage {
-  width: 80%;
-  margin: 0 auto;
-  font-style: italic;
-  padding-top: 10px;
-  padding-bottom: 10px;
-}
 /*
  * Page: Mailbox
  * -------------
@@ -80,7 +70,7 @@
   margin: 0;
 }
 
-.mailbox-messages > .table > td > * {
+.mailbox-messages > .table > tbody > tr > td  {
     vertical-align : middle;
 }
 
