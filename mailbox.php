@@ -82,7 +82,8 @@ else
 				}
 				else
 				{
-					$text .= e107::getMessage()->addInfo(LAN_MAILBOX_NOMESSAGESTODISPLAY);
+					$nomessages = e107::getParser()->lanVars(LAN_MAILBOX_NOMESSAGESTODISPLAY, $current_mailbox);
+					$text .= e107::getMessage()->addInfo($nomessages);
 				}
 			// Footer
 			$text .= $tp->parseTemplate($template['tablelist']['footer'], true, $sc);
