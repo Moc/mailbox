@@ -247,16 +247,9 @@ class mailbox_shortcodes extends e_shortcode
 
    function sc_mailbox_compose_to($parm='')
    {
-      $userpicker_options =
-      array(
-          'selectize' =>
-             array(
-                  'loadPath'  => e_HTTP.'user.php',
-                  'create'    => false,
-                  'maxItems'  => 10,
-                  'mode'      => 'multi',
-             ),
-          'placeholder' => 'To',
+      // Set options
+      $options = array(
+         'limit' => 10, // TODO: change into preference
       );
 
       if($this->var['message_to'])
@@ -264,7 +257,7 @@ class mailbox_shortcodes extends e_shortcode
          $message_to = $this->var['message_to'];
       }
 
-      return e107::getForm()->userpicker('message_to', $message_to, '', '', $userpicker_options);
+      return e107::getForm()->userpicker('message_to', $message_to, $options);
    }
 
    function sc_mailbox_compose_subject($parm='')
