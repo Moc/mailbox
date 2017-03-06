@@ -134,6 +134,35 @@ $MAILBOX_TEMPLATE['box_navigation'] = '
 	<!-- /.panel-body -->
 </div>
 <!-- /. panel -->
+
+<div class="panel panel-primary">
+	<div class="panel-heading">Categories</div>
+	<div class="panel-body">
+		<ul class="nav nav-pills nav-stacked mailbox-nav">
+		    <li><a href="#"> <i class="fa fa-circle text-navy"></i> Work </a></li>
+		    <li><a href="#"> <i class="fa fa-circle text-danger"></i> Documents</a></li>
+		    <li><a href="#"> <i class="fa fa-circle text-primary"></i> Social</a></li>
+		    <li><a href="#"> <i class="fa fa-circle text-info"></i> Advertising</a></li>
+		    <li><a href="#"> <i class="fa fa-circle text-warning"></i> Clients</a></li>
+      	</ul>
+ 	</div>
+	<!-- /.panel-body -->
+</div>
+<!-- /. panel -->
+
+<h5 class="tag-title">Labels</h5>
+<ul class="tag-list" style="padding: 0">
+    <li><a href=""><i class="fa fa-tag"></i> Family</a></li>
+    <li><a href=""><i class="fa fa-tag"></i> Work</a></li>
+    <li><a href=""><i class="fa fa-tag"></i> Home</a></li>
+    <li><a href=""><i class="fa fa-tag"></i> Children</a></li>
+    <li><a href=""><i class="fa fa-tag"></i> Holidays</a></li>
+    <li><a href=""><i class="fa fa-tag"></i> Music</a></li>
+    <li><a href=""><i class="fa fa-tag"></i> Photography</a></li>
+    <li><a href=""><i class="fa fa-tag"></i> Film</a></li>
+</ul>
+<div class="clearfix"></div>
+
 ';
 
 $MAILBOX_TEMPLATE['compose_message'] = '
