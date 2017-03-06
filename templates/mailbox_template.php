@@ -127,7 +127,7 @@ $MAILBOX_TEMPLATE['box_navigation'] = '
            		<a href="{MAILBOX_BOXLINK=starbox}">{MAILBOX_BOXGLYPH=starbox} '.LAN_MAILBOX_STARBOX.' {MAILBOX_BOXCOUNT=starbox}</a>
            	</li>
 	        <li {MAILBOX_BOXLINK_ACTIVE=trashbox}>
-	        	<a href="{MAILBOX_BOXLINK=trashbox}">{MAILBOX_BOXGLYPH=trashbox} '.LAN_MAILBOX_TRASHBOX.' {MAILBOX_BOXCOUNT=starbox}</a>
+	        	<a href="{MAILBOX_BOXLINK=trashbox}">{MAILBOX_BOXGLYPH=trashbox} '.LAN_MAILBOX_TRASHBOX.' {MAILBOX_BOXCOUNT=trashbox}</a>
 	        </li>
       	</ul>
  	</div>
