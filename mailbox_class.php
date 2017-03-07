@@ -110,13 +110,13 @@ class Mailbox
 			'message_attachments' 	=> '',
 		);
 
-		// The insert data represents changes specific to a message (e.g. draft)
+		// The insert data represent changes to the default data (which are specific to a message, such as a draft)
 		$insert_data = $default_data;
 
 		// If the message is only a draft, we need to make some changes to the default data
 		if($action == 'draft')
 		{
-			// Set draft status and send datestamp to 0
+			// Set draft status and set datestamp to 0
 			$insert_data['message_draft'] 	= '1';
 			$insert_data['message_sent'] 	= '0';
 			$insert_data['message_to'] 		= $post_data['message_to'];
@@ -165,7 +165,6 @@ class Mailbox
 		// individual
 		else
 		{
-			//print_a("It should be multiple: ".$message_to);
 			$sendmode = 'multiple';
 		}
 
