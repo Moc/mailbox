@@ -1,7 +1,7 @@
 CREATE TABLE mailbox_messages (
   message_id int(10) unsigned NOT NULL auto_increment,
   message_from int(10) unsigned NOT NULL default '0',             /* User ID of sender */
-  message_to varchar(250) NOT NULL default '',                    /* Comma separated string of users */
+  message_to int(10) NOT NULL default '0',                        /* User ID of receiver */
   message_draft int(10) NOT NULL default '0',                     /* Draft status */
   message_sent int(10) unsigned NOT NULL default '0',			        /* Datestamp sent */
   message_read int(10) unsigned NOT NULL default '0',			        /* Datestamp read */
