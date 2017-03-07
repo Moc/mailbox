@@ -93,7 +93,6 @@ class Mailbox
 
 		$tp  = e107::getParser();
 		$sql = e107::getDb();
-		$mes = e107::getMessage();
 
 		// This is the default data set
 		$default_data = array(
