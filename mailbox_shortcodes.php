@@ -127,6 +127,41 @@ class mailbox_shortcodes extends e_shortcode
 
    function sc_mailbox_message_avatar($parm='')
    {
+      $PREFERENCE = 2; // TODO
+
+      // Check if there are multiple recipients (outbox, draftbox)
+      if(strrpos($this->var['message_to'], ','))
+      {
+         $options = array(
+            'w' => '20',
+            'h' => '20',
+         );
+
+         $recipients = explode(',', $this->var['message_to']);
+         $avatars = '';
+
+         $max = $PREFERENCE + 1; // Set maximum depending on preference
+         $count = 0;
+
+         foreach($recipients as $recipient)
+         {
+            $count++;
+
+            $userinfo = e107::user($recipient);
+
+            // Check for maximum amount of avatars
+            if ($count >= $max)
+            {
+               $avatars .= "..."; // Add text after ommitting other avatars
+               break;
+            }
+
+            $avatars .= e107::getParser()->toAvatar($userinfo, $options);
+         }
+
+         return $avatars;
+      }
+
       switch(e107::getParser()->filter($_GET['page']))
       {
          case 'inbox':
@@ -142,10 +177,10 @@ class mailbox_shortcodes extends e_shortcode
       }
 
       // Check if we are viewing an outbox message (message that was send by user viewing)
-      if($this->var['message_from'] == USERID)
-      {
-          $userinfo = e107::user($this->var['message_to']);
-      }
+      // if($this->var['message_from'] == USERID)
+      // {
+      //     $userinfo = e107::user($this->var['message_to']);
+      // }
 
       return e107::getParser()->toAvatar($userinfo);
    }

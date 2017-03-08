@@ -65,7 +65,7 @@ $MAILBOX_TEMPLATE['tablelist']['body'] = '
 				<tr>
 					<td><input type="checkbox"></td>
 					<td class="mailbox-star hidden-xs">{MAILBOX_MESSAGE_STAR}</td>
-					<td class="mailbox-name">{SETIMAGE: w=50&h=50&crop=1} {MAILBOX_MESSAGE_AVATAR} {MAILBOX_MESSAGE_FROMTO}</td>
+					<td class="mailbox-name">{SETIMAGE: w=40&h=40&crop=1} {MAILBOX_MESSAGE_AVATAR} {MAILBOX_MESSAGE_FROMTO}</td>
 					<td class="mailbox-subject">{MAILBOX_MESSAGE_SUBJECT}</td>
 					<td class="mailbox-attachment hidden-xs">{MAILBOX_MESSAGE_ATTACHMENT}</td>
 					<td class="mailbox-date">{MAILBOX_MESSAGE_DATESTAMP=relative}</td>
