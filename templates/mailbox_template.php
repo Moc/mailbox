@@ -151,16 +151,13 @@ $MAILBOX_TEMPLATE['box_navigation'] = '
 <!-- /. panel -->
 
 <h5 class="tag-title">Labels</h5>
-<ul class="tag-list" style="padding: 0">
-    <li><a href=""><i class="fa fa-tag"></i> Family</a></li>
-    <li><a href=""><i class="fa fa-tag"></i> Work</a></li>
-    <li><a href=""><i class="fa fa-tag"></i> Home</a></li>
-    <li><a href=""><i class="fa fa-tag"></i> Children</a></li>
-    <li><a href=""><i class="fa fa-tag"></i> Holidays</a></li>
-    <li><a href=""><i class="fa fa-tag"></i> Music</a></li>
-    <li><a href=""><i class="fa fa-tag"></i> Photography</a></li>
-    <li><a href=""><i class="fa fa-tag"></i> Film</a></li>
-</ul>
+<span class="label label-default">Work</span>
+<span class="label label-primary">Home</span>
+<span class="label label-success">Family</span>
+<span class="label label-info">Holidays</span>
+<span class="label label-warning">Photography</span>
+<span class="label label-danger">Film</span>
+
 <div class="clearfix"></div>
 
 ';
