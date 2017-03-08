@@ -129,39 +129,6 @@ class mailbox_shortcodes extends e_shortcode
    {
       $PREFERENCE = 2; // TODO
 
-      // Check if there are multiple recipients (outbox, draftbox)
-      if(strrpos($this->var['message_to'], ','))
-      {
-         $options = array(
-            'w' => '20',
-            'h' => '20',
-         );
-
-         $recipients = explode(',', $this->var['message_to']);
-         $avatars = '';
-
-         $max = $PREFERENCE + 1; // Set maximum depending on preference
-         $count = 0;
-
-         foreach($recipients as $recipient)
-         {
-            $count++;
-
-            $userinfo = e107::user($recipient);
-
-            // Check for maximum amount of avatars
-            if ($count >= $max)
-            {
-               $avatars .= "..."; // Add text after ommitting other avatars
-               break;
-            }
-
-            $avatars .= e107::getParser()->toAvatar($userinfo, $options);
-         }
-
-         return $avatars;
-      }
-
       switch(e107::getParser()->filter($_GET['page']))
       {
          case 'inbox':
@@ -172,21 +139,49 @@ class mailbox_shortcodes extends e_shortcode
             break;
          case 'outbox':
          case 'draftbox':
+            // Check if there are multiple recipients (outbox, draftbox)
+            if(strrpos($this->var['message_to'], ','))
+            {
+               $options = array(
+                  'w' => '20',
+                  'h' => '20',
+               );
+
+               $recipients = explode(',', $this->var['message_to']);
+               $avatars = '';
+
+               $max = $PREFERENCE + 1; // Set maximum depending on preference
+               $count = 0;
+
+               foreach($recipients as $recipient)
+               {
+                  $count++;
+                  $userinfo = e107::user($recipient);
+
+                  // Check for maximum amount of avatars
+                  if ($count >= $max)
+                  {
+                     $avatars .= "..."; // Add text after ommitting other avatars
+                     break;
+                  }
+
+                  $avatars .= e107::getParser()->toAvatar($userinfo, $options);
+               }
+
+               return $avatars;
+            }
+
             $userinfo = e107::user($this->var['message_to']);
             break;
       }
-
-      // Check if we are viewing an outbox message (message that was send by user viewing)
-      // if($this->var['message_from'] == USERID)
-      // {
-      //     $userinfo = e107::user($this->var['message_to']);
-      // }
 
       return e107::getParser()->toAvatar($userinfo);
    }
 
    function sc_mailbox_message_fromto($parm='')
    {
+      $PREFERENCE = 2; // TODO
+
       switch(e107::getParser()->filter($_GET['page']))
       {
          case 'inbox':
@@ -197,14 +192,36 @@ class mailbox_shortcodes extends e_shortcode
             break;
          case 'outbox':
          case 'draftbox':
+            if(strrpos($this->var['message_to'], ','))
+            {
+               $recipients = explode(',', $this->var['message_to']);
+               $output = '';
+
+               $max = $PREFERENCE + 1; // Set maximum depending on preference
+               $count = 0;
+
+               foreach($recipients as $recipient)
+               {
+                  $count++;
+
+                  $userinfo = e107::user($recipient);
+                  $profile_link = e107::getUrl()->create('user/profile/view', array('id' => $userinfo['user_id'], 'name' => $userinfo['user_name']));
+                  $output .= "<a href='".$profile_link."'>".$userinfo['user_name']."</a>, ";
+
+                  // Check for maximum amount of recipients
+                  if ($count >= $max)
+                  {
+                     $output .= "..."; // Add text after ommitting other recipients
+                     break;
+                  }
+
+               }
+
+               return $output;
+            }
+
             $userinfo = e107::user($this->var['message_to']);
             break;
-      }
-
-      // Check if we are viewing an outbox message (message that was send by user viewing)
-      if($this->var['message_from'] == USERID)
-      {
-          $userinfo = e107::user($this->var['message_to']);
       }
 
       $profile_link = e107::getUrl()->create('user/profile/view', array('id' => $userinfo['user_id'], 'name' => $userinfo['user_name']));
