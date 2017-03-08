@@ -55,6 +55,7 @@ $text .= '<div class="row">';
 			// Check if the message is there
 			if($query_getmessage)
 			{
+				// Make sure that the message belongs to user (sender or receiver)
 				if($query_getmessage['message_to'] == USERID || $query_getmessage['message_from'] == USERID)
 				{
 					$sc->setVars($query_getmessage);
