@@ -58,7 +58,7 @@ class Mailbox
 		return $current_mailbox;
 	}
 
-	public function get_database_queryargs($box = '')
+	public function get_database_queryargs($box = 'inbox')
 	{
 		// Default back to inbox to be sure
 		if(!$box) { $box = 'inbox'; }
@@ -155,18 +155,21 @@ class Mailbox
 		// First, determine the sendmode: individual, multiple, userclass (message_to)
 		print_a($post_data['message_to']);
 		$message_to = $tp->toDb($post_data['message_to']);
-		var_dump($message_to);
 
+		// individual
 		if(is_numeric($message_to))
 		{
-			$sendmode = 'individual';
+			$sendmode = "individual";
 		}
-		// individual
+		// multiple
+		elseif(strrpos($post_data['message_to'], ','))
+		{
+			$sendmode = "multiple";
+		}
 		else
 		{
-			$sendmode = 'multiple';
+			$sendmode = "class";
 		}
-
 
 
 		print_a("sendmode: ".$sendmode." recipients: ".$message_to);
