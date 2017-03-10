@@ -16,8 +16,17 @@ class mailbox_shortcodes extends e_shortcode
    {
       require_once(e_PLUGIN."mailbox/mailbox_class.php");
       $mailbox_class = new Mailbox;
-      $args  = $mailbox_class->get_database_queryargs($parm);
-      $count = e107::getDb()->count('mailbox_messages', '(*)', ''.$args.'');
+
+      // In the case of outbox, we need to call a special routine to combine messages sent to multiple recipients or a class.
+      if($parm == 'outbox')
+      {
+         $count = $mailbox_class->get_outbox_messages('', true);
+      }
+      else
+      {
+         $args  = $mailbox_class->get_database_queryargs($parm);
+         $count = e107::getDb()->count('mailbox_messages', '(*)', ''.$args.'');
+      }
 
       return '<span class="label label-primary pull-right">'.$count.'</span>';
    }
@@ -192,6 +201,7 @@ class mailbox_shortcodes extends e_shortcode
             break;
          case 'outbox':
          case 'draftbox':
+            // Check for multiple recipients
             if(strrpos($this->var['message_to'], ','))
             {
                $recipients = explode(',', $this->var['message_to']);

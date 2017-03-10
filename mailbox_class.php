@@ -86,6 +86,18 @@ class Mailbox
 		return $args;
 	}
 
+	// this function processes all messages in outbox and combines messages which are sent to multiple recipients or a class into a single message.
+	// $count = if true, returns integer amount of messages. false: return array of data with outbox messages
+	public function get_outbox_messages($data = '', $count = false)
+	{
+		if($count)
+		{
+			return "100";
+		}
+
+		return false;
+	}
+
 	public function process_compose($action = 'send', $post_data)
 	{
 		// print_a("Message action: ".$action);
@@ -119,7 +131,6 @@ class Mailbox
 			$insert_data['message_draft'] 	= '1';
 			$insert_data['message_sent'] 	= '0';
 			$insert_data['message_to'] 		= $post_data['message_to'];
-
 
 			// If saving an existing draft, update rather than insert new record
 			if($post_data['id'])
