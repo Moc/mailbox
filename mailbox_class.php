@@ -100,8 +100,8 @@ class Mailbox
 			'message_draft'			=> '0',
 			'message_sent' 			=> time(),
 			'message_read' 			=> 0,
-			'message_subject' 		=> $post_data['message_subject'],
-			'message_text'			=> $post_data['message_text'],
+			'message_subject' 		=> $tp->toDb($post_data['message_subject']),
+			'message_text'			=> $tp->toDb($post_data['message_text']),
 			'message_to_starred' 	=> '0',
 			'message_from_starred' 	=> '0',
 			'message_to_deleted'	=> '0',
@@ -162,7 +162,7 @@ class Mailbox
 			$sendmode = "individual";
 		}
 		// multiple
-		elseif(strrpos($post_data['message_to'], ','))
+		elseif(strrpos($message_to, ','))
 		{
 			$sendmode = "multiple";
 		}
