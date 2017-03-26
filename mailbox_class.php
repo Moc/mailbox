@@ -11,15 +11,15 @@
  */
 
 /* NOTES
-- Delete message
+- Delete message from database:
 => check if message is ready to be deleted from database completely
 1) should not be starred
 2) should be deleted by both to and from
 
-- Move to trash
-=> Remove starred status from to (set message_to_starred to 0)
+- Move to trash:
+=> Remove starred status from recipient (set message_to_starred to 0)
 
-- Empty trash
+- Empty trash:
 => last empty date updated each time when trash is emptied
 => only messages displayed where the message_to_deleted < latest_emptytrash_datestamp of user
 
@@ -127,6 +127,7 @@ class Mailbox
 		// If the message is only a draft, we need to make some changes to the default data
 		if($action == 'draft')
 		{
+			// process_draft($insert_data);)
 			// Set draft status and set datestamp to 0
 			$insert_data['message_draft'] 	= '1';
 			$insert_data['message_sent'] 	= '0';
@@ -163,7 +164,7 @@ class Mailbox
 		}
 
 		// Ending up here, we are actually sending the message.
-		// First, determine the sendmode: individual, multiple, userclass (message_to)
+		// First, determine the sendmode: 1) individual, 2) multiple, 3) usserclass
 		print_a($post_data['message_to']);
 		$message_to = $tp->toDb($post_data['message_to']);
 
@@ -190,6 +191,21 @@ class Mailbox
 
 		// Prepare message text (message_text)
 
+		// Trigger event
+		e107::getEvent()->trigger('user_mailbox_sent', $info);
+	}
+
+
+	// Discard a draft message
+	public function discard_message($data = '')
+	{
+		// Check if we have all the required data
+		if(!$data || !$data['id'])
+		{
+			return e107::getMessage()->addError("Something went wrong when trying to discard the message...");
+		}
+
+		return e107::getMessage()->addInfo("Message should be discarded but this routine is not finished yet.");
 	}
 
 	/*
