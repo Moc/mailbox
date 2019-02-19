@@ -39,19 +39,19 @@ class mailbox_shortcodes extends e_shortcode
       {
          case 'inbox':
          default:
-            $glyph = e107::getParser()->toGlyph('inbox');
+            $glyph = e107::getParser()->toGlyph('fa-inbox');
             break;
          case 'outbox':
-            $glyph = e107::getParser()->toGlyph('envelope-o');
+            $glyph = e107::getParser()->toGlyph('fa-envelope-o');
             break;
          case 'draftbox':
-            $glyph = e107::getParser()->toGlyph("pencil-square-o");
+            $glyph = e107::getParser()->toGlyph("fa-pencil-square-o");
             break;
          case 'starbox':
-            $glyph = e107::getParser()->toGlyph("star");
+            $glyph = e107::getParser()->toGlyph("fa-star");
             break;
          case 'trashbox':
-            $glyph = e107::getParser()->toGlyph("trash-o");
+            $glyph = e107::getParser()->toGlyph("fa-trash-o");
             break;
       }
 
