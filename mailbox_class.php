@@ -11,15 +11,15 @@
  */
 
 /* NOTES
-- Delete message from database:
+- Delete message
 => check if message is ready to be deleted from database completely
 1) should not be starred
 2) should be deleted by both to and from
 
-- Move to trash:
-=> Remove starred status from recipient (set message_to_starred to 0)
+- Move to trash
+=> Remove starred status from to (set message_to_starred to 0)
 
-- Empty trash:
+- Empty trash
 => last empty date updated each time when trash is emptied
 => only messages displayed where the message_to_deleted < latest_emptytrash_datestamp of user
 
@@ -86,18 +86,6 @@ class Mailbox
 		return $args;
 	}
 
-	// this function processes all messages in outbox and combines messages which are sent to multiple recipients or a class into a single message.
-	// $count = if true, returns integer amount of messages. false: return array of data with outbox messages
-	public function get_outbox_messages($data = '', $count = false)
-	{
-		if($count)
-		{
-			return "100";
-		}
-
-		return false;
-	}
-
 	public function process_compose($action = 'send', $post_data)
 	{
 		// print_a("Message action: ".$action);
@@ -112,8 +100,8 @@ class Mailbox
 			'message_draft'			=> '0',
 			'message_sent' 			=> time(),
 			'message_read' 			=> 0,
-			'message_subject' 		=> $tp->toDb($post_data['message_subject']),
-			'message_text'			=> $tp->toDb($post_data['message_text']),
+			'message_subject' 		=> $post_data['message_subject'],
+			'message_text'			=> $post_data['message_text'],
 			'message_to_starred' 	=> '0',
 			'message_from_starred' 	=> '0',
 			'message_to_deleted'	=> '0',
@@ -127,11 +115,11 @@ class Mailbox
 		// If the message is only a draft, we need to make some changes to the default data
 		if($action == 'draft')
 		{
-			// process_draft($insert_data);)
 			// Set draft status and set datestamp to 0
 			$insert_data['message_draft'] 	= '1';
 			$insert_data['message_sent'] 	= '0';
 			$insert_data['message_to'] 		= $post_data['message_to'];
+
 
 			// If saving an existing draft, update rather than insert new record
 			if($post_data['id'])
@@ -164,7 +152,7 @@ class Mailbox
 		}
 
 		// Ending up here, we are actually sending the message.
-		// First, determine the sendmode: 1) individual, 2) multiple, 3) usserclass
+		// First, determine the sendmode: individual, multiple, userclass (message_to)
 		print_a($post_data['message_to']);
 		$message_to = $tp->toDb($post_data['message_to']);
 
@@ -174,7 +162,7 @@ class Mailbox
 			$sendmode = "individual";
 		}
 		// multiple
-		elseif(strrpos($message_to, ','))
+		elseif(strrpos($post_data['message_to'], ','))
 		{
 			$sendmode = "multiple";
 		}
@@ -191,21 +179,6 @@ class Mailbox
 
 		// Prepare message text (message_text)
 
-		// Trigger event
-		e107::getEvent()->trigger('user_mailbox_sent', $info);
-	}
-
-
-	// Discard a draft message
-	public function discard_message($data = '')
-	{
-		// Check if we have all the required data
-		if(!$data || !$data['id'])
-		{
-			return e107::getMessage()->addError("Something went wrong when trying to discard the message...");
-		}
-
-		return e107::getMessage()->addInfo("Message should be discarded but this routine is not finished yet.");
 	}
 
 	/*

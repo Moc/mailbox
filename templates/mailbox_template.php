@@ -151,13 +151,16 @@ $MAILBOX_TEMPLATE['box_navigation'] = '
 <!-- /. panel -->
 
 <h5 class="tag-title">Labels</h5>
-<span class="label label-default">Work</span>
-<span class="label label-primary">Home</span>
-<span class="label label-success">Family</span>
-<span class="label label-info">Holidays</span>
-<span class="label label-warning">Photography</span>
-<span class="label label-danger">Film</span>
-
+<ul class="tag-list" style="padding: 0">
+    <li><a href=""><i class="fa fa-tag"></i> Family</a></li>
+    <li><a href=""><i class="fa fa-tag"></i> Work</a></li>
+    <li><a href=""><i class="fa fa-tag"></i> Home</a></li>
+    <li><a href=""><i class="fa fa-tag"></i> Children</a></li>
+    <li><a href=""><i class="fa fa-tag"></i> Holidays</a></li>
+    <li><a href=""><i class="fa fa-tag"></i> Music</a></li>
+    <li><a href=""><i class="fa fa-tag"></i> Photography</a></li>
+    <li><a href=""><i class="fa fa-tag"></i> Film</a></li>
+</ul>
 <div class="clearfix"></div>
 
 ';
@@ -189,7 +192,7 @@ $MAILBOX_TEMPLATE['compose_message'] = '
         	<button name="compose" type="submit" class="btn btn-default" value="draft">'.e107::getParser()->toGlyph("floppy-o").' Save as draft</button>
         	<button name="compose" type="submit" class="btn btn-primary" value="send">'.e107::getParser()->toGlyph("envelope-o").' Send</button>
       	</div>
-      	<button name="compose" type="submit" class="btn btn-default" value="discard">'.e107::getParser()->toGlyph("times").' Discard</button>
+      	<button name="compose" type="reset" class="btn btn-default" value="discard">'.e107::getParser()->toGlyph("times").' Discard</button>
 
     </div>
     <!-- /.panel-footer -->

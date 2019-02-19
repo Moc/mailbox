@@ -20,7 +20,7 @@ if(!e107::isInstalled('mailbox'))
 }
 
 // Load the LAN files
-e107::lan('mailbox', false, true);
+e107::lan('mailbox');
 
 // Load the header and the mailbox class
 require_once(HEADERF);
@@ -43,7 +43,7 @@ $mailbox_class = new Mailbox;
 if($_SERVER['REQUEST_METHOD'] == 'POST')
 {
 	// Get message id when updating existing draft
-	if($_GET['cid'])
+	if($tp->filter($_GET['cid']))
 	{
 		$_POST['id'] = $tp->filter($_GET['cid']);
 	}
@@ -51,7 +51,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 	// Determine whether we are sending, saving as a draft or discarding the message
 	switch($_POST['compose'])
 	{
-		// Message should be send to the recipient(s)
+		// Message should be send to the receiver
 		case 'send':
 		default:
 			$text .= $mailbox_class->process_compose("send", $_POST);
@@ -61,7 +61,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 			$text .= $mailbox_class->process_compose("draft", $_POST);
 			break;
 		case 'discard':
-			$text .= $mailbox_class->discard_message($_POST);
+			print_a("The message should be discarded");
 			break;
 	}
 }

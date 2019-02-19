@@ -16,17 +16,8 @@ class mailbox_shortcodes extends e_shortcode
    {
       require_once(e_PLUGIN."mailbox/mailbox_class.php");
       $mailbox_class = new Mailbox;
-
-      // In the case of outbox, we need to call a special routine to combine messages sent to multiple recipients or a class.
-      if($parm == 'outbox')
-      {
-         $count = $mailbox_class->get_outbox_messages('', true);
-      }
-      else
-      {
-         $args  = $mailbox_class->get_database_queryargs($parm);
-         $count = e107::getDb()->count('mailbox_messages', '(*)', ''.$args.'');
-      }
+      $args  = $mailbox_class->get_database_queryargs($parm);
+      $count = e107::getDb()->count('mailbox_messages', '(*)', ''.$args.'');
 
       return '<span class="label label-primary pull-right">'.$count.'</span>';
    }
@@ -201,7 +192,6 @@ class mailbox_shortcodes extends e_shortcode
             break;
          case 'outbox':
          case 'draftbox':
-            // Check for multiple recipients
             if(strrpos($this->var['message_to'], ','))
             {
                $recipients = explode(',', $this->var['message_to']);
@@ -309,8 +299,6 @@ class mailbox_shortcodes extends e_shortcode
 
    function sc_mailbox_compose_to($parm='')
    {
-      $userclass = false; // TODO PREF
-
       // Set options
       $options = array(
          'limit' => 10, // TODO: change into preference
@@ -321,19 +309,7 @@ class mailbox_shortcodes extends e_shortcode
          $message_to = $this->var['message_to'];
       }
 
-      $text = '<label for="message_to">Recipient(s)</label>';
-      $text .= e107::getForm()->userpicker('message_to', $message_to, $options);
-
-      if($userclass)
-      {
-         $text .= '<label for="message_to_userclass">Userclass</label>';
-         $text .= e107::getUserClass()->uc_dropdown('message_to_userclass', e_UC_NOBODY, $args);
-      }
-
-      return $text;
-
-      // userclass
-
+      return e107::getForm()->userpicker('message_to', $message_to, $options);
    }
 
    function sc_mailbox_compose_subject($parm='')
@@ -343,8 +319,7 @@ class mailbox_shortcodes extends e_shortcode
          $message_subject = $this->var['message_subject'];
       }
 
-      $text = '<label for="message_subject">Subject</label>';
-      return $text.e107::getForm()->text('message_subject', $message_subject, '', array('placeholder' => 'Subject'));
+      return e107::getForm()->text('message_subject', $message_subject, '', array('placeholder' => 'Subject'));
    }
 
    function sc_mailbox_compose_text($parm='')
@@ -354,8 +329,7 @@ class mailbox_shortcodes extends e_shortcode
          $message_text = $this->var['message_text'];
       }
 
-      $text = '<label for="message_text">Message</label>';
-      return $text.e107::getForm()->bbarea('message_text', $message_text);
+      return e107::getForm()->bbarea('message_text', $message_text);
    }
 
    function sc_mailbox_quickform($parm='')
