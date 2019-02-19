@@ -20,7 +20,7 @@ if(!e107::isInstalled('mailbox'))
 }
 
 // Load the LAN files
-e107::lan('mailbox');
+e107::lan('mailbox', false, true);
 
 // Load the header
 require_once(HEADERF);

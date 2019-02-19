@@ -20,7 +20,7 @@ if(!e107::isInstalled('mailbox'))
 }
 
 // Load the LAN files
-e107::lan('mailbox');
+e107::lan('mailbox', false, true);
 
 // Load the header and mailbox class
 require_once(HEADERF);
@@ -69,6 +69,12 @@ else
 			// Body
 				// Construct query
 				$query_getmessages = $sql->retrieve('mailbox_messages', '*', ''.$queryargs.'', true);
+
+				// Special routine for outbox, needed to combine messages send to multiple recipients or class
+				if($current_mailbox == 'outbox')
+				{
+					$query_getmessages = $mailbox_class->get_outbox_messages($query_getmessages);
+				}
 
 				// Check if there messages to display
 				if($query_getmessages)
