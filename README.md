@@ -1,3 +1,7 @@
+# IMPORTANT #
+**This plugin is by far not ready to be installed yet!** 
+It's still in development and I'm not even sure if I'll ever get around to release it.
+
 # Mailbox #
 *Mailbox* is an e107 plugin that features an up-to-date messaging platform that uses all the latest web technologies and functionalities offered by e107.
 
