@@ -38,16 +38,16 @@ $text 	= '';
 $mid 	= (int) $_GET['id'];
 
 /* Let's render some things now */
-// Open container
-$text .= '<div class="row">';
-	// Open left sidebar
-	$text .= '<div class="col-md-3">';
-		// Load left sidebar
-		$text .= $tp->parseTemplate($template['box_navigation'], true, $sc);
-	// Close left sidebar
-	$text .= '</div>';
-	// Open right content
-	$text .= '<div class="col-md-9">';
+	// Open container
+	$text .= $tp->parseTemplate($template['container']['start'], true, $sc);
+		// Open sidemenu
+		$text .= $tp->parseTemplate($template['box_navigation']['start'], true, $sc);
+			// Load sidemenu content
+			$text .= $tp->parseTemplate($template['box_navigation']['content'], true, $sc);
+		// Close sidemenu
+		$text .= $tp->parseTemplate($template['box_navigation']['end'], true, $sc);
+	// Open tablelist 
+	$text .= $tp->parseTemplate($template['tablelist']['start'], true, $sc);
 		// Load right content
 			// Construct query
 			$query_getmessage = $sql->retrieve('mailbox_messages', '*', 'message_id='.$mid.'');
@@ -70,10 +70,10 @@ $text .= '<div class="row">';
 			{
 				$text .= e107::getMessage()->addError(LAN_MAILBOX_MESSAGENOTFOUND); // may only happen when message has been deleted > 14 days ago
 			}
-	// Close right content
-	$text .= '</div>';
+	// Close tabellist
+	$text .= $tp->parseTemplate($template['tablelist']['end'], true, $sc);
 // Close container
-$text .= '</div>';
+$text .= $tp->parseTemplate($template['container']['end'], true, $sc);
 
 $ns->tablerender(LAN_MAILBOX_NAME, e107::getMessage()->render().$text);
 require_once(FOOTERF);

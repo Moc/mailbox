@@ -28,7 +28,8 @@ class mailbox_shortcodes extends e_shortcode
          $count = e107::getDb()->count('mailbox_messages', '(*)', ''.$args.'');
       }
 
-      return '<span class="label label-primary pull-right">'.$count.'</span>';
+      //return $count;
+      return e107::getParser()->toGlyph('fab fa-mailchimp');
    }
 
    function sc_mailbox_boxglyph($parm='')
@@ -87,27 +88,11 @@ class mailbox_shortcodes extends e_shortcode
 
    function sc_mailbox_boxtitle($parm='')
    {
-      switch(e107::getParser()->filter($_GET['page']))
-      {
-         case 'inbox':
-         default:
-            $title = LAN_MAILBOX_INBOX;
-            break;
-         case 'outbox':
-            $title = LAN_MAILBOX_OUTBOX;
-            break;
-         case 'draftbox':
-            $title = LAN_MAILBOX_DRAFTBOX;
-            break;
-         case 'starbox':
-            $title = LAN_MAILBOX_STARBOX;
-            break;
-         case 'trashbox':
-            $title = LAN_MAILBOX_TRASHBOX;
-            break;
-      }
 
-      return $title;
+      require_once(e_PLUGIN."mailbox/mailbox_class.php");
+      $mailbox_class = new Mailbox;
+
+      return $mailbox_class->get_pagetitle(e107::getParser()->filter($_GET['page']));
    }
 
    function sc_mailbox_composelink($parm='')
@@ -119,10 +104,10 @@ class mailbox_shortcodes extends e_shortcode
    function sc_mailbox_message_star($parm='')
    {
       // Draft messages cannot be starred
-      if(e107::getParser()->filter($_GET['page']) == 'draftbox')
+      /*if(e107::getParser()->filter($_GET['page']) == 'draftbox')
       {
          return;
-      }
+      }*/
 
       if($this->var['message_to_starred'])
       {
@@ -136,7 +121,16 @@ class mailbox_shortcodes extends e_shortcode
 
    function sc_mailbox_message_avatar($parm='')
    {
-      $PREFERENCE = 2; // TODO
+      $PREFERENCE = 2; // MAILBOXPREF TODO
+
+      $options = array(); 
+
+      if($parm['shape'])
+      {
+         $options['shape'] =  $parm['shape'];
+      }
+
+      //print_a($options);
 
       switch(e107::getParser()->filter($_GET['page']))
       {
@@ -151,10 +145,9 @@ class mailbox_shortcodes extends e_shortcode
             // Check if there are multiple recipients (outbox, draftbox)
             if(strrpos($this->var['message_to'], ','))
             {
-               $options = array(
-                  'w' => '20',
-                  'h' => '20',
-               );
+               // Decrease size for multiple avatars
+               $options['w'] = '20'; 
+               $options['h'] = '20'; 
 
                $recipients = explode(',', $this->var['message_to']);
                $avatars = '';
@@ -170,7 +163,7 @@ class mailbox_shortcodes extends e_shortcode
                   // Check for maximum amount of avatars
                   if ($count >= $max)
                   {
-                     $avatars .= "..."; // Add text after ommitting other avatars
+                     //$avatars .= "..."; // Add text after ommitting other avatars
                      break;
                   }
 
@@ -184,12 +177,27 @@ class mailbox_shortcodes extends e_shortcode
             break;
       }
 
-      return e107::getParser()->toAvatar($userinfo);
+      return e107::getParser()->toAvatar($userinfo, $options);
    }
+
+   function sc_mailbox_message_readunread($parm='')
+   {
+      //print_a($this->var);
+      if($this->var['message_read'] === 0)
+      {
+         return 'unread';
+      }
+      else
+      {
+         return 'read';
+      }
+
+   }
+
 
    function sc_mailbox_message_fromto($parm='')
    {
-      $PREFERENCE = 2; // TODO
+      $PREFERENCE = 2; // MAILBOXPREF TODO
 
       switch(e107::getParser()->filter($_GET['page']))
       {
@@ -206,9 +214,13 @@ class mailbox_shortcodes extends e_shortcode
             {
                $recipients = explode(',', $this->var['message_to']);
                $output = '';
+               $output_array = array();
 
-               $max = $PREFERENCE + 1; // Set maximum depending on preference
+               $max = $PREFERENCE +1; // Set maximum depending on preference
                $count = 0;
+
+               //print_a("Count: ".count($recipients));
+               //print_a("Max: ".$max);
 
                foreach($recipients as $recipient)
                {
@@ -216,20 +228,30 @@ class mailbox_shortcodes extends e_shortcode
 
                   $userinfo = e107::user($recipient);
                   $profile_link = e107::getUrl()->create('user/profile/view', array('id' => $userinfo['user_id'], 'name' => $userinfo['user_name']));
-                  $output .= "<a href='".$profile_link."'>".$userinfo['user_name']."</a>, ";
+                  $output = "<a href='".$profile_link."'>".$userinfo['user_name']."</a>";
 
+               
                   // Check for maximum amount of recipients
                   if ($count >= $max)
                   {
-                     $output .= "..."; // Add text after ommitting other recipients
+                     $output = "..."; // Add text after ommitting other recipients
+                     //break;
+                     array_push($output_array, $output);
                      break;
+                                          ;
+                  }
+                  {
+                     array_push($output_array, $output);
                   }
 
                }
+               
+               //print_a($output_array);
 
-               return $output;
+               return implode(", ", $output_array);
             }
 
+            // Single recipient
             $userinfo = e107::user($this->var['message_to']);
             break;
       }
@@ -274,9 +296,11 @@ class mailbox_shortcodes extends e_shortcode
 
    function sc_mailbox_message_attachment($parm='')
    {
-      if($this->var['message_attachment'])
+      //print_a($this->var);
+      if($this->var['message_attachments'])
       {
-         return '<a href="#">'.e107::getParser()->toGlyph("paperclip").'</a>';
+         //return '<a href="#">'.e107::getParser()->toGlyph("paperclip").'</a>';
+         return e107::getParser()->toGlyph("paperclip");
       }
       else
       {
@@ -286,19 +310,27 @@ class mailbox_shortcodes extends e_shortcode
 
    function sc_mailbox_message_datestamp($parm='')
    {
-      // No need for a date when message is not send yet or when it is a draft message
-      if(e107::getParser()->filter($_GET['page']) == 'draftbox'){ return; }
-      if($this->var['message_draft']) { return; }
-
-      $gen = e107::getDateConvert();
-      if(!$parm) { $parm = 'short'; }
-
-      if($parm == 'relative')
+      
+      // Default to datestamp from when message was sent 
+      $datestamp = $this->var['message_sent']; 
+      
+      // If it's a draft, datestamp is 'last saved'
+      if(e107::getParser()->filter($_GET['page']) == 'draftbox')
       {
-         return $gen->computeLapse($this->var['message_sent'], time(), false, false, 'short');
+        $datestamp = $this->var['message_draft'];
       }
 
-      return $gen->convert_date($this->var['message_sent'], $parm);
+      // Default parm to 'short'
+      if(!$parm) { $parm = 'short'; }
+      
+      if($parm == 'relative')
+      {
+         //return $gen->computeLapse($this->var['message_sent'], time(), false, false, 'short');
+         e107::getParser()->toDate($datestamp, "relative");
+      }
+
+      return e107::getParser()->toDate($datestamp, $parm);
+      //$gen->convert_date($this->var['message_sent'], $parm);
    }
 
    // COMPOSE
@@ -309,11 +341,11 @@ class mailbox_shortcodes extends e_shortcode
 
    function sc_mailbox_compose_to($parm='')
    {
-      $userclass = false; // TODO PREF
+      $userclass = false; // MAILBOXPREF TODO
 
       // Set options
       $options = array(
-         'limit' => 10, // TODO: change into preference
+         'limit' => 10, // MAILBOXPREFTODO 
       );
 
       if($this->var['message_to'])
@@ -321,12 +353,12 @@ class mailbox_shortcodes extends e_shortcode
          $message_to = $this->var['message_to'];
       }
 
-      $text = '<label for="message_to">Recipient(s)</label>';
+      $text = '<label for="message_to">Recipient(s)</label>'; // TODO LAN
       $text .= e107::getForm()->userpicker('message_to', $message_to, $options);
 
       if($userclass)
       {
-         $text .= '<label for="message_to_userclass">Userclass</label>';
+         $text .= '<label for="message_to_userclass">Userclass</label>'; // TODO LAN
          $text .= e107::getUserClass()->uc_dropdown('message_to_userclass', e_UC_NOBODY, $args);
       }
 

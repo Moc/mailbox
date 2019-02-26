@@ -22,24 +22,32 @@ if(!e107::isInstalled('mailbox'))
 // Load the LAN files
 e107::lan('mailbox');
 
-// Load the header and mailbox class
-require_once(HEADERF);
-require_once(e_PLUGIN."mailbox/mailbox_class.php");
-
-// Load template and shortcodes
-$sc 		= e107::getScBatch('mailbox', TRUE);
-$template 	= e107::getTemplate('mailbox');
-$template 	= array_change_key_case($template);
-
 // Define variables
 $sql 	= e107::getDb();
 $tp 	= e107::getParser();
 $text 	= '';
 $page   = $tp->filter($_GET['page']);
 
+// Load mailbox class
+require_once(e_PLUGIN."mailbox/mailbox_class.php");
+
+// Initiate mailbox class
 $mailbox_class 		= new Mailbox;
 $current_mailbox 	= $mailbox_class->get_current_mailbox($page);
 $queryargs 			= $mailbox_class->get_database_queryargs($current_mailbox);
+
+// Set pagetitles
+$pagetitle = $mailbox_class->get_pagetitle($page); 
+define('e_PAGETITLE', $pagetitle);
+
+// Load the header and mailbox class
+require_once(HEADERF);
+
+// Load template and shortcodes
+$sc 		= e107::getScBatch('mailbox', TRUE);
+$template 	= e107::getTemplate('mailbox');
+$template 	= array_change_key_case($template);
+
 
 if(!USERID)
 {
@@ -53,20 +61,20 @@ else
 		e107::getMessage()->addInfo(LAN_MAILBOX_TRASHDELETED);
 	}
 	// Open container
-	$text .= '<div class="row">';
-		// Open left sidebar
-		$text .= '<div class="col-md-3">';
-			// Load left sidebar
-			$text .= $tp->parseTemplate($template['box_navigation'], true, $sc);
-		// Close left sidebar
-		$text .= '</div>';
-		// Open right content
-		$text .= '<div class="col-md-9">';
-		// Load right content
+	$text .= $tp->parseTemplate($template['container']['start'], true, $sc);
+		// Open sidemenu
+		$text .= $tp->parseTemplate($template['box_navigation']['start'], true, $sc);
+			// Load sidemenu content
+			$text .= $tp->parseTemplate($template['box_navigation']['content'], true, $sc);
+		// Close sidemenu
+		$text .= $tp->parseTemplate($template['box_navigation']['end'], true, $sc);
+		// Open tablelist 
+		$text .= $tp->parseTemplate($template['tablelist']['start'], true, $sc);
+		// Load tablelist table (contents)
 			// Header
 			$text .= $tp->parseTemplate($template['tablelist']['header'], true, $sc);
 
-			// Body
+			// Body (= messages)
 				// Construct query
 				$query_getmessages = $sql->retrieve('mailbox_messages', '*', ''.$queryargs.'', true);
 
@@ -83,7 +91,7 @@ else
 					foreach($query_getmessages as $message)
 					{
 						$sc->setVars($message); // pass query values on so they can be used in the shortcodes
-						$text .= $tp->parseTemplate($template['tablelist']['body'], true, $sc);
+						$text .= $tp->parseTemplate($template['tablelist']['messages'], true, $sc);
 					}
 				}
 				else
@@ -93,12 +101,12 @@ else
 				}
 			// Footer
 			$text .= $tp->parseTemplate($template['tablelist']['footer'], true, $sc);
-		// Close right content
-		$text .= '</div>';
+		// Close tabellist
+		$text .= $tp->parseTemplate($template['tablelist']['end'], true, $sc);
 	// Close container
-	$text .= '</div>';
+	$text .= $tp->parseTemplate($template['container']['end'], true, $sc);
 }
 
-$ns->tablerender(LAN_MAILBOX_NAME, e107::getMessage()->render().$text);
+$ns->tablerender(LAN_MAILBOX_NAME, e107::getMessage()->render().$text, 'mailbox');
 require_once(FOOTERF);
 exit;

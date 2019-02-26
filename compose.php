@@ -67,15 +67,15 @@ if($_SERVER['REQUEST_METHOD'] == 'POST')
 }
 
 // Open container
-$text .= '<div class="row">';
-	// Open left sidebar
-	$text .= '<div class="col-md-3">';
-		// Load left sidebar
-		$text .= $tp->parseTemplate($template['box_navigation'], true, $sc);
-	// Close left sidebar
-	$text .= '</div>';
-	// Open right content
-	$text .= '<div class="col-md-9">';
+$text .= $tp->parseTemplate($template['container']['start'], true, $sc);
+	// Open sidemenu
+	$text .= $tp->parseTemplate($template['box_navigation']['start'], true, $sc);
+		// Load sidemenu content
+		$text .= $tp->parseTemplate($template['box_navigation']['content'], true, $sc);
+	// Close sidemenu
+	$text .= $tp->parseTemplate($template['box_navigation']['end'], true, $sc);
+// Open tablelist 
+$text .= $tp->parseTemplate($template['tablelist']['start'], true, $sc);
 
 	// Check if we are continuing a draft - in which case we need to retrieve the data from db
 	if($tp->filter($_GET['cid']))
@@ -110,10 +110,10 @@ $text .= '<div class="row">';
 		$text .= $tp->parseTemplate($template['compose_message'], true, $sc);
 	}
 
-	// Close right content
-	$text .= '</div>';
+	// Close tabellist
+	$text .= $tp->parseTemplate($template['tablelist']['end'], true, $sc);
 // Close container
-$text .= '</div>';
+$text .= $tp->parseTemplate($template['container']['end'], true, $sc);
 
 $ns->tablerender(LAN_MAILBOX_NAME, e107::getMessage()->render().$text);
 require_once(FOOTERF);

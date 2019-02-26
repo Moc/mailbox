@@ -10,58 +10,63 @@
 
 if (!defined('e107_INIT')) { exit; }
 
-$MAILBOX_TEMPLATE['tablelist']['header'] = '
-<div class="panel panel-primary">
-	<div class="panel-heading clearfix">
-		<div class="row">
-			<div class="col-md-4">
-				<h2 class="panel-title pull-left mailbox-title">{MAILBOX_BOXTITLE}</h3>
-			</div>
-			<!-- /.col-md-4 -->
-			<div class="col-md-8">
-				<form method="get" action="">
-				<div class="input-group">
-					<input class="form-control" type="text" id="mailbox-searchform" placeholder="'.LAN_SEARCH.'">
-			        <span class="input-group-btn">
-			        	<button class="btn btn-default" type="submit" name="s">'.e107::getParser()->toGlyph("search").'</button>
-			        </span>
-				</div>
-				</form>
-			</div>
-			<!-- /.col-md-8 -->
-		</div>
-		<!-- /.row -->
-	</div>
-	<!-- /.panel-heading -->
+$MAILBOX_TEMPLATE['container']['start'] = '<div class="row">';
 
-	<div class="panel-body">
-		<div class="mailbox-controls">
-		    <!-- Check all button -->
-		    <button type="button" class="btn btn-default btn-sm checkbox-toggle">'.e107::getParser()->toGlyph("square-o").'
-		    </button>
-		    <div class="btn-group">
-				<button type="button" class="btn btn-default btn-sm">'.e107::getParser()->toGlyph("trash-o").'</button>
-				<button type="button" class="btn btn-default btn-sm">'.e107::getParser()->toGlyph("floppy-o").'</button>
-		    </div>
-	   		<!-- /.btn-group -->
- 			<button type="button" class="btn btn-default btn-sm">'.e107::getParser()->toGlyph("refresh").'</button>
-		    <div class="pull-right">
-		    	1-50/200
-		      	<div class="btn-group">
-		        	<button type="button" class="btn btn-default btn-sm">'.e107::getParser()->toGlyph("chevron-left").'</button>
-		        	<button type="button" class="btn btn-default btn-sm">'.e107::getParser()->toGlyph("chevron-right").'</button>
-		      	</div>
-		      	<!-- /.btn-group -->
-		    </div>
-		    <!-- /.pull-right -->
-		</div>
+$MAILBOX_TEMPLATE['container']['end'] = '</div>';
 
-		<div class="table-responsive mailbox-messages">
-			<table class="table table-hover table-striped">
-				<tbody>
+
+
+$MAILBOX_TEMPLATE['tablelist']['start'] = '
+	<div class="col-lg-9">          
 ';
 
-$MAILBOX_TEMPLATE['tablelist']['body'] = '
+$MAILBOX_TEMPLATE['tablelist']['header'] = '
+		<div class="mail-box-header">
+			<form method="get" action="index.html" class="float-right mail-search">
+                <div class="input-group">
+                    <input type="text" class="form-control form-control-sm" name="search" placeholder="Search email">
+                    <div class="input-group-btn">
+                        <button type="submit" class="btn btn-sm btn-primary">
+                            Search
+                        </button>
+                    </div>
+                </div>
+            </form>
+
+			<h2>{MAILBOX_BOXTITLE} (#)</h2>
+
+            <div class="mail-tools tooltip-demo m-t-md">
+                <div class="btn-group float-right">
+                    <button class="btn btn-white btn-sm"><i class="fa fa-arrow-left"></i></button>
+                    <button class="btn btn-white btn-sm"><i class="fa fa-arrow-right"></i></button>
+
+                </div>
+                <button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="left" title="Refresh inbox"><i class="fa fa-refresh"></i> Refresh</button>
+                <button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top" title="Mark as read"><i class="fa fa-eye"></i> </button>
+                <button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top" title="Mark with star"><i class="fa fa-star"></i> </button>
+                <button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top" title="Move to trash"><i class="fa fa-trash-o"></i> </button>
+
+            </div>
+        </div> 
+			
+        <div class="mail-box">
+			<table class="table table-hover table-mail">
+				<thead>
+				    <tr>
+				      <th></th>
+				      <th>{LAN=LAN_MAILBOX_STARRED}</th>
+				      <th>{LAN=LAN_MAILBOX_FROMTO}</th>
+				      <th>{LAN=LAN_CATEGORY}</th>
+				      <th>{LAN=LAN_SUBJECT}</th>
+				      <th>{LAN=LAN_MAILBOX_ATTACHMENT}</th>
+				      <th>{LAN=LAN_DATESTAMP}</th>
+				      <th>{LAN=LAN_MAILBOX_TAGS}</th>
+				    </tr>
+			  	</thead>
+		        <tbody>
+';
+
+/*$MAILBOX_TEMPLATE['tablelist']['messages'] = '
 				<tr>
 					<td><input type="checkbox"></td>
 					<td class="mailbox-star hidden-xs">{MAILBOX_MESSAGE_STAR}</td>
@@ -70,132 +75,139 @@ $MAILBOX_TEMPLATE['tablelist']['body'] = '
 					<td class="mailbox-attachment hidden-xs">{MAILBOX_MESSAGE_ATTACHMENT}</td>
 					<td class="mailbox-date">{MAILBOX_MESSAGE_DATESTAMP=relative}</td>
 				</tr>
+';*/
+
+$MAILBOX_TEMPLATE['tablelist']['messages'] = '
+					<tr class="{MAILBOX_MESSAGE_READUNREAD}">
+			            <td class="check-mail">
+			                <input type="checkbox" class="i-checks">
+			            </td>
+			            <td class="hidden-xs">{MAILBOX_MESSAGE_STAR}</td>
+			            <td class="mail-ontact"><a href="mail_detail.html">{SETIMAGE: w=30&h=30&crop=1} {MAILBOX_MESSAGE_AVATAR: shape=circle} {MAILBOX_MESSAGE_FROMTO}</a>  </td>
+			            <td class=""><span class="label label-warning">Clients</span></td>
+			            <td class="mail-subject"><a href="mail_detail.html">{MAILBOX_MESSAGE_SUBJECT}</a></td>
+			            <td class="hidden-xs">{MAILBOX_MESSAGE_ATTACHMENT}</td>
+			            <td class="mail-date">{MAILBOX_MESSAGE_DATESTAMP=relative}</td>
+			            <td class=""> 
+			            	<ul class="tag-list" style="padding: 0">
+						        <li><a href=""><i class="fa fa-tag"></i> Family</a></li>
+						        <li><a href=""><i class="fa fa-tag"></i> Work</a></li>
+						        <li><a href=""><i class="fa fa-tag"></i> Family</a></li>
+						        <li><a href=""><i class="fa fa-tag"></i> Work</a></li>
+						    </ul>
+						</td>
+			        </tr>
 ';
 
 $MAILBOX_TEMPLATE['tablelist']['footer'] = '
 				</tbody>
 			</table>
-			<!-- /.table -->
 		</div>
-		<!-- /.mail-box-messages -->
-
-		<div class="mailbox-controls">
-			<!-- Check all button -->
-			<button type="button" class="btn btn-default btn-sm checkbox-toggle">'.e107::getParser()->toGlyph("square-o").'</button>
-		    <div class="btn-group">
-				<button type="button" class="btn btn-default btn-sm">'.e107::getParser()->toGlyph("trash-o").'</button>
-				<button type="button" class="btn btn-default btn-sm">'.e107::getParser()->toGlyph("floppy-o").'</button>
-		    </div>
-			<!-- /.btn-group -->
-			<button type="button" class="btn btn-default btn-sm">'.e107::getParser()->toGlyph("refresh").'</button>
-			<div class="pull-right">
-	  		1-50/200
-	      		<div class="btn-group">
-			        <button type="button" class="btn btn-default btn-sm">'.e107::getParser()->toGlyph("chevron-left").'</button>
-			        <button type="button" class="btn btn-default btn-sm">'.e107::getParser()->toGlyph("chevron-right").'</button>
-			    </div>
-	      		<!-- /.btn-group -->
-	   		</div>
-	    	<!-- /.pull-right -->
-		</div>
-		<!-- /.mailbox-controls -->
-	</div>
-	<!-- /.panel-body -->
-</div>
-<!-- /.panel -->
+		<!-- /.mail-box -->
 ';
 
-$MAILBOX_TEMPLATE['box_navigation'] = '
-<div class="form-group">
-	<a href="{MAILBOX_COMPOSELINK}" class="btn btn-primary btn-block">'.LAN_MAILBOX_COMPOSE.'</a>
+$MAILBOX_TEMPLATE['tablelist']['end'] = '
+	</div>
+	<!-- /.col-lg-9 -->
+';
+
+$MAILBOX_TEMPLATE['box_navigation']['start'] = '
+<div class="col-lg-3">
+    <div class="ibox ">
+		<div class="ibox-content mailbox-content">
+';
+
+$MAILBOX_TEMPLATE['box_navigation']['content'] = '
+<div class="file-manager">
+	<a class="btn btn-block btn-primary compose-mail" href="{MAILBOX_COMPOSELINK}">{LAN=LAN_MAILBOX_COMPOSE}</a>
+	<div class="space-25"></div>
+
+    <h5>{LAN=LAN_MAILBOX_MAILBOXES}</h5>
+
+    <ul class="folder-list m-b-md" style="padding: 0">       		
+    	<li {MAILBOX_BOXLINK_ACTIVE=inbox}>
+    		<a href="{MAILBOX_BOXLINK=inbox}">{MAILBOX_BOXGLYPH=inbox} {LAN=LAN_MAILBOX_INBOX} <span class="label label-primary float-right">{MAILBOX_BOXCOUNT=inbox}</span></a>
+       	</li>
+       	<li {MAILBOX_BOXLINK_ACTIVE=outbox}>
+       		<a href="{MAILBOX_BOXLINK=outbox}">{MAILBOX_BOXGLYPH=outbox} {LAN=LAN_MAILBOX_OUTBOX} <span class="label label-primary float-right">{MAILBOX_BOXCOUNT=outbox}</span></a>
+       	</li>
+       	<li {MAILBOX_BOXLINK_ACTIVE=draftbox}>
+       		<a href="{MAILBOX_BOXLINK=draftbox}">{MAILBOX_BOXGLYPH=draftbox} {LAN=LAN_MAILBOX_DRAFTBOX} <span class="label label-primary float-right">{MAILBOX_BOXCOUNT=draftbox}</span></a>
+       	</li>
+       	<li {MAILBOX_BOXLINK_ACTIVE=starbox}>
+       		<a href="{MAILBOX_BOXLINK=starbox}">{MAILBOX_BOXGLYPH=starbox} {LAN=LAN_MAILBOX_STARBOX} <span class="label label-primary float-right">{MAILBOX_BOXCOUNT=starbox}</span></a>
+       	</li>
+        <li {MAILBOX_BOXLINK_ACTIVE=trashbox}>
+        	<a href="{MAILBOX_BOXLINK=trashbox}">{MAILBOX_BOXGLYPH=trashbox} {LAN=LAN_MAILBOX_TRASHBOX} <span class="label label-primary float-right">{MAILBOX_BOXCOUNT=trashbox}</span></a>
+        </li>
+    </ul>
+ 
+	<h5>{LAN=LAN_CATEGORIES}</h5>
+	<ul class="category-list" style="padding: 0">
+	    <li><a href="#"> <i class="fa fa-circle text-navy"></i> Work </a></li>
+	    <li><a href="#"> <i class="fa fa-circle text-danger"></i> Documents</a></li>
+	    <li><a href="#"> <i class="fa fa-circle text-primary"></i> Social</a></li>
+	    <li><a href="#"> <i class="fa fa-circle text-info"></i> Advertising</a></li>
+	    <li><a href="#"> <i class="fa fa-circle text-warning"></i> Clients</a></li>
+	</ul>
+
+    <h5 class="tag-title">{LAN=LAN_MAILBOX_TAGS}</h5>
+    <ul class="tag-list" style="padding: 0">
+        <li><a href=""><i class="fa fa-tag"></i> Family</a></li>
+        <li><a href=""><i class="fa fa-tag"></i> Work</a></li>
+        <li><a href=""><i class="fa fa-tag"></i> Home</a></li>
+        <li><a href=""><i class="fa fa-tag"></i> Children</a></li>
+        <li><a href=""><i class="fa fa-tag"></i> Holidays</a></li>
+        <li><a href=""><i class="fa fa-tag"></i> Music</a></li>
+        <li><a href=""><i class="fa fa-tag"></i> Photography</a></li>
+        <li><a href=""><i class="fa fa-tag"></i> Film</a></li>
+    </ul>
+    <div class="clearfix"></div>
 </div>
+';
 
-<div class="panel panel-primary">
-	<div class="panel-heading">'.LAN_MAILBOX_MAILBOXES.'</div>
-	<div class="panel-body">
-		<ul class="nav nav-pills nav-stacked mailbox-nav">
-        	<li {MAILBOX_BOXLINK_ACTIVE=inbox}>
-        		<a href="{MAILBOX_BOXLINK=inbox}">{MAILBOX_BOXGLYPH=inbox} '.LAN_MAILBOX_INBOX.' {MAILBOX_BOXCOUNT=inbox}</a>
-           	</li>
-           	<li {MAILBOX_BOXLINK_ACTIVE=outbox}>
-           		<a href="{MAILBOX_BOXLINK=outbox}">{MAILBOX_BOXGLYPH=outbox} '.LAN_MAILBOX_OUTBOX.' {MAILBOX_BOXCOUNT=outbox}</a>
-           	</li>
-           	<li {MAILBOX_BOXLINK_ACTIVE=draftbox}>
-           		<a href="{MAILBOX_BOXLINK=draftbox}">{MAILBOX_BOXGLYPH=draftbox} '.LAN_MAILBOX_DRAFTBOX.' {MAILBOX_BOXCOUNT=draftbox}</a>
-           	</li>
-           	<li {MAILBOX_BOXLINK_ACTIVE=starbox}>
-           		<a href="{MAILBOX_BOXLINK=starbox}">{MAILBOX_BOXGLYPH=starbox} '.LAN_MAILBOX_STARBOX.' {MAILBOX_BOXCOUNT=starbox}</a>
-           	</li>
-	        <li {MAILBOX_BOXLINK_ACTIVE=trashbox}>
-	        	<a href="{MAILBOX_BOXLINK=trashbox}">{MAILBOX_BOXGLYPH=trashbox} '.LAN_MAILBOX_TRASHBOX.' {MAILBOX_BOXCOUNT=trashbox}</a>
-	        </li>
-      	</ul>
- 	</div>
-	<!-- /.panel-body -->
-</div>
-<!-- /. panel -->
-
-<div class="panel panel-primary">
-	<div class="panel-heading">Categories</div>
-	<div class="panel-body">
-		<ul class="nav nav-pills nav-stacked mailbox-nav">
-		    <li><a href="#"> <i class="fa fa-circle text-navy"></i> Work </a></li>
-		    <li><a href="#"> <i class="fa fa-circle text-danger"></i> Documents</a></li>
-		    <li><a href="#"> <i class="fa fa-circle text-primary"></i> Social</a></li>
-		    <li><a href="#"> <i class="fa fa-circle text-info"></i> Advertising</a></li>
-		    <li><a href="#"> <i class="fa fa-circle text-warning"></i> Clients</a></li>
-      	</ul>
- 	</div>
-	<!-- /.panel-body -->
-</div>
-<!-- /. panel -->
-
-<h5 class="tag-title">Labels</h5>
-<span class="label label-default">Work</span>
-<span class="label label-primary">Home</span>
-<span class="label label-success">Family</span>
-<span class="label label-info">Holidays</span>
-<span class="label label-warning">Photography</span>
-<span class="label label-danger">Film</span>
-
-<div class="clearfix"></div>
-
+$MAILBOX_TEMPLATE['box_navigation']['end'] = '
+					</div>
+                </div>
+            </div>
 ';
 
 $MAILBOX_TEMPLATE['compose_message'] = '
-<div class="panel panel-primary">
-	<div class="panel-heading">
-		<h3 class="panel-title">'.LAN_MAILBOX_COMPOSE.'</h3>
-	</div>
-	<!-- /.panel-heading -->
 
-	<div class="panel-body">
+<div class="mail-box-header">
 	<form method="post">
-		<div class="form-group">{MAILBOX_COMPOSE_TO}</div>
-	    <div class="form-group">{MAILBOX_COMPOSE_SUBJECT}</div>
-	    <div class="form-group">{MAILBOX_COMPOSE_TEXT}</div>
+	    <div class="float-right">
+	    	<button name="compose" type="submit" class="btn btn-primary" value="send">'.e107::getParser()->toGlyph("fa-envelope-o").' Send</button>
+	        <button name="compose" type="submit" class="btn btn-success" value="draft">'.e107::getParser()->toGlyph("fa-floppy-o").' Save as draft</button>
+	        <button name="compose" type="submit" class="btn btn-danger" value="discard">'.e107::getParser()->toGlyph("fa-times").' Discard</button>
+	    </div>
 
-        <div class="form-group">
-			<div class="btn btn-default btn-file">
-            	'.e107::getParser()->toGlyph("paperclip").' Attachment
-            </div>
-            <p class="help-block">Max. 32MB</p>
-        </div>
-    </div>
-    <!-- /.panel-body -->
-
-    <div class="panel-footer">
-    	<div class="pull-right">
-        	<button name="compose" type="submit" class="btn btn-default" value="draft">'.e107::getParser()->toGlyph("floppy-o").' Save as draft</button>
-        	<button name="compose" type="submit" class="btn btn-primary" value="send">'.e107::getParser()->toGlyph("envelope-o").' Send</button>
-      	</div>
-      	<button name="compose" type="submit" class="btn btn-default" value="discard">'.e107::getParser()->toGlyph("times").' Discard</button>
-
-    </div>
-    <!-- /.panel-footer -->
-    </form>
+	    <h2>
+	        {LAN=LAN_MAILBOX_COMPOSE}
+	    </h2>
 </div>
-<!-- /. panel -->
+<div class="mail-box">
+	<div class="mail-body">
+		<div class="form-group font-bold">{MAILBOX_COMPOSE_TO}</div>
+	    <div class="form-group font-bold">{MAILBOX_COMPOSE_SUBJECT}</div>
+	    <div class="form-group font-bold">{MAILBOX_COMPOSE_TEXT}</div>
+
+	    <div class="form-group">
+			<div class="btn btn-default btn-file">
+	        	'.e107::getParser()->toGlyph("fa-paperclip").' Attachment
+	        </div>
+	        <p class="help-block">Max. 32MB</p>
+	    </div>
+
+	    <div class="text-right">
+	  		<button name="compose" type="submit" class="btn btn-primary" value="send">'.e107::getParser()->toGlyph("fa-envelope-o").' Send</button>
+	  		<button name="compose" type="submit" class="btn btn-success" value="draft">'.e107::getParser()->toGlyph("fa-floppy-o").' Save as draft</button>
+			<button name="compose" type="submit" class="btn btn-danger" value="discard">'.e107::getParser()->toGlyph("fa-times").' Discard</button>
+	    </div>
+    </form>
+    </div>
+</div>
+
 ';
 
 $MAILBOX_TEMPLATE['read_message'] = '

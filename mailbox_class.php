@@ -58,6 +58,33 @@ class Mailbox
 		return $current_mailbox;
 	}
 
+	public function get_pagetitle($parm = '')
+	{
+
+      switch($parm)
+      {
+         case 'inbox':
+         default:
+            $title = LAN_MAILBOX_INBOX;
+            break;
+         case 'outbox':
+            $title = LAN_MAILBOX_OUTBOX;
+            break;
+         case 'draftbox':
+            $title = LAN_MAILBOX_DRAFTBOX;
+            break;
+         case 'starbox':
+            $title = LAN_MAILBOX_STARBOX;
+            break;
+         case 'trashbox':
+            $title = LAN_MAILBOX_TRASHBOX;
+            break;
+      }
+
+      return $title;
+	}
+
+
 	public function get_database_queryargs($box = 'inbox')
 	{
 		// Default back to inbox to be sure
@@ -73,7 +100,7 @@ class Mailbox
 				$args = "message_from=".USERID." AND message_to_deleted=0 AND message_draft=0";
 				break;
 			case 'draftbox':
-				$args = "message_from=".USERID." AND message_draft=1 AND message_sent=0 AND message_to_deleted=0";
+				$args = "message_from=".USERID." AND message_draft IS NOT NULL AND message_sent=0 AND message_to_deleted=0";
 				break;
 			case 'starbox': // no, not Starbucks ;)
 				$args = "message_to=".USERID." AND message_to_starred=1 AND message_to_deleted=0";
@@ -89,12 +116,14 @@ class Mailbox
 	// this function processes all messages in outbox and combines messages which are sent to multiple recipients or a class into a single message.
 	// $count = if true, returns integer amount of messages. false: return array of data with outbox messages
 	public function get_outbox_messages($data = '', $count = false)
-	{
+	{	
+		// return just the number of combined messages
 		if($count)
 		{
-			return "100";
+			return "OUT TODO";
 		}
 
+		// return the combined message list 
 		return false;
 	}
 
@@ -178,6 +207,7 @@ class Mailbox
 		{
 			$sendmode = "multiple";
 		}
+		// class
 		else
 		{
 			$sendmode = "class";
