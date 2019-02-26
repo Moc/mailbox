@@ -23,17 +23,17 @@ $MAILBOX_TEMPLATE['tablelist']['start'] = '
 $MAILBOX_TEMPLATE['tablelist']['header'] = '
 		<div class="mail-box-header">
 			<form method="get" action="index.html" class="float-right mail-search">
-                <div class="input-group">
-                    <input type="text" class="form-control form-control-sm" name="search" placeholder="Search email">
+                <div class="input-group ">
+                    <input type="text" class="form-control form-control-sm" name="search" placeholder="Search message(s)">
                     <div class="input-group-btn">
                         <button type="submit" class="btn btn-sm btn-primary">
-                            Search
+                            <i class="fa fa-search"></i>
                         </button>
                     </div>
                 </div>
             </form>
 
-			<h2>{MAILBOX_BOXTITLE} (#)</h2>
+			<h2>{MAILBOX_BOXTITLE} ({MAILBOX_BOXCOUNT})</h2>
 
             <div class="mail-tools tooltip-demo m-t-md">
                 <div class="btn-group float-right">
@@ -42,7 +42,7 @@ $MAILBOX_TEMPLATE['tablelist']['header'] = '
 
                 </div>
                 <button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="left" title="Refresh inbox"><i class="fa fa-refresh"></i> Refresh</button>
-                <button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top" title="Mark as read"><i class="fa fa-eye"></i> </button>
+                <button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top" title="Mark as read/unread"><i class="fa fa-eye"></i> </button>
                 <button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top" title="Mark with star"><i class="fa fa-star"></i> </button>
                 <button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top" title="Move to trash"><i class="fa fa-trash-o"></i> </button>
 
@@ -54,13 +54,13 @@ $MAILBOX_TEMPLATE['tablelist']['header'] = '
 				<thead>
 				    <tr>
 				      <th></th>
-				      <th>{LAN=LAN_MAILBOX_STARRED}</th>
+				      <th class="d-none d-sm-table-cell">{LAN=LAN_MAILBOX_STARRED}</th>
 				      <th>{LAN=LAN_MAILBOX_FROMTO}</th>
-				      <th>{LAN=LAN_CATEGORY}</th>
+				      <th class="d-none d-sm-table-cell">{LAN=LAN_CATEGORY}</th>
 				      <th>{LAN=LAN_SUBJECT}</th>
-				      <th>{LAN=LAN_MAILBOX_ATTACHMENT}</th>
+				      <th class="d-none d-sm-table-cell">{LAN=LAN_MAILBOX_ATTACHMENT}</th>
 				      <th>{LAN=LAN_DATESTAMP}</th>
-				      <th>{LAN=LAN_MAILBOX_TAGS}</th>
+				      <th class="d-none d-sm-table-cell">{LAN=LAN_MAILBOX_TAGS}</th>
 				    </tr>
 			  	</thead>
 		        <tbody>
@@ -82,13 +82,13 @@ $MAILBOX_TEMPLATE['tablelist']['messages'] = '
 			            <td class="check-mail">
 			                <input type="checkbox" class="i-checks">
 			            </td>
-			            <td class="hidden-xs">{MAILBOX_MESSAGE_STAR}</td>
+			            <td class="d-none d-sm-table-cell">{MAILBOX_MESSAGE_STAR}</td>
 			            <td class="mail-ontact"><a href="mail_detail.html">{SETIMAGE: w=30&h=30&crop=1} {MAILBOX_MESSAGE_AVATAR: shape=circle} {MAILBOX_MESSAGE_FROMTO}</a>  </td>
-			            <td class=""><span class="label label-warning">Clients</span></td>
+			            <td class="d-none d-sm-table-cell"><span class="label label-warning">Clients</span></td>
 			            <td class="mail-subject"><a href="mail_detail.html">{MAILBOX_MESSAGE_SUBJECT}</a></td>
-			            <td class="hidden-xs">{MAILBOX_MESSAGE_ATTACHMENT}</td>
+			            <td class="d-none d-sm-table-cell">{MAILBOX_MESSAGE_ATTACHMENT}</td>
 			            <td class="mail-date">{MAILBOX_MESSAGE_DATESTAMP=relative}</td>
-			            <td class=""> 
+			            <td class="d-none d-sm-table-cell"> 
 			            	<ul class="tag-list" style="padding: 0">
 						        <li><a href=""><i class="fa fa-tag"></i> Family</a></li>
 						        <li><a href=""><i class="fa fa-tag"></i> Work</a></li>
@@ -126,19 +126,19 @@ $MAILBOX_TEMPLATE['box_navigation']['content'] = '
 
     <ul class="folder-list m-b-md" style="padding: 0">       		
     	<li {MAILBOX_BOXLINK_ACTIVE=inbox}>
-    		<a href="{MAILBOX_BOXLINK=inbox}">{MAILBOX_BOXGLYPH=inbox} {LAN=LAN_MAILBOX_INBOX} <span class="label label-primary float-right">{MAILBOX_BOXCOUNT=inbox}</span></a>
+    		<a href="{MAILBOX_BOXLINK=inbox}">{MAILBOX_BOXGLYPH=inbox} {LAN=LAN_MAILBOX_INBOX} <span class="label label-primary float-right">{MAILBOX_BOXCOUNT: box=inbox}</span></a>
        	</li>
        	<li {MAILBOX_BOXLINK_ACTIVE=outbox}>
-       		<a href="{MAILBOX_BOXLINK=outbox}">{MAILBOX_BOXGLYPH=outbox} {LAN=LAN_MAILBOX_OUTBOX} <span class="label label-primary float-right">{MAILBOX_BOXCOUNT=outbox}</span></a>
+       		<a href="{MAILBOX_BOXLINK=outbox}">{MAILBOX_BOXGLYPH=outbox} {LAN=LAN_MAILBOX_OUTBOX} <span class="label label-primary float-right">{MAILBOX_BOXCOUNT: box=outbox}</span></a>
        	</li>
        	<li {MAILBOX_BOXLINK_ACTIVE=draftbox}>
-       		<a href="{MAILBOX_BOXLINK=draftbox}">{MAILBOX_BOXGLYPH=draftbox} {LAN=LAN_MAILBOX_DRAFTBOX} <span class="label label-primary float-right">{MAILBOX_BOXCOUNT=draftbox}</span></a>
+       		<a href="{MAILBOX_BOXLINK=draftbox}">{MAILBOX_BOXGLYPH=draftbox} {LAN=LAN_MAILBOX_DRAFTBOX} <span class="label label-primary float-right">{MAILBOX_BOXCOUNT: box=draftbox}</span></a>
        	</li>
        	<li {MAILBOX_BOXLINK_ACTIVE=starbox}>
-       		<a href="{MAILBOX_BOXLINK=starbox}">{MAILBOX_BOXGLYPH=starbox} {LAN=LAN_MAILBOX_STARBOX} <span class="label label-primary float-right">{MAILBOX_BOXCOUNT=starbox}</span></a>
+       		<a href="{MAILBOX_BOXLINK=starbox}">{MAILBOX_BOXGLYPH=starbox} {LAN=LAN_MAILBOX_STARBOX} <span class="label label-primary float-right">{MAILBOX_BOXCOUNT: box=starbox}</span></a>
        	</li>
         <li {MAILBOX_BOXLINK_ACTIVE=trashbox}>
-        	<a href="{MAILBOX_BOXLINK=trashbox}">{MAILBOX_BOXGLYPH=trashbox} {LAN=LAN_MAILBOX_TRASHBOX} <span class="label label-primary float-right">{MAILBOX_BOXCOUNT=trashbox}</span></a>
+        	<a href="{MAILBOX_BOXLINK=trashbox}">{MAILBOX_BOXGLYPH=trashbox} {LAN=LAN_MAILBOX_TRASHBOX} <span class="label label-primary float-right">{MAILBOX_BOXCOUNT: box=trashbox}</span></a>
         </li>
     </ul>
  

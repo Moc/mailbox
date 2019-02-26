@@ -12,26 +12,32 @@ if (!defined('e107_INIT')) { exit; }
 
 class mailbox_shortcodes extends e_shortcode
 {
-   function sc_mailbox_boxcount($parm='')
+   function sc_mailbox_boxcount($parm = '')
    {
       require_once(e_PLUGIN."mailbox/mailbox_class.php");
       $mailbox_class = new Mailbox;
 
+      // default to current mailbox
+      if(empty($parm['box']))
+      {
+         $parm['box'] = $mailbox_class->get_current_mailbox();
+      }
+
       // In the case of outbox, we need to call a special routine to combine messages sent to multiple recipients or a class.
-      if($parm == 'outbox')
+      if($parm['box'] == 'outbox')
       {
          $count = $mailbox_class->get_outbox_messages('', true);
       }
       else
       {
-         $args  = $mailbox_class->get_database_queryargs($parm);
+         $args  = $mailbox_class->get_database_queryargs($parm['box']);
          $count = e107::getDb()->count('mailbox_messages', '(*)', ''.$args.'');
       }
 
       return $count;
    }
 
-   function sc_mailbox_boxglyph($parm='')
+   function sc_mailbox_boxglyph($parm = '')
    {
       if(!$parm) { $parm = 'inbox'; }
 
@@ -58,7 +64,7 @@ class mailbox_shortcodes extends e_shortcode
       return $glyph;
    }
 
-   function sc_mailbox_boxlink($parm='')
+   function sc_mailbox_boxlink($parm = '')
    {
       if(!$parm) { $parm = 'inbox'; }
 
@@ -71,7 +77,7 @@ class mailbox_shortcodes extends e_shortcode
       return $url;
    }
 
-   function sc_mailbox_boxlink_active($parm='')
+   function sc_mailbox_boxlink_active($parm = '')
    {
       // always default back to inbox
       if(!$parm) { $parm = 'inbox'; }
@@ -85,7 +91,7 @@ class mailbox_shortcodes extends e_shortcode
       return;
    }
 
-   function sc_mailbox_boxtitle($parm='')
+   function sc_mailbox_boxtitle($parm = '')
    {
 
       require_once(e_PLUGIN."mailbox/mailbox_class.php");
@@ -94,13 +100,13 @@ class mailbox_shortcodes extends e_shortcode
       return $mailbox_class->get_pagetitle(e107::getParser()->filter($_GET['page']));
    }
 
-   function sc_mailbox_composelink($parm='')
+   function sc_mailbox_composelink($parm = '')
    {
       $url = e107::url('mailbox', 'compose');
       return $url;
    }
 
-   function sc_mailbox_message_star($parm='')
+   function sc_mailbox_message_star($parm = '')
    {
       // Draft messages cannot be starred
       /*if(e107::getParser()->filter($_GET['page']) == 'draftbox')
@@ -110,15 +116,15 @@ class mailbox_shortcodes extends e_shortcode
 
       if($this->var['message_to_starred'])
       {
-         return '<a href="#">'.e107::getParser()->toGlyph("star").'</a>';
+         return '<a href="#">'.e107::getParser()->toGlyph("fa-star").'</a>';
       }
       else
       {
-         return '<a href="#">'.e107::getParser()->toGlyph("star-o").'</a>';
+         return '<a href="#">'.e107::getParser()->toGlyph("fa-star-o").'</a>';
       }
    }
 
-   function sc_mailbox_message_avatar($parm='')
+   function sc_mailbox_message_avatar($parm = '')
    {
       $PREFERENCE = 2; // MAILBOXPREF TODO
 
@@ -179,10 +185,10 @@ class mailbox_shortcodes extends e_shortcode
       return e107::getParser()->toAvatar($userinfo, $options);
    }
 
-   function sc_mailbox_message_readunread($parm='')
+   function sc_mailbox_message_readunread($parm = '')
    {
       //print_a($this->var);
-      if($this->var['message_read'] === 0)
+      if($this->var['message_read'] == 0)
       {
          return 'unread';
       }
@@ -194,7 +200,7 @@ class mailbox_shortcodes extends e_shortcode
    }
 
 
-   function sc_mailbox_message_fromto($parm='')
+   function sc_mailbox_message_fromto($parm = '')
    {
       $PREFERENCE = 2; // MAILBOXPREF TODO
 
@@ -259,7 +265,7 @@ class mailbox_shortcodes extends e_shortcode
       return "<a href='".$profile_link."'>".$userinfo['user_name']."</a>";
    }
 
-   function sc_mailbox_message_subject($parm='')
+   function sc_mailbox_message_subject($parm = '')
    {
       // Check for either mailboxes section or reading an individual message
       if(e107::getParser()->filter($_GET['id']))
@@ -288,18 +294,18 @@ class mailbox_shortcodes extends e_shortcode
       }
    }
 
-   function sc_mailbox_message_text($parm='')
+   function sc_mailbox_message_text($parm = '')
    {
       return e107::getParser()->toHTML($this->var['message_text']);
    }
 
-   function sc_mailbox_message_attachment($parm='')
+   function sc_mailbox_message_attachment($parm = '')
    {
       //print_a($this->var);
       if($this->var['message_attachments'])
       {
          //return '<a href="#">'.e107::getParser()->toGlyph("paperclip").'</a>';
-         return e107::getParser()->toGlyph("paperclip");
+         return e107::getParser()->toGlyph("fa-paperclip");
       }
       else
       {
@@ -307,7 +313,7 @@ class mailbox_shortcodes extends e_shortcode
       }
    }
 
-   function sc_mailbox_message_datestamp($parm='')
+   function sc_mailbox_message_datestamp($parm = '')
    {
       
       // Default to datestamp from when message was sent 
@@ -333,12 +339,12 @@ class mailbox_shortcodes extends e_shortcode
    }
 
    // COMPOSE
-   function sc_mailbox_compose_id($parm='')
+   function sc_mailbox_compose_id($parm = '')
    {
       return $this->var['message_id'];
    }
 
-   function sc_mailbox_compose_to($parm='')
+   function sc_mailbox_compose_to($parm = '')
    {
       $userclass = false; // MAILBOXPREF TODO
 
@@ -367,7 +373,7 @@ class mailbox_shortcodes extends e_shortcode
 
    }
 
-   function sc_mailbox_compose_subject($parm='')
+   function sc_mailbox_compose_subject($parm = '')
    {
       if($this->var['message_subject'])
       {
@@ -378,7 +384,7 @@ class mailbox_shortcodes extends e_shortcode
       return $text.e107::getForm()->text('message_subject', $message_subject, '', array('placeholder' => 'Subject'));
    }
 
-   function sc_mailbox_compose_text($parm='')
+   function sc_mailbox_compose_text($parm = '')
    {
       if($this->var['message_text'])
       {
@@ -389,7 +395,7 @@ class mailbox_shortcodes extends e_shortcode
       return $text.e107::getForm()->bbarea('message_text', $message_text);
    }
 
-   function sc_mailbox_quickform($parm='')
+   function sc_mailbox_quickform($parm = '')
    {
       return '
          <div class="ibox">

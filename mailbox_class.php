@@ -39,8 +39,14 @@ class Mailbox
 		$this->plugprefs = e107::getPlugPref('messaging');
 	}
 
-	public function get_current_mailbox($parm)
+	public function get_current_mailbox($parm = '')
 	{
+		// If parm is not set, use current page
+		if(!$parm)
+		{
+			$parm = e107::getParser()->filter($_GET['page']);
+		}
+
 		// All valid mailboxes in an array
 		$mailbox_array = array("inbox", "outbox", "draftbox", "starbox", "trashbox");
 
