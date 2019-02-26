@@ -28,8 +28,7 @@ class mailbox_shortcodes extends e_shortcode
          $count = e107::getDb()->count('mailbox_messages', '(*)', ''.$args.'');
       }
 
-      //return $count;
-      return e107::getParser()->toGlyph('fab fa-mailchimp');
+      return $count;
    }
 
    function sc_mailbox_boxglyph($parm='')
