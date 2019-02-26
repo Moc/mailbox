@@ -177,9 +177,9 @@ $MAILBOX_TEMPLATE['compose_message'] = '
 <div class="mail-box-header">
 	<form method="post">
 	    <div class="float-right">
-	    	<button name="compose" type="submit" class="btn btn-primary" value="send">'.e107::getParser()->toGlyph("fa-envelope-o").' Send</button>
-	        <button name="compose" type="submit" class="btn btn-success" value="draft">'.e107::getParser()->toGlyph("fa-floppy-o").' Save as draft</button>
-	        <button name="compose" type="submit" class="btn btn-danger" value="discard">'.e107::getParser()->toGlyph("fa-times").' Discard</button>
+	    	<button name="compose" type="submit" class="btn btn-primary" value="send"><i class="fa fa-envelope-o"></i> Send</button>
+	        <button name="compose" type="submit" class="btn btn-success" value="draft"><i class="fa fa-floppy-o"></i> Save as draft</button>
+	        <button name="compose" type="submit" class="btn btn-danger" value="discard"><i class="fa fa-times"></i> Discard</button>
 	    </div>
 
 	    <h2>
@@ -194,15 +194,15 @@ $MAILBOX_TEMPLATE['compose_message'] = '
 
 	    <div class="form-group">
 			<div class="btn btn-default btn-file">
-	        	'.e107::getParser()->toGlyph("fa-paperclip").' Attachment
+	        	<i class="fa fa-paperclip"></i> Attachment
 	        </div>
 	        <p class="help-block">Max. 32MB</p>
 	    </div>
 
 	    <div class="text-right">
-	  		<button name="compose" type="submit" class="btn btn-primary" value="send">'.e107::getParser()->toGlyph("fa-envelope-o").' Send</button>
-	  		<button name="compose" type="submit" class="btn btn-success" value="draft">'.e107::getParser()->toGlyph("fa-floppy-o").' Save as draft</button>
-			<button name="compose" type="submit" class="btn btn-danger" value="discard">'.e107::getParser()->toGlyph("fa-times").' Discard</button>
+	  		<button name="compose" type="submit" class="btn btn-primary" value="send"><i class="fa fa-envelope-o"></i> Send</button>
+	  		<button name="compose" type="submit" class="btn btn-success" value="draft"><i class="fa fa-floppy-o"></i> Save as draft</button>
+			<button name="compose" type="submit" class="btn btn-danger" value="discard"><i class="fa fa-times"></i> Discard</button>
 	    </div>
     </form>
     </div>
@@ -221,8 +221,8 @@ $MAILBOX_TEMPLATE['read_message'] = '
 			<div class="col-md-4">
 				<div class="pull-right">
 		      		<div class="btn-group">
-				        <button type="button" class="btn btn-default btn-sm">'.e107::getParser()->toGlyph("chevron-left").'</button>
-				        <button type="button" class="btn btn-default btn-sm">'.e107::getParser()->toGlyph("chevron-right").'</button>
+				        <button type="button" class="btn btn-default btn-sm"><i class="fa fa-chevron-left"></i></button>
+				        <button type="button" class="btn btn-default btn-sm"><i class="fa fa-chevron-right"></i></button>
 				    </div>
 		      		<!-- /.btn-group -->
 		   		</div>
