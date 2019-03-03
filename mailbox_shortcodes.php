@@ -2,7 +2,7 @@
 /*
  * Mailbox - an e107 plugin by Tijn Kuyper
  *
- * Copyright (C) 2016-2017 Tijn Kuyper (http://www.tijnkuyper.nl)
+ * Copyright (C) 2019-2020 Tijn Kuyper (http://www.tijnkuyper.nl)
  * Released under the terms and conditions of the
  * GNU General Public License (http://www.gnu.org/licenses/gpl.txt)
  *
@@ -12,29 +12,57 @@ if (!defined('e107_INIT')) { exit; }
 
 class mailbox_shortcodes extends e_shortcode
 {
+   function sc_mailbox_src($parm = '')
+   {
+      require_once(e_PLUGIN."mailbox/mailbox_class.php");
+      $mailbox_class = new Mailbox;
+
+      $current = $mailbox_class->get_current_mailbox();
+      $url = e107::url('mailbox', 'mailbox', $current);
+      
+      return $url;      
+   }
+
    function sc_mailbox_boxcount($parm = '')
    {
       require_once(e_PLUGIN."mailbox/mailbox_class.php");
       $mailbox_class = new Mailbox;
 
-      // default to current mailbox
+      // Filter options (all | unread)
+      if(empty($parm['filter']))
+      {
+         $parm['filter'] = 'all';
+      }
+
+      // Format (full | countonly)
+      if(empty($parm['format']))
+      {
+         $parm['format'] = 'full';
+      }
+
+      // Default to current mailbox
       if(empty($parm['box']))
       {
          $parm['box'] = $mailbox_class->get_current_mailbox();
       }
 
-      // In the case of outbox, we need to call a special routine to combine messages sent to multiple recipients or a class.
-      if($parm['box'] == 'outbox')
+      $args  = $mailbox_class->get_database_queryargs($parm['box'], $parm['filter']);
+      $count = e107::getDb()->count('mailbox_messages', '(*)', $args);
+
+      // Format 'countonly' returns only the integer (number)
+      if($parm['format'] == 'countonly')
       {
-         $count = $mailbox_class->get_outbox_messages('', true);
-      }
-      else
-      {
-         $args  = $mailbox_class->get_database_queryargs($parm['box']);
-         $count = e107::getDb()->count('mailbox_messages', '(*)', ''.$args.'');
+         return $count; 
       }
 
-      return $count;
+      // If there are no unread messages, and fitler is set to unread, display nothing
+      if(!$count && $parm['filter'] == 'unread')
+      {
+         return '';
+      }
+
+      // Default returns styling 
+      return '<span class="label label-primary float-right">'.$count.'</span>';
    }
 
    function sc_mailbox_boxglyph($parm = '')
@@ -104,6 +132,28 @@ class mailbox_shortcodes extends e_shortcode
    {
       $url = e107::url('mailbox', 'compose');
       return $url;
+   }
+
+
+   function sc_mailbox_mailtools_formstart($parm = '')
+   {
+      require_once(e_PLUGIN."mailbox/mailbox_class.php");
+      $mailbox_class = new Mailbox;
+
+      $current = $mailbox_class->get_current_mailbox();
+
+      $url = e107::url('mailbox', 'mailbox', $current);
+      return '<form name="mail-tools" method="post" action="'.$url.'">';
+   }
+
+   function sc_mailbox_mailtools_formend($parm ='')
+   {
+      return '</form>';
+   }
+
+   function sc_mailbox_message_id($parm = '')
+   {
+      return $this->var['message_id'];
    }
 
    function sc_mailbox_message_star($parm = '')
@@ -188,6 +238,14 @@ class mailbox_shortcodes extends e_shortcode
    function sc_mailbox_message_readunread($parm = '')
    {
       //print_a($this->var);
+
+      // Draft messages are always 'unread'
+      if($this->var['message_draft'] != '0')
+      {
+         return 'read';
+      }
+
+      // Check if read has a datestamp
       if($this->var['message_read'] == 0)
       {
          return 'unread';
@@ -262,6 +320,17 @@ class mailbox_shortcodes extends e_shortcode
       }
 
       $profile_link = e107::getUrl()->create('user/profile/view', array('id' => $userinfo['user_id'], 'name' => $userinfo['user_name']));
+
+      if($parm == 'linkonly')
+      {
+         return $profile_link;
+      }
+
+      if($parm == 'nolink')
+      {
+         return $userinfo['user_name'];
+      }
+
       return "<a href='".$profile_link."'>".$userinfo['user_name']."</a>";
    }
 
@@ -296,7 +365,7 @@ class mailbox_shortcodes extends e_shortcode
 
    function sc_mailbox_message_text($parm = '')
    {
-      return e107::getParser()->toHTML($this->var['message_text']);
+      return e107::getParser()->toHTML($this->var['message_text'], true);
    }
 
    function sc_mailbox_message_attachment($parm = '')
@@ -304,7 +373,6 @@ class mailbox_shortcodes extends e_shortcode
       //print_a($this->var);
       if($this->var['message_attachments'])
       {
-         //return '<a href="#">'.e107::getParser()->toGlyph("paperclip").'</a>';
          return e107::getParser()->toGlyph("fa-paperclip");
       }
       else
@@ -351,8 +419,10 @@ class mailbox_shortcodes extends e_shortcode
       // Set options
       $options = array(
          'limit' => 10, // MAILBOXPREFTODO 
+         'required' => true,
       );
 
+      // Continue draft, re-fill the already entered recipients
       if($this->var['message_to'])
       {
          $message_to = $this->var['message_to'];
@@ -361,6 +431,7 @@ class mailbox_shortcodes extends e_shortcode
       $text = '<label for="message_to">Recipient(s)</label>'; // TODO LAN
       $text .= e107::getForm()->userpicker('message_to', $message_to, $options);
 
+      // If userclass selection pref is enabled. 
       if($userclass)
       {
          $text .= '<label for="message_to_userclass">Userclass</label>'; // TODO LAN
@@ -368,8 +439,6 @@ class mailbox_shortcodes extends e_shortcode
       }
 
       return $text;
-
-      // userclass
 
    }
 
@@ -392,7 +461,19 @@ class mailbox_shortcodes extends e_shortcode
       }
 
       $text = '<label for="message_text">Message</label>';
+
       return $text.e107::getForm()->bbarea('message_text', $message_text);
+   }
+
+   function sc_mailbox_compose_attachments($parm = '')
+   {
+      //return e107::getForm()->mediapicker('mailbox_attachments', '', 'media=mailbox_attachments&dropzone=true');
+      return'
+      <div class="btn btn-default btn-file">
+            <i class="fa fa-paperclip"></i> Attachments TODO
+      </div>
+      <p class="help-block">Max. 32MB</p>
+      ';
    }
 
    function sc_mailbox_quickform($parm = '')

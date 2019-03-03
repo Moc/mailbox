@@ -28,11 +28,33 @@ $tp 	= e107::getParser();
 $text 	= '';
 $page   = $tp->filter($_GET['page']);
 
-// Load mailbox class
+// Load mailbox class and initiate
 require_once(e_PLUGIN."mailbox/mailbox_class.php");
-
-// Initiate mailbox class
 $mailbox_class 		= new Mailbox;
+;
+// Check if AJAX calls were made
+if(e_AJAX_REQUEST)
+{	
+	// Check if 'mark as read/unread' button was pressed
+	if(varset($_POST['action']) == 'readunread')
+	{
+		$mailbox_class->ajaxReadUnread();
+	}
+
+	// Check if 'mark as star' button was pressed, or individual star
+	if(varset($_POST['action']) == 'star')
+	{
+		$mailbox_class->ajaxStar();
+	}
+
+	// Check if 'mark as star' button was pressed, or individual star
+	if(varset($_POST['action']) == 'trash')
+	{
+		$mailbox_class->ajaxTrash();
+	}
+}
+
+// Get some basic info 
 $current_mailbox 	= $mailbox_class->get_current_mailbox($page);
 $queryargs 			= $mailbox_class->get_database_queryargs($current_mailbox);
 
@@ -47,7 +69,6 @@ require_once(HEADERF);
 $sc 		= e107::getScBatch('mailbox', TRUE);
 $template 	= e107::getTemplate('mailbox');
 $template 	= array_change_key_case($template);
-
 
 if(!USERID)
 {
@@ -76,13 +97,7 @@ else
 
 			// Body (= messages)
 				// Construct query
-				$query_getmessages = $sql->retrieve('mailbox_messages', '*', ''.$queryargs.'', true);
-
-				// Special routine for outbox, needed to combine messages send to multiple recipients or class
-				if($current_mailbox == 'outbox')
-				{
-					$query_getmessages = $mailbox_class->get_outbox_messages($query_getmessages);
-				}
+				$query_getmessages = $sql->retrieve('mailbox_messages', '*', $queryargs, true);
 
 				// Check if there messages to display
 				if($query_getmessages)
@@ -96,7 +111,7 @@ else
 				}
 				else
 				{
-					$nomessages = e107::getParser()->lanVars(LAN_MAILBOX_NOMESSAGESTODISPLAY, $current_mailbox);
+					$nomessages = e107::getParser()->lanVars(LAN_MAILBOX_NOMESSAGESTODISPLAY, $current_mailbox, true);
 					$text .= e107::getMessage()->addInfo($nomessages);
 				}
 			// Footer

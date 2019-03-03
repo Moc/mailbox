@@ -55,11 +55,32 @@ $mid 	= (int) $_GET['id'];
 			// Check if the message is there
 			if($query_getmessage)
 			{
-				// Make sure that the message belongs to user (sender or receiver)
+				// Make sure that the message belongs to user (sender for outbox or receiver for inbox)
 				if($query_getmessage['message_to'] == USERID || $query_getmessage['message_from'] == USERID)
 				{
-					$sc->setVars($query_getmessage);
-					$text .= $tp->parseTemplate($template['read_message'], true, $sc);
+					
+					// Double check - if it's a draft, redirect to compose
+					if($query_getmessage['message_draft'] != '0')
+					{
+						$url = e107::url('mailbox', 'composeid', array('id' => $query_getmessage['message_id']));
+						e107::redirect($url);
+					}
+
+					// Message belongs to user (sender or receiver), it's not a draft, so we can now show the message 
+						// update 'read' status
+						$update_read = array(
+							'message_read'  => time(),
+							'WHERE'         => 'message_id = '.$query_getmessage['message_id']
+						);
+
+						if(!$sql->update("mailbox_messages", $update_read))
+						{
+							e107::getMessage()->addError("Could not update message_read status");
+						}
+
+						// Pass database values onto template, and render
+						$sc->setVars($query_getmessage);
+						$text .= $tp->parseTemplate($template['read_message'], true, $sc);
 				}
 				else
 				{

@@ -90,7 +90,7 @@ $text .= $tp->parseTemplate($template['tablelist']['start'], true, $sc);
 		*/
 		if(
 			$draftvalues['message_from'] 	== USERID &&
-			$draftvalues['message_draft']	== 1 &&
+			$draftvalues['message_draft']	!= 0 &&
 			$draftvalues['message_sent'] 	== 0
 		  )
 		{

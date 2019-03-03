@@ -2,7 +2,7 @@
 /*
  * Mailbox - an e107 plugin by Tijn Kuyper
  *
- * Copyright (C) 2016-2017 Tijn Kuyper (http://www.tijnkuyper.nl)
+ * Copyright (C) 2019-2020 Tijn Kuyper (http://www.tijnkuyper.nl)
  * Released under the terms and conditions of the
  * GNU General Public License (http://www.gnu.org/licenses/gpl.txt)
  *
@@ -22,8 +22,8 @@ $MAILBOX_TEMPLATE['tablelist']['start'] = '
 
 $MAILBOX_TEMPLATE['tablelist']['header'] = '
 		<div class="mail-box-header">
-			<form method="get" action="index.html" class="float-right mail-search">
-                <div class="input-group ">
+			<form name="search-messages" method="post" action="index." class="float-right mail-search">
+                <div class="input-group">
                     <input type="text" class="form-control form-control-sm" name="search" placeholder="Search message(s)">
                     <div class="input-group-btn">
                         <button type="submit" class="btn btn-sm btn-primary">
@@ -33,20 +33,19 @@ $MAILBOX_TEMPLATE['tablelist']['header'] = '
                 </div>
             </form>
 
-			<h2>{MAILBOX_BOXTITLE} ({MAILBOX_BOXCOUNT})</h2>
-
-            <div class="mail-tools tooltip-demo m-t-md">
-                <div class="btn-group float-right">
-                    <button class="btn btn-white btn-sm"><i class="fa fa-arrow-left"></i></button>
-                    <button class="btn btn-white btn-sm"><i class="fa fa-arrow-right"></i></button>
-
+			<h2>{MAILBOX_BOXTITLE} ({MAILBOX_BOXCOUNT: format=countonly})</h2>
+            
+                <div class="mail-tools m-t-md">
+                    <div class="btn-group float-right">
+                        <button class="btn btn-white btn-sm"><i class="fa fa-arrow-left"></i></button>
+                        <button class="btn btn-white btn-sm"><i class="fa fa-arrow-right"></i></button>
+                    </div>
+                    <button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="left" name"refresh" title="Refresh inbox"><i class="fa fa-refresh"></i> Refresh</button>
+                    <button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top" data-mailbox-action="readunread" title="Mark as read/unread"><i class="fa fa-eye"></i> </button>
+                    <button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top" data-mailbox-action="star" title="Mark with star"><i class="fa fa-star"></i> </button>
+                    <button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top" data-mailbox-action="trash" title="Move to trash"><i class="fa fa-trash-o"></i> </button>
                 </div>
-                <button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="left" title="Refresh inbox"><i class="fa fa-refresh"></i> Refresh</button>
-                <button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top" title="Mark as read/unread"><i class="fa fa-eye"></i> </button>
-                <button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top" title="Mark with star"><i class="fa fa-star"></i> </button>
-                <button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top" title="Move to trash"><i class="fa fa-trash-o"></i> </button>
-
-            </div>
+            
         </div> 
 			
         <div class="mail-box">
@@ -66,21 +65,11 @@ $MAILBOX_TEMPLATE['tablelist']['header'] = '
 		        <tbody>
 ';
 
-/*$MAILBOX_TEMPLATE['tablelist']['messages'] = '
-				<tr>
-					<td><input type="checkbox"></td>
-					<td class="mailbox-star hidden-xs">{MAILBOX_MESSAGE_STAR}</td>
-					<td class="mailbox-name">{SETIMAGE: w=40&h=40&crop=1} {MAILBOX_MESSAGE_AVATAR} {MAILBOX_MESSAGE_FROMTO}</td>
-					<td class="mailbox-subject">{MAILBOX_MESSAGE_SUBJECT}</td>
-					<td class="mailbox-attachment hidden-xs">{MAILBOX_MESSAGE_ATTACHMENT}</td>
-					<td class="mailbox-date">{MAILBOX_MESSAGE_DATESTAMP=relative}</td>
-				</tr>
-';*/
 
 $MAILBOX_TEMPLATE['tablelist']['messages'] = '
-					<tr class="{MAILBOX_MESSAGE_READUNREAD}">
+					<tr id="message-{MAILBOX_MESSAGE_ID}" class="{MAILBOX_MESSAGE_READUNREAD}">
 			            <td class="check-mail">
-			                <input type="checkbox" class="i-checks">
+			                <input data-token="'.e_TOKEN.'" type="checkbox" name="messages[]" id="{MAILBOX_MESSAGE_ID}" value="{MAILBOX_MESSAGE_READUNREAD}" class="i-checks">
 			            </td>
 			            <td class="d-none d-sm-table-cell">{MAILBOX_MESSAGE_STAR}</td>
 			            <td class="mail-ontact"><a href="mail_detail.html">{SETIMAGE: w=30&h=30&crop=1} {MAILBOX_MESSAGE_AVATAR: shape=circle} {MAILBOX_MESSAGE_FROMTO}</a>  </td>
@@ -126,19 +115,19 @@ $MAILBOX_TEMPLATE['box_navigation']['content'] = '
 
     <ul class="folder-list m-b-md" style="padding: 0">       		
     	<li {MAILBOX_BOXLINK_ACTIVE=inbox}>
-    		<a href="{MAILBOX_BOXLINK=inbox}">{MAILBOX_BOXGLYPH=inbox} {LAN=LAN_MAILBOX_INBOX} <span class="label label-primary float-right">{MAILBOX_BOXCOUNT: box=inbox}</span></a>
+    		<a href="{MAILBOX_BOXLINK=inbox}">{MAILBOX_BOXGLYPH=inbox} {LAN=LAN_MAILBOX_INBOX} {MAILBOX_BOXCOUNT: box=inbox}</a>
        	</li>
        	<li {MAILBOX_BOXLINK_ACTIVE=outbox}>
-       		<a href="{MAILBOX_BOXLINK=outbox}">{MAILBOX_BOXGLYPH=outbox} {LAN=LAN_MAILBOX_OUTBOX} <span class="label label-primary float-right">{MAILBOX_BOXCOUNT: box=outbox}</span></a>
+       		<a href="{MAILBOX_BOXLINK=outbox}">{MAILBOX_BOXGLYPH=outbox} {LAN=LAN_MAILBOX_OUTBOX} {MAILBOX_BOXCOUNT: box=outbox}</a>
        	</li>
        	<li {MAILBOX_BOXLINK_ACTIVE=draftbox}>
-       		<a href="{MAILBOX_BOXLINK=draftbox}">{MAILBOX_BOXGLYPH=draftbox} {LAN=LAN_MAILBOX_DRAFTBOX} <span class="label label-primary float-right">{MAILBOX_BOXCOUNT: box=draftbox}</span></a>
+       		<a href="{MAILBOX_BOXLINK=draftbox}">{MAILBOX_BOXGLYPH=draftbox} {LAN=LAN_MAILBOX_DRAFTBOX} {MAILBOX_BOXCOUNT: box=draftbox}</a>
        	</li>
        	<li {MAILBOX_BOXLINK_ACTIVE=starbox}>
-       		<a href="{MAILBOX_BOXLINK=starbox}">{MAILBOX_BOXGLYPH=starbox} {LAN=LAN_MAILBOX_STARBOX} <span class="label label-primary float-right">{MAILBOX_BOXCOUNT: box=starbox}</span></a>
+       		<a href="{MAILBOX_BOXLINK=starbox}">{MAILBOX_BOXGLYPH=starbox} {LAN=LAN_MAILBOX_STARBOX} {MAILBOX_BOXCOUNT: box=starbox}</a>
        	</li>
         <li {MAILBOX_BOXLINK_ACTIVE=trashbox}>
-        	<a href="{MAILBOX_BOXLINK=trashbox}">{MAILBOX_BOXGLYPH=trashbox} {LAN=LAN_MAILBOX_TRASHBOX} <span class="label label-primary float-right">{MAILBOX_BOXCOUNT: box=trashbox}</span></a>
+        	<a href="{MAILBOX_BOXLINK=trashbox}">{MAILBOX_BOXGLYPH=trashbox} {LAN=LAN_MAILBOX_TRASHBOX} {MAILBOX_BOXCOUNT: box=trashbox}</a>
         </li>
     </ul>
  
@@ -193,10 +182,7 @@ $MAILBOX_TEMPLATE['compose_message'] = '
 	    <div class="form-group font-bold">{MAILBOX_COMPOSE_TEXT}</div>
 
 	    <div class="form-group">
-			<div class="btn btn-default btn-file">
-	        	<i class="fa fa-paperclip"></i> Attachment
-	        </div>
-	        <p class="help-block">Max. 32MB</p>
+            {MAILBOX_COMPOSE_ATTACHMENTS}
 	    </div>
 
 	    <div class="text-right">
@@ -211,76 +197,125 @@ $MAILBOX_TEMPLATE['compose_message'] = '
 ';
 
 $MAILBOX_TEMPLATE['read_message'] = '
-<div class="panel panel-primary">
-	<div class="panel-heading clearfix">
-		<div class="row">
-			<div class="col-md-8">
-				<h2 class="panel-title pull-left mailbox-title">{MAILBOX_MESSAGE_SUBJECT}</h3>
-			</div>
-			<!-- /.col-md-8 -->
-			<div class="col-md-4">
-				<div class="pull-right">
-		      		<div class="btn-group">
-				        <button type="button" class="btn btn-default btn-sm"><i class="fa fa-chevron-left"></i></button>
-				        <button type="button" class="btn btn-default btn-sm"><i class="fa fa-chevron-right"></i></button>
-				    </div>
-		      		<!-- /.btn-group -->
-		   		</div>
-		    	<!-- /.pull-right -->
-			</div>
-			<!-- /.col-md-4 -->
-		</div>
-		<!-- /.row -->
-	</div>
-	<!-- /.panel-heading -->
-
-	<div class="panel-body">
-		<div class="mailbox-read-info">
-			<div class="row">
-				<div class="col-md-6">
-					{SETIMAGE: w=50&h=50&crop=1} {MAILBOX_MESSAGE_AVATAR} {MAILBOX_MESSAGE_FROMTO}
-				</div>
-				<!-- /.col-md-6 -->
-
-				<div class="col-md-6">
-					<span class="mailbox-read-time pull-right">{MAILBOX_MESSAGE_DATESTAMP=long}</span> <br />
-					<div class="mailbox-controls hidden-xs pull-right">
-	                	<div class="btn-group">
-	                  		<button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-container="body" title="Delete">
-	                    		<i class="fa fa-trash-o"></i></button>
-	                  		<button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-container="body" title="Reply">
-	                    		<i class="fa fa-reply"></i></button>
-	                  		<button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-container="body" title="Forward">
-	                    		<i class="fa fa-share"></i></button>
-	                	</div>
-	                	<!-- /.btn-group -->
-	                	<button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" title="Print">
-	                  	<i class="fa fa-print"></i></button>
-	              	</div>
-	              	<!-- /.mailbox-controls -->
-				</div>
-				<!-- /.col-md-6 -->
-			</div>
-			<!-- /.row -->
-		</div>
-		<!-- /.mailbox-read-info -->
-
-		<div class="mailbox-read-message">
-			{MAILBOX_MESSAGE_TEXT}
-		</div>
-		<!-- /.mailbox-read-message -->
+<div class="mail-box-header">
+    <div class="float-right">
+		<button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-container="body" title="Reply">
+			<i class="fa fa-reply"></i> Reply
+		</button>
+	    <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-container="body" title="Forward">
+			<i class="fa fa-share"></i> Forward
+		</button>
+		<button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-container="body" title="Delete">
+			<i class="fa fa-trash-o"></i> Remove
+		</button>
     </div>
-    <!-- /.panel-body -->
+    <h2>
+        View message: <span class="font-italic">{MAILBOX_MESSAGE_SUBJECT}</span>
+    </h2>
+    <div class="mail-tools m-t-md">
 
-    <div class="panel-footer">
-		<div class="pull-right">
-			<button type="button" class="btn btn-default"><i class="fa fa-reply"></i> Reply</button>
-			<button type="button" class="btn btn-default"><i class="fa fa-share"></i> Forward</button>
-		</div>
-		<button type="button" class="btn btn-default"><i class="fa fa-trash-o"></i> Delete</button>
-		<button type="button" class="btn btn-default"><i class="fa fa-print"></i> Print</button>
-	</div>
-    <!-- /.panel-footer -->
+    </div>
 </div>
-<!-- /. panel -->
+<div class="mail-box">
+	<div class="mail-body">
+	<div class="row">
+		<div class="col-md-2">
+
+			<div class="widget-head-color-box navy-bg p-lg text-center">
+	            <div class="m-b-md">
+	                <h2 class="font-bold no-margins">
+	                    {MAILBOX_MESSAGE_FROMTO=nolink}
+	                </h2>
+	            </div>
+
+	           	{SETIMAGE: w=80&h=80&crop=1} <a href="{MAILBOX_MESSAGE_FROMTO=linkonly}">{MAILBOX_MESSAGE_AVATAR: shape=circle}</a>    
+	        </div>
+	        <div class="widget-text-box">
+	            <div class="text-center">
+	                <a href="" class="btn btn-xs btn-white"><i class="fa fa-thumbs-up"></i> Like </a>
+	                <a href="" class="btn btn-xs btn-primary"><i class="fa fa-reply"></i> Reply</a>
+	            </div>
+	        </div>
+
+        </div> 
+        <div class="col-md-10">  
+		    <p>
+		       {MAILBOX_MESSAGE_TEXT}
+		    </p>
+		</div>
+	</div>
+	</div>
+    <div class="mail-attachment">
+        <p>
+            <span><i class="fa fa-paperclip"></i> 3 attachments - </span>
+            <a href="#">Download all</a>
+        </p>
+
+        <div class="attachment">
+            <div class="file-box">
+                <div class="file">
+                    <a href="#">
+                        <span class="corner"></span>
+
+                        <div class="file-icon">
+                            <i class="fa fa-file"></i>
+                        </div>
+                        <div class="file-name">
+                            Document_2019.doc
+                            <br/>
+                            <small>Added: Jan 11, 2019</small>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div class="file-box">
+                <div class="file">
+                    <a href="#">
+                        <span class="corner"></span>
+
+                        <div class="file-image">
+                            <img alt="image" class="img-fluid" src="{e_MEDIA_IMAGE}2019-02/test_image_5.jpg">
+                        </div>
+                        <div class="file-name">
+                            Italy street.jpg
+                            <br/>
+                            <small>Added: Jan 6, 2019</small>
+                        </div>
+                    </a>
+
+                </div>
+            </div>
+            <div class="file-box">
+                <div class="file">
+                    <a href="#">
+                        <span class="corner"></span>
+
+                        <div class="file-image">
+                            <img alt="image" class="img-fluid" src="http://www.bureauvijftig.nl/wp-content/uploads/2017/09/test-image-5.jpg">
+                        </div>
+                        <div class="file-name">
+                            My feel.png
+                            <br/>
+                            <small>Added: Jan 7, 2019</small>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+
+    <div class="mail-body text-right">
+		<button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-container="body" title="Reply">
+			<i class="fa fa-reply"></i> Reply
+		</button>
+	    <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-container="body" title="Forward">
+			<i class="fa fa-share"></i> Forward
+		</button>
+		<button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-container="body" title="Delete">
+			<i class="fa fa-trash-o"></i> Remove
+		</button>
+    </div>
+    <div class="clearfix"></div>
+</div>
 ';

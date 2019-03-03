@@ -2,7 +2,7 @@
 /*
  * Mailbox - an e107 plugin by Tijn Kuyper
  *
- * Copyright (C) 2016-2017 Tijn Kuyper (http://www.tijnkuyper.nl)
+ * Copyright (C) 2019-2020 Tijn Kuyper (http://www.tijnkuyper.nl)
  * Released under the terms and conditions of the
  * GNU General Public License (http://www.gnu.org/licenses/gpl.txt)
  *
@@ -26,9 +26,17 @@
 - Delete draft
 => check for draft status (just to be sure)
 => set message_to_deleted=1
+
+- MULTIPLE RECIPIENTS
+=> message_to: as long as it is in draft may contain multiple comma separated id's. In sending process, new entry is made, for recipient unique row with unique message_to. No special outbox counting routine needed. If send to 5 people, 5 entries in outbox are visible. 
+
+
 */
 
 if (!defined('e107_INIT')) { exit; }
+
+// Include JQuery / Ajax code
+e107::js('mailbox','js/mailbox.js', 'jquery', 5);
 
 class Mailbox
 {
@@ -91,52 +99,49 @@ class Mailbox
 	}
 
 
-	public function get_database_queryargs($box = 'inbox')
+	public function get_database_queryargs($box = 'inbox', $filter = 'all')
 	{
 		// Default back to inbox to be sure
 		if(!$box) { $box = 'inbox'; }
+
+		if($filter == 'unread')
+		{
+			$unread =  ' AND message_read=0';
+		}
 
 		switch($box)
 		{
 			case 'inbox':
 			default:
-				$args = "message_to=".USERID." AND message_to_deleted=0 AND message_draft=0";
+				$args = "message_to=".USERID." AND message_to_deleted=0 AND message_draft=0".$unread;
 				break;
 			case 'outbox':
-				$args = "message_from=".USERID." AND message_to_deleted=0 AND message_draft=0";
+				$args = "message_from=".USERID." AND message_to_deleted=0 AND message_draft=0".$unread;
 				break;
 			case 'draftbox':
-				$args = "message_from=".USERID." AND message_draft IS NOT NULL AND message_sent=0 AND message_to_deleted=0";
+				$args = "message_from=".USERID." AND message_draft IS NOT NULL AND message_sent=0 AND message_to_deleted=0".$unread;
 				break;
 			case 'starbox': // no, not Starbucks ;)
-				$args = "message_to=".USERID." AND message_to_starred=1 AND message_to_deleted=0";
+				$args = "message_to=".USERID." AND message_to_starred=1 AND message_to_deleted=0".$unread;
 				break;
 			case 'trashbox':
-				$args = "message_to=".USERID." AND message_to_deleted!=0";
+				$args = "message_to=".USERID." AND message_to_deleted!=0".$unread;
 				break;
 		}
 
 		return $args;
 	}
 
-	// this function processes all messages in outbox and combines messages which are sent to multiple recipients or a class into a single message.
-	// $count = if true, returns integer amount of messages. false: return array of data with outbox messages
-	public function get_outbox_messages($data = '', $count = false)
-	{	
-		// return just the number of combined messages
-		if($count)
-		{
-			return "OUT TODO";
-		}
-
-		// return the combined message list 
-		return false;
-	}
-
 	public function process_compose($action = 'send', $post_data)
 	{
-		// print_a("Message action: ".$action);
-		// print_a($post_data);
+		print_a($post_data);
+
+		// Check fields 
+		if(empty($post_data['message_to']) || empty($post_data['message_subject']) || empty($post_data['message_text']))
+		{
+			return e107::getMessage()->addError("Required fields are left empty: todo list fields"); // MAILBOX TODO LAN
+		}
+		
 
 		$tp  = e107::getParser();
 		$sql = e107::getDb();
@@ -162,11 +167,11 @@ class Mailbox
 		// If the message is only a draft, we need to make some changes to the default data
 		if($action == 'draft')
 		{
-			// process_draft($insert_data);)
-			// Set draft status and set datestamp to 0
-			$insert_data['message_draft'] 	= '1';
+			// process_draft($insert_data);
+			// Set draft status to current time (last edited)
+			$insert_data['message_draft'] 	= time();
 			$insert_data['message_sent'] 	= '0';
-			$insert_data['message_to'] 		= $post_data['message_to'];
+			$insert_data['message_to'] 		= $tp->toDb($post_data['message_to']);
 
 			// If saving an existing draft, update rather than insert new record
 			if($post_data['id'])
@@ -180,7 +185,7 @@ class Mailbox
 				}
 				else
 				{
-					return e107::getMessage()->addError("Something went wrong with saving the draft");
+					return e107::getMessage()->addError("Something went wrong with updating the draft");
 				}
 			}
 
@@ -200,7 +205,7 @@ class Mailbox
 
 		// Ending up here, we are actually sending the message.
 		// First, determine the sendmode: 1) individual, 2) multiple, 3) usserclass
-		print_a($post_data['message_to']);
+		//print_a($post_data['message_to']);
 		$message_to = $tp->toDb($post_data['message_to']);
 
 		// individual
@@ -220,7 +225,8 @@ class Mailbox
 		}
 
 
-		print_a("sendmode: ".$sendmode." recipients: ".$message_to);
+		print_a("sendmode: ".$sendmode);
+		print_a("recipients: ".$message_to);
 		return;
 		// Prepare subject (message_subject)
 
@@ -242,6 +248,105 @@ class Mailbox
 		}
 
 		return e107::getMessage()->addInfo("Message should be discarded but this routine is not finished yet.");
+	}
+
+
+	public function ajaxReadUnread()
+	{
+		$sql = e107::getDb();
+		$tp = e107::getParser();
+
+		if(!isset($_POST['e-token'])) // Set the token if not included
+		{
+			$_POST['e-token'] = $_POST['etoken'];
+		}
+
+		//error_log(print_r($_POST, true));
+
+		if(!e107::getSession()->check(false))
+		{
+			// Invalid token.
+			error_log("Mailbox - invalid token!"); // MAILBOX TODO LOG
+			exit;
+		}
+
+		$ids 	= $_POST["ids"];
+		$values = $_POST["values"];
+
+		$input_array = array_combine($ids, $values);
+		$output_array = array();
+
+		foreach($input_array as $id => $value)
+		{	
+			$id = $tp->filter($id);
+
+			// Draft messages are always read. No need to do anything
+			if($sql->retrieve('mailbox_messages', 'message_draft', 'message_id='.$id) != 0)
+			{
+				break;
+			}
+			
+			// If currently 'read', set to unread (0)
+			if($value == 'read')
+			{
+				$new_value = 0;
+				$output_array[$id] = "unread";
+			}
+			// If currently 'unread', set to read (current timestamp)
+			elseif($value == 'unread')
+			{
+				$new_value = time();
+				$output_array[$id] = "read";
+			}
+			// If it's something else it may be malicious, stop script... 
+			else
+			{
+				error_log("Mailbox - Possible malicious attempt!"); // TODO LOG 
+				break;
+			}
+
+			// Prepare update statement
+			$update = array(
+			    'message_read' 	=> $new_value,
+			    'WHERE' 		=> 'message_id = '.$id,
+			);
+
+			// Update database, and catch error if applicable 
+			if($sql->update('mailbox_messages', $update) !== false) 
+			{
+				// MAILBOX TODO LOG
+			}
+			else
+			{
+				error_log("Mailbox - SQL ERROR"); // MAILBOX TODO LO
+				error_log($update);
+			}
+		}
+		//error_log($output_array);
+		echo json_encode($output_array);
+		exit;
+	}
+
+	public function ajaxStar()
+	{
+		$ids 	= $_POST["ids"];
+		
+		$output_array = array();
+
+		foreach($ids as $id)
+		{	
+			$id = $tp->filter($id);
+		}
+
+		echo json_encode();
+		exit;
+	}
+
+	public function ajaxTrash()
+	{
+		//error_log("Mailbox - Trash TODO");
+		//echo json_encode();
+		exit;
 	}
 
 	/*
