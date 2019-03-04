@@ -12,17 +12,6 @@ if (!defined('e107_INIT')) { exit; }
 
 class mailbox_shortcodes extends e_shortcode
 {
-   function sc_mailbox_src($parm = '')
-   {
-      require_once(e_PLUGIN."mailbox/mailbox_class.php");
-      $mailbox_class = new Mailbox;
-
-      $current = $mailbox_class->get_current_mailbox();
-      $url = e107::url('mailbox', 'mailbox', $current);
-      
-      return $url;      
-   }
-
    function sc_mailbox_boxcount($parm = '')
    {
       require_once(e_PLUGIN."mailbox/mailbox_class.php");
@@ -132,23 +121,6 @@ class mailbox_shortcodes extends e_shortcode
    {
       $url = e107::url('mailbox', 'compose');
       return $url;
-   }
-
-
-   function sc_mailbox_mailtools_formstart($parm = '')
-   {
-      require_once(e_PLUGIN."mailbox/mailbox_class.php");
-      $mailbox_class = new Mailbox;
-
-      $current = $mailbox_class->get_current_mailbox();
-
-      $url = e107::url('mailbox', 'mailbox', $current);
-      return '<form name="mail-tools" method="post" action="'.$url.'">';
-   }
-
-   function sc_mailbox_mailtools_formend($parm ='')
-   {
-      return '</form>';
    }
 
    function sc_mailbox_message_id($parm = '')

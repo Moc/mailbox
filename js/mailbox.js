@@ -44,7 +44,7 @@ var e107 = e107 || {'settings': {}, 'behaviors': {}};
 					// If star icon was checked, and no checkboxes checked
 					if(!checked)
 					{
-						console.log("Direct star");
+						//console.log("Direct star");
 						var directID = $this.attr('data-mailbox-starid');
 						selectedIDs.push(directID);
 					}
