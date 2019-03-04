@@ -122,7 +122,10 @@ class Mailbox
 				$args = "message_from=".USERID." AND message_draft IS NOT NULL AND message_sent=0 AND message_to_deleted=0".$unread;
 				break;
 			case 'starbox': // no, not Starbucks ;)
-				$args = "message_to=".USERID." AND message_to_starred=1 AND message_to_deleted=0".$unread;
+				$args = "	(message_to=".USERID." AND message_to_starred=1 AND message_to_deleted=0".$unread.") 
+								OR 
+							(message_from=".USERID." AND message_from_starred=1 AND message_to_deleted=0".$unread.")
+						";
 				break;
 			case 'trashbox':
 				$args = "message_to=".USERID." AND message_to_deleted!=0".$unread;
@@ -346,8 +349,16 @@ class Mailbox
 			// Filter user input
 			$id = $tp->filter($id);
 
-			// Determine right column depending on the current mailbox (inbox vs draftbox)
-			$column = ($current_mailbox == 'draftbox') ? 'message_from_starred' : 'message_to_starred';
+
+			if($sql->retrieve('mailbox_messages', 'message_draft', 'message_id='.$id) != 0)
+			{
+				$column = 'message_from_starred';
+			}
+			else
+			{
+				$column = 'message_to_starred';
+			}
+			
 
 			if($current_status = $sql->retrieve('mailbox_messages', $column, 'message_id='.$id))
 			{

@@ -133,6 +133,13 @@ class mailbox_shortcodes extends e_shortcode
       // Distinguish between draft or inbox 
       $column = (e107::getParser()->filter($_GET['page']) == 'draftbox') ? 'message_from_starred' : 'message_to_starred';
 
+      // If a draft is starred, starbox should also use message_from_starred
+      //print_a($column);
+      if($this->var['message_draft'] != '0')
+      {
+         $column = 'message_from_starred';
+      }
+
       if($this->var[$column])
       {
          return '<span data-mailbox-action="star" data-mailbox-starid="'.$this->var['message_id'].'">'.e107::getParser()->toGlyph("fa-star").'</span>';
@@ -357,7 +364,7 @@ class mailbox_shortcodes extends e_shortcode
       $datestamp = $this->var['message_sent']; 
       
       // If it's a draft, datestamp is 'last saved'
-      if(e107::getParser()->filter($_GET['page']) == 'draftbox')
+      if(e107::getParser()->filter($_GET['page']) == 'draftbox' || $this->var['message_sent'] == '0')
       {
         $datestamp = $this->var['message_draft'];
       }
