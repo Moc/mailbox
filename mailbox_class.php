@@ -314,12 +314,14 @@ class Mailbox
 			// Update database, and catch error if applicable 
 			if($sql->update('mailbox_messages', $update) !== false) 
 			{
-				// MAILBOX TODO LOG
+				
 			}
 			else
 			{
-				error_log("Mailbox - SQL ERROR"); // MAILBOX TODO LO
-				error_log($update);
+				// MAILBOX TODO LOG
+				error_log("Mailbox - SQL ERROR"); 
+				error_log('SQL Error #'.$sql->getLastErrorNumber().': '.$sql->getLastErrorText());
+				error_log('$SQL Query'.print_r($sql->getLastQuery(),true));
 			}
 		}
 		//error_log($output_array);
@@ -329,16 +331,60 @@ class Mailbox
 
 	public function ajaxStar()
 	{
+		$sql = e107::getDb();
+		$tp = e107::getParser();
+
 		$ids 	= $_POST["ids"];
 		
 		$output_array = array();
 
+		$current_mailbox = $this->get_current_mailbox();
+		//error_log($current_mailbox);
+
 		foreach($ids as $id)
 		{	
+			// Filter user input
 			$id = $tp->filter($id);
-		}
 
-		echo json_encode();
+			// Determine right column depending on the current mailbox (inbox vs draftbox)
+			$column = ($current_mailbox == 'draftbox') ? 'message_from_starred' : 'message_to_starred';
+
+			if($current_status = $sql->retrieve('mailbox_messages', $column, 'message_id='.$id))
+			{
+				$current_status = 'starred';
+				$new_status = '0'; // set to not starred
+			}
+			else
+			{
+				$current_status = 'notstarred';
+				$new_status = '1'; // set to starred
+			}
+
+
+			// Prepare update statement
+			$update = array(
+			    $column => $new_status,
+			    'WHERE'	=> 'message_id = '.$id,
+			);
+
+			// Update database, and catch error if applicable 
+			if($sql->update('mailbox_messages', $update) !== false) 
+			{
+				
+				$output_array[$id] = $new_status;
+			}
+			else
+			{
+				// MAILBOX TODO LOG
+				error_log("Mailbox - SQL ERROR"); 
+				error_log('SQL Error #'.$sql->getLastErrorNumber().': '.$sql->getLastErrorText());
+				error_log('$SQL Query'.print_r($sql->getLastQuery(),true));
+			}
+			
+		}
+		
+		//error_log(print_r($output_array, true));
+		echo json_encode($output_array);
 		exit;
 	}
 

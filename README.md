@@ -18,6 +18,8 @@ This plugin is coded using e107 standards and relies on **Bootstrap 4 and jQuery
 * Email functionality (notifications)
 * Cronjobs (queue for large amount of messages, cleanup database etc.)
 * Customizable labels per individual user 
+* Event triggers 
+* Attachments
 
 ## How to get help? ##
 * First, **search the wiki** [here](https://github.com/Moc/mailbox/wiki)

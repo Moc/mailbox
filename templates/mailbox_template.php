@@ -40,7 +40,7 @@ $MAILBOX_TEMPLATE['tablelist']['header'] = '
                         <button class="btn btn-white btn-sm"><i class="fa fa-arrow-left"></i></button>
                         <button class="btn btn-white btn-sm"><i class="fa fa-arrow-right"></i></button>
                     </div>
-                    <button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="left" name"refresh" title="Refresh inbox"><i class="fa fa-refresh"></i> Refresh</button>
+                    <button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="left" data-mailbox-action="refresh" title="Refresh inbox"><i class="fa fa-refresh"></i> Refresh</button>
                     <button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top" data-mailbox-action="readunread" title="Mark as read/unread"><i class="fa fa-eye"></i> </button>
                     <button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top" data-mailbox-action="star" title="Mark with star"><i class="fa fa-star"></i> </button>
                     <button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top" data-mailbox-action="trash" title="Move to trash"><i class="fa fa-trash-o"></i> </button>
@@ -49,7 +49,7 @@ $MAILBOX_TEMPLATE['tablelist']['header'] = '
         </div> 
 			
         <div class="mail-box">
-			<table class="table table-hover table-mail">
+			<table id="mailbox-messages" class="table table-hover table-mail">
 				<thead>
 				    <tr>
 				      <th></th>

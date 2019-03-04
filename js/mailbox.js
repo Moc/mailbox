@@ -18,7 +18,7 @@ var e107 = e107 || {'settings': {}, 'behaviors': {}};
 		{
 			$(function () {
 				// When button 'mark' is clicked
-			    $("button[data-mailbox-action='readunread'], button[data-mailbox-action='star']").click(function () {
+			    $("button[data-mailbox-action='readunread'], button[data-mailbox-action='star'], span[data-mailbox-action='star']").click(function () {
 
 			    	// Initiate array of selected ID's
 			        var selectedIDs = [];
@@ -28,6 +28,7 @@ var e107 = e107 || {'settings': {}, 'behaviors': {}};
 					var script = $this.attr("src");
 					var action = $this.attr('data-mailbox-action');
 					var token = $(':checkbox:checked:first').attr('data-token');
+					var checked = $('#mailbox-messages').find(':checked').length;
 
 					//var script = $(':checkbox:checked:first').attr('data-src');
 
@@ -37,6 +38,19 @@ var e107 = e107 || {'settings': {}, 'behaviors': {}};
 					    selectedIDs.push(this.id);
 					    selectedValues.push(this.value);
 					});
+
+					//console.log(selectedIDs);
+
+					// If star icon was checked, and no checkboxes checked
+					if(!checked)
+					{
+						console.log("Direct star");
+						var directID = $this.attr('data-mailbox-starid');
+						selectedIDs.push(directID);
+					}
+
+					console.log(selectedIDs);
+					//return;
 
 					$.ajax({  
 					    url: script,	
@@ -67,6 +81,19 @@ var e107 = e107 || {'settings': {}, 'behaviors': {}};
 							if(action == 'star')
 			        		{
 				        		//console.log("succes from star");
+				        		for(var key in response) 
+						        {
+						        	if(response[key] == '1')
+						        	{
+						        		var newStar = '<i class="fas fa-star"></i>'; // MAILBOX TODO - check FA icon syntax
+						        	}
+						        	else
+						        	{
+						        		var newStar = '<i class="fa fa-star-o"></i>'; // MAILBOX TODO - check FA icon syntax
+						        	}
+					        		
+					        		$('span[data-mailbox-starid='+key+']').html(newStar);
+					       		}
 							}
 
 			            },
@@ -82,12 +109,11 @@ var e107 = e107 || {'settings': {}, 'behaviors': {}};
 					});
 			    });
 
-			    /*
-			    $("button[name='refresh']").click(function () {
-			    	//location.reload();
-			    	//alert("refresh");
-			    	console.log("refresh button clicked!");
-			  	});*/
+			    
+			    $("button[data-mailbox-action='refresh']").click(function () {
+			    	location.reload();
+			    	//console.log("refresh button clicked!");
+			  	});
 			});
 		}
 	};

@@ -158,19 +158,16 @@ class mailbox_shortcodes extends e_shortcode
 
    function sc_mailbox_message_star($parm = '')
    {
-      // Draft messages cannot be starred
-      /*if(e107::getParser()->filter($_GET['page']) == 'draftbox')
-      {
-         return;
-      }*/
+      // Distinguish between draft or inbox 
+      $column = (e107::getParser()->filter($_GET['page']) == 'draftbox') ? 'message_from_starred' : 'message_to_starred';
 
-      if($this->var['message_to_starred'])
+      if($this->var[$column])
       {
-         return '<a href="#">'.e107::getParser()->toGlyph("fa-star").'</a>';
+         return '<span data-mailbox-action="star" data-mailbox-starid="'.$this->var['message_id'].'">'.e107::getParser()->toGlyph("fa-star").'</span>';
       }
       else
       {
-         return '<a href="#">'.e107::getParser()->toGlyph("fa-star-o").'</a>';
+         return '<span data-mailbox-action="star" data-mailbox-starid="'.$this->var['message_id'].'">'.e107::getParser()->toGlyph("fa-star-o").'</span>';
       }
    }
 
