@@ -31,7 +31,7 @@ $page   = $tp->filter($_GET['page']);
 // Load mailbox class and initiate
 require_once(e_PLUGIN."mailbox/mailbox_class.php");
 $mailbox_class 		= new Mailbox;
-;
+
 // Check if AJAX calls were made
 if(e_AJAX_REQUEST)
 {	

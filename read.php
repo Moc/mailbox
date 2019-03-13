@@ -22,6 +22,27 @@ if(!e107::isInstalled('mailbox'))
 // Load the LAN files
 e107::lan('mailbox');
 
+// Define variables
+$sql 	= e107::getDb();
+$tp 	= e107::getParser();
+$frm 	= e107::getForm();
+$text 	= '';
+$page   = $tp->filter($_GET['page']);
+$mid 	= (int) $_GET['id'];
+
+
+// Load mailbox class and initiate
+require_once(e_PLUGIN."mailbox/mailbox_class.php");
+$mailbox_class 		= new Mailbox;
+
+// Get some basic info 
+$current_mailbox 	= $mailbox_class->get_current_mailbox($page);
+$queryargs 			= $mailbox_class->get_database_queryargs($current_mailbox);
+
+// Set pagetitles
+$pagetitle = $mailbox_class->get_pagetitle($page); 
+define('e_PAGETITLE', $pagetitle);
+
 // Load the header
 require_once(HEADERF);
 
@@ -30,13 +51,12 @@ $sc 		= e107::getScBatch('mailbox', TRUE);
 $template 	= e107::getTemplate('mailbox');
 $template 	= array_change_key_case($template);
 
-// Define variables
-$sql 	= e107::getDb();
-$tp 	= e107::getParser();
-$frm 	= e107::getForm();
-$text 	= '';
-$mid 	= (int) $_GET['id'];
-
+if(!USERID)
+{
+	e107::getMessage()->addError(LAN_MAILBOX_NOTLOGGEDIN);
+}
+else
+{
 /* Let's render some things now */
 	// Open container
 	$text .= $tp->parseTemplate($template['container']['start'], true, $sc);
@@ -95,6 +115,7 @@ $mid 	= (int) $_GET['id'];
 	$text .= $tp->parseTemplate($template['tablelist']['end'], true, $sc);
 // Close container
 $text .= $tp->parseTemplate($template['container']['end'], true, $sc);
+}
 
 $ns->tablerender(LAN_MAILBOX_NAME, e107::getMessage()->render().$text);
 require_once(FOOTERF);
