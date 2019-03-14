@@ -39,7 +39,6 @@ var e107 = e107 || {'settings': {}, 'behaviors': {}};
 					    selectedValues.push(this.value);
 					});
 
-					//console.log(selectedIDs);
 
 					// If star icon was checked, and no checkboxes checked
 					if(!checked)
@@ -49,7 +48,14 @@ var e107 = e107 || {'settings': {}, 'behaviors': {}};
 						selectedIDs.push(directID);
 					}
 
-					console.log(selectedIDs);
+					if(selectedIDs[0] === undefined)  
+					{
+						console.log("No ID's selected!");
+						console.log(selectedIDs);
+						return;
+					}
+
+					//console.log(selectedIDs);
 					//return;
 
 					$.ajax({  
