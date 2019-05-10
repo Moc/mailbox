@@ -44,7 +44,7 @@ class Mailbox
 
 	public function __construct()
 	{
-		$this->plugprefs = e107::getPlugPref('messaging');
+		$this->plugprefs = e107::getPlugPref('mailbox');
 	}
 
 	public function get_current_mailbox($parm = '')
@@ -137,7 +137,7 @@ class Mailbox
 
 	public function process_compose($action = 'send', $post_data)
 	{
-		print_a($post_data);
+		//print_a($post_data);
 
 		// Check fields 
 		if(empty($post_data['message_to']) || empty($post_data['message_subject']) || empty($post_data['message_text']))
@@ -215,6 +215,8 @@ class Mailbox
 		if(is_numeric($message_to))
 		{
 			$sendmode = "individual";
+			$insert_data['message_to'] = $message_to; 
+			$this->send_message($insert_data); 
 		}
 		// multiple
 		elseif(strrpos($message_to, ','))
@@ -238,6 +240,12 @@ class Mailbox
 
 		// Trigger event
 		e107::getEvent()->trigger('user_mailbox_sent', $info);
+	}
+
+	public function send_message($insert_data = '')
+	{
+		print_a($insert_data); 
+		print_a("done");
 	}
 
 
@@ -422,7 +430,7 @@ class Mailbox
 	 *
 	 *	@return	string - text detailing result
 	 */
-	function send_message($vars)
+	function send_message_OLD($vars)
 	{
 		$tp = e107::getParser();
 		$sql = e107::getDb();

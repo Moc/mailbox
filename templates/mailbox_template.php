@@ -103,7 +103,7 @@ $MAILBOX_TEMPLATE['tablelist']['end'] = '
 $MAILBOX_TEMPLATE['box_navigation']['start'] = '
 <div class="col-lg-3">
     <div class="ibox ">
-		<div class="ibox-content mailbox-content">
+		<div class="ibox-content">
 ';
 
 $MAILBOX_TEMPLATE['box_navigation']['content'] = '
@@ -199,15 +199,9 @@ $MAILBOX_TEMPLATE['compose_message'] = '
 $MAILBOX_TEMPLATE['read_message'] = '
 <div class="mail-box-header">
     <div class="float-right">
-		<button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-container="body" title="Reply">
-			<i class="fa fa-reply"></i> Reply
-		</button>
-	    <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-container="body" title="Forward">
-			<i class="fa fa-share"></i> Forward
-		</button>
-		<button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-container="body" title="Delete">
-			<i class="fa fa-trash-o"></i> Remove
-		</button>
+		<button name="reply" type="submit" class="btn btn-primary" title="Reply"><i class="fa fa-reply"></i> Reply</button>
+	    <button name="forward" type="submit" class="btn btn-success" title="Forward"><i class="fa fa-share"></i> Forward</button>
+		<button name="delete" type="button" class="btn btn-danger" title="Delete"><i class="fa fa-trash-o"></i> Delete</button>
     </div>
     <h2>
         View message: <span class="font-italic">{MAILBOX_MESSAGE_SUBJECT}</span>
@@ -306,15 +300,9 @@ $MAILBOX_TEMPLATE['read_message'] = '
     </div>
 
     <div class="mail-body text-right">
-		<button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-container="body" title="Reply">
-			<i class="fa fa-reply"></i> Reply
-		</button>
-	    <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-container="body" title="Forward">
-			<i class="fa fa-share"></i> Forward
-		</button>
-		<button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" data-container="body" title="Delete">
-			<i class="fa fa-trash-o"></i> Remove
-		</button>
+        <button name="reply" type="submit" class="btn btn-primary" title="Reply"><i class="fa fa-reply"></i> Reply</button>
+        <button name="forward" type="submit" class="btn btn-success" title="Forward"><i class="fa fa-share"></i> Forward</button>
+        <button name="delete" type="button" class="btn btn-danger" title="Delete"><i class="fa fa-trash-o"></i> Delete</button>
     </div>
     <div class="clearfix"></div>
 </div>

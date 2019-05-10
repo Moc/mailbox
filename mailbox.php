@@ -47,7 +47,7 @@ if(e_AJAX_REQUEST)
 		$mailbox_class->ajaxStar();
 	}
 
-	// Check if 'mark as star' button was pressed, or individual star
+	// Check if trash button was pressed 
 	if(varset($_POST['action']) == 'trash')
 	{
 		$mailbox_class->ajaxTrash();
@@ -59,6 +59,7 @@ $current_mailbox 	= $mailbox_class->get_current_mailbox($page);
 $queryargs 			= $mailbox_class->get_database_queryargs($current_mailbox);
 
 // Set pagetitles
+define('PAGE_NAME', LAN_MAILBOX_NAME);
 $pagetitle = $mailbox_class->get_pagetitle($page); 
 define('e_PAGETITLE', $pagetitle);
 
