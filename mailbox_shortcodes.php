@@ -312,31 +312,34 @@ class mailbox_shortcodes extends e_shortcode
 
    function sc_mailbox_message_subject($parm = '')
    {
-      // Check for either mailboxes section or reading an individual message
-      if(e107::getParser()->filter($_GET['id']))
+      // Reading an individual message, does not require a link
+      // if(e107::getParser()->filter($_GET['id']))
+      // {
+      //    return $this->var['message_subject'];
+      // }
+
+      
+      $urlparms = array(
+         'id' => $this->var['message_id'],
+      );
+
+      // Check if draft, because then it requires a link to continue writing the message (compose)
+      if(e107::getParser()->filter($_GET['page']) == 'draftbox')
       {
-         // Reading an individual message, does not require a link
-         return $this->var['message_subject'];
+         $url = e107::url('mailbox', 'composeid', $urlparms);
       }
-      // In one of the mailboxes
       else
       {
-         $urlparms = array(
-            'id' => $this->var['message_id'],
-         );
-
-         // Check if draft, because then it requires a link to continue writing the message (compose)
-         if(e107::getParser()->filter($_GET['page']) == 'draftbox')
-         {
-            $url = e107::url('mailbox', 'composeid', $urlparms);
-         }
-         else
-         {
-            $url = e107::url('mailbox', 'read', $urlparms);
-         }
-
-         return "<a href='".$url."'>".$this->var['message_subject']."</a>";
+         $url = e107::url('mailbox', 'read', $urlparms);
       }
+
+      if($parm['type'] == 'url')
+      {
+        return $url; 
+      }
+
+      return $this->var['message_subject']; 
+      
    }
 
    function sc_mailbox_message_text($parm = '')

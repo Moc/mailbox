@@ -74,7 +74,7 @@ $MAILBOX_TEMPLATE['tablelist']['messages'] = '
 			            <td class="d-none d-sm-table-cell">{MAILBOX_MESSAGE_STAR}</td>
 			            <td class="mail-ontact"><a href="mail_detail.html">{SETIMAGE: w=30&h=30&crop=1} {MAILBOX_MESSAGE_AVATAR: shape=circle} {MAILBOX_MESSAGE_FROMTO}</a>  </td>
 			            <td class="d-none d-sm-table-cell"><span class="label label-warning">Clients</span></td>
-			            <td class="mail-subject"><a href="mail_detail.html">{MAILBOX_MESSAGE_SUBJECT}</a></td>
+			            <td class="mail-subject"><a href="{MAILBOX_MESSAGE_SUBJECT: type=url}">{MAILBOX_MESSAGE_SUBJECT}</a></td>
 			            <td class="d-none d-sm-table-cell">{MAILBOX_MESSAGE_ATTACHMENT}</td>
 			            <td class="mail-date">{MAILBOX_MESSAGE_DATESTAMP=relative}</td>
 			            <td class="d-none d-sm-table-cell"> 
