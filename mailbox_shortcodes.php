@@ -1,12 +1,12 @@
 <?php
 /*
- * Mailbox - an e107 plugin by Tijn Kuyper
+ * Mailbox 
  *
- * Copyright (C) 2019-2020 Tijn Kuyper (http://www.tijnkuyper.nl)
+ * Copyright (C) 2021 - Tijn Kuyper (Moc)
  * Released under the terms and conditions of the
  * GNU General Public License (http://www.gnu.org/licenses/gpl.txt)
  *
- */
+*/
 
 if (!defined('e107_INIT')) { exit; }
 
